@@ -2,7 +2,6 @@ package models.responses;
 
 import models.LoggedUser;
 import models.trimmed.TrimmedLoggedUser;
-import models.trimmed.TrimmedUser;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("login")

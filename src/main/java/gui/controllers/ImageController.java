@@ -1,6 +1,5 @@
 package gui.controllers;
 
-import gui.controllers.popups.AlertBox;
 import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
