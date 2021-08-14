@@ -13,7 +13,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import models.LoggedUser;
+import models.NetworkData;
 import models.User;
+import models.requests.LoginRequest;
+import models.responses.LoginResponse;
+import models.responses.Response;
 import util.ConfigLoader;
 
 public class LoginGuiController {
@@ -27,30 +32,27 @@ public class LoginGuiController {
     private Scene scene;
     private Parent root;
 
-    private final AuthController authController = new AuthController();
-
-
     public void loginButtonClicked(ActionEvent actionEvent) {
         System.out.println("Checking Login validation. please wait...");
         String username = usernameTextField.getText();
         String password = passwordTextField.getText();
-        if(username.isEmpty())
+        if (username.isEmpty())
             errorMessage.setText("Enter Your Username");
-        else if(password.isEmpty())
+        else if (password.isEmpty())
             errorMessage.setText("Enter Your Password");
         else {
-            try {
-                User user = authController.login(username, password);
-                if(user.isActive()) {
-                    SceneLoader.getInstance().mainMenu(actionEvent);
+                LoginResponse response = (LoginResponse) new LoginRequest(username, password).execute();
+                response.unleash();
+                if (response.isLoginValid()) {
+                    if (LoggedUser.getTrimmedLoggedUser().isActive()) {
+                        SceneLoader.getInstance().mainMenu(actionEvent);
+                    } else {
+                        SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("deactiveSelfProf"), actionEvent);
+                    }
                 }
-                else{
-                    SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("deactiveSelfProf"),actionEvent);
+            else{
+                errorMessage.setText(response.getError());
                 }
-            }
-            catch (InvalidInputException e) {
-                errorMessage.setText(e.getMessage());
-            }
         }
     }
 

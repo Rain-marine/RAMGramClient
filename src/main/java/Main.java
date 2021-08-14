@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import models.NetworkData;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import util.ConfigLoader;
@@ -17,8 +18,14 @@ import java.util.Objects;
 public class Main extends Application {
     static Logger log = LogManager.getLogger(Main.class);
     public static void main(String[] args) {
-       log.info("Application Started");
-        launch(args);
+        log.info("Application Started");
+        try {
+            new NetworkData();
+            launch(args);
+        } catch (IOException e) {
+            System.err.println("connection to server failed");
+            System.exit(0);
+        }
 
     }
 
