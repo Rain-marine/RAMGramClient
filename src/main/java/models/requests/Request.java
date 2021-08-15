@@ -25,6 +25,8 @@ import org.codehaus.jackson.map.ObjectMapper;
         @JsonSubTypes.Type(value = ListRequest.class, name = "list"),
         @JsonSubTypes.Type(value = TweetActionRequest.class, name = "tweetAction"),
         @JsonSubTypes.Type(value = UserActionRequest.class, name = "userAction"),
+        @JsonSubTypes.Type(value = AddCommentRequest.class, name = "addComment"),
+
 
 })
 

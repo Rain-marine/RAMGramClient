@@ -21,6 +21,7 @@ import javafx.scene.text.FontWeight;
 import models.LoggedUser;
 import models.Tweet;
 import models.User;
+import models.requests.AddCommentRequest;
 import models.requests.TweetActionRequest;
 import models.requests.TweetRequest;
 import models.requests.UserActionRequest;
@@ -168,9 +169,8 @@ public class TweetCard {
         addComment.setTextFill(Color.LEMONCHIFFON);
         addComment.setOnAction(event -> {
             String commentTextString = commentText.getText();
-            if (!commentTextString.equals("")) {
-                //todo
-                new TweetController().addComment(commentTextString, commentImageArray == null ? null : commentImageArray, tweetId);
+            if ((!commentTextString.equals("")) || (commentImageArray != null)) {
+                new AddCommentRequest(LoggedUser.getToken() , LoggedUser.getId() , tweetId , commentTextString ,commentImageArray == null ? null : commentImageArray).execute();
             }
         });
         commentImage.setStyle("-fx-background-color: #690081");
@@ -245,6 +245,8 @@ public class TweetCard {
             buttons.getChildren().addAll(like, report, retweet, block, mute);
             vBox.getChildren().addAll(header, tweetText, tweetPhoto, likedNumber, buttons, addCommentLayout, separator);
         } else {
+            header.getChildren().addAll(profilePhoto, writerName );
+            header.getChildren().add(new VBox(5, dateTime , generalButtons));
             vBox.getChildren().addAll(header, tweetText, tweetPhoto, likedNumber, addCommentLayout, separator);
         }
 
