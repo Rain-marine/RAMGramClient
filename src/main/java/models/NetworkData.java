@@ -1,5 +1,7 @@
 package models;
 
+import models.requests.Request;
+import models.responses.Response;
 import org.codehaus.jackson.map.ObjectMapper;
 import util.ConfigLoader;
 
@@ -19,8 +21,8 @@ public class NetworkData {
         try {
             socket = new Socket(ConfigLoader.readNetworkProperty("host"),Integer.parseInt(ConfigLoader.readNetworkProperty("port")));
             try {
-                this.scanner = new Scanner(socket.getInputStream());
-                this.printWriter = new PrintWriter(socket.getOutputStream(), true);
+                scanner = new Scanner(socket.getInputStream());
+                printWriter = new PrintWriter(socket.getOutputStream(), true);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -28,12 +30,24 @@ public class NetworkData {
         catch (IOException e){
             socket = new Socket("localhost", Integer.parseInt(ConfigLoader.readNetworkProperty("defaultPort")));
             try {
-                this.scanner = new Scanner(socket.getInputStream());
-                this.printWriter = new PrintWriter(socket.getOutputStream(), true);
+                scanner = new Scanner(socket.getInputStream());
+                printWriter = new PrintWriter(socket.getOutputStream(), true);
             } catch (IOException e2) {
                 e2.printStackTrace();
             }
         }
+    }
+
+    public static Response sendRequest(Request request){
+        try {
+            String s = objectMapper.writeValueAsString(request);
+            printWriter.println(s);
+            Response response = objectMapper.readValue(NetworkData.scanner.nextLine(), Response.class);
+            return response;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

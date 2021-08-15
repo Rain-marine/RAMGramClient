@@ -2,6 +2,8 @@ package gui.controllers.tweets;
 
 import controllers.ProfileAccessController;
 import controllers.Controllers;
+import controllers.TweetController;
+import controllers.UserController;
 import gui.controllers.ImageController;
 import gui.controllers.SceneLoader;
 import gui.controllers.popups.AlertBox;
@@ -16,14 +18,25 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import models.LoggedUser;
+import models.Tweet;
+import models.User;
+import models.requests.TweetActionRequest;
+import models.requests.TweetRequest;
+import models.requests.UserActionRequest;
+import models.responses.BooleanResponse;
+import models.responses.Response;
+import models.responses.TweetResponse;
+import models.trimmed.TrimmedTweet;
 import util.ConfigLoader;
 
 import javax.naming.SizeLimitExceededException;
 import java.util.ArrayList;
 
-public class TweetCard implements Controllers {
+public class TweetCard {
 
     private long tweetId;
+    private TrimmedTweet trimmedTweet;
     private long writeId;
     private VBox vBox;
     private Label tweetText;
@@ -58,21 +71,23 @@ public class TweetCard implements Controllers {
 
     public TweetCard(long tweetId, MODE mode) {
         this.tweetId = tweetId;
-        if (TWEET_CONTROLLER.isSelfTweet(tweetId)){
+        Response response = new TweetRequest(LoggedUser.getToken() , LoggedUser.getId() , tweetId).execute();
+        this.trimmedTweet = ((TweetResponse)response).getTrimmedTweet();
+        if (trimmedTweet.getWriterId() == LoggedUser.getId()) {
             mode = MODE.OWNER;
         }
         MODE finalMode = mode;
-        writeId = TWEET_CONTROLLER.getWriterId(tweetId);
+        writeId = trimmedTweet.getWriterId();
         vBox = new VBox(5);
-        vBox.setPadding(new Insets(0,0,0,0));
+        vBox.setPadding(new Insets(0, 0, 0, 0));
         vBox.setPrefWidth(430);
         vBox.setStyle("-fx-background-color: #000000");
-        tweetText = new Label(TWEET_CONTROLLER.getTweetText(tweetId));
+        tweetText = new Label(trimmedTweet.getTweetText());
         tweetText.setWrapText(true);
         tweetText.setTextFill(Color.SNOW);
         tweetText.setFont(Font.font(15));
 
-        writerName = new Button(TWEET_CONTROLLER.getWriterUsername(tweetId));
+        writerName = new Button(trimmedTweet.getWriterUsername());
         writerName.setOnAction(event -> {
             if (finalMode != MODE.PROFILE) {
                 ProfileAccessController profileAccessController = new ProfileAccessController(finalMode == MODE.EXPLORER ? 1 : (finalMode == MODE.TIMELINE ? 2 : 3), writeId, 0);
@@ -82,15 +97,15 @@ public class TweetCard implements Controllers {
         writerName.setStyle("-fx-background-color: #000000");
         writerName.setPrefHeight(50);
         writerName.setTextFill(Color.MEDIUMORCHID);
-        writerName.setFont(Font.font("Arial" , FontWeight.BOLD , 18 ));
+        writerName.setFont(Font.font("Arial", FontWeight.BOLD, 18));
 
-        dateTime = new Label(TWEET_CONTROLLER.getTweetDate(tweetId));
+        dateTime = new Label(trimmedTweet.getDate());
         dateTime.setTextFill(Color.DARKVIOLET);
 
         profilePhoto = new ImageView();
         profilePhoto.setFitHeight(50);
         profilePhoto.setFitWidth(50);
-        byte[] byteArray = USER_CONTROLLER.getProfilePhoto(writeId);
+        byte[] byteArray = trimmedTweet.getWriterProfile();
         Rectangle clip = new Rectangle(
                 profilePhoto.getFitWidth(), profilePhoto.getFitHeight()
         );
@@ -101,8 +116,8 @@ public class TweetCard implements Controllers {
         header = new HBox(10);
 
         tweetPhoto = new ImageView();
-        if (TWEET_CONTROLLER.getTweetImage(tweetId) != null) {
-            tweetPhoto.setImage(ImageController.byteArrayToImage(TWEET_CONTROLLER.getTweetImage(tweetId)));
+        if (trimmedTweet.getTweetImage() != null) {
+            tweetPhoto.setImage(ImageController.byteArrayToImage(trimmedTweet.getTweetImage()));
             tweetPhoto.setPreserveRatio(true);
             tweetPhoto.setFitWidth(350);
         }
@@ -111,7 +126,7 @@ public class TweetCard implements Controllers {
         save.setStyle("-fx-background-color: #690081");
         save.setTextFill(Color.LEMONCHIFFON);
         save.setOnAction(event -> {
-            TWEET_CONTROLLER.saveTweet(tweetId);
+            new TweetActionRequest(LoggedUser.getToken() ,LoggedUser.getId() , tweetId , TweetActionRequest.TWEET_ACTION.SAVE).execute();
             AlertBox.display("done!", "tweet saved");
         });
 
@@ -127,12 +142,12 @@ public class TweetCard implements Controllers {
         comments.setStyle("-fx-background-color: #690081");
         comments.setTextFill(Color.LEMONCHIFFON);
         comments.setOnAction(event -> {
-            if (TWEET_CONTROLLER.getTweetComments(tweetId).size() == 0) {
+            if (trimmedTweet.getCommentsIds().size() == 0) {
                 AlertBox.display("empty", "no comments to show");
             } else {
-                TweetShowerGuiController.setListOfTweets(TWEET_CONTROLLER.getTweetComments(tweetId));
-                TweetShowerGuiController.setPreviousMenu( finalMode == MODE.EXPLORER ? 1 : (finalMode ==MODE.TIMELINE ? 2 : (finalMode == MODE.OWNER ? 6 : 5)));
-                SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("tweetShower"),event);
+                TweetShowerGuiController.setListOfTweets(trimmedTweet.getCommentsIds());
+                TweetShowerGuiController.setPreviousMenu(finalMode == MODE.EXPLORER ? 1 : (finalMode == MODE.TIMELINE ? 2 : (finalMode == MODE.OWNER ? 6 : 5)));
+                SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("tweetShower"), event);
             }
         });
 
@@ -141,7 +156,7 @@ public class TweetCard implements Controllers {
             try {
                 commentImageArray = ImageController.pickImage();
             } catch (SizeLimitExceededException e) {
-                AlertBox.display("size limit error","Image size is too large. \nImage size should be less than 2MB");
+                AlertBox.display("size limit error", "Image size is too large. \nImage size should be less than 2MB");
             }
         });
 
@@ -153,8 +168,9 @@ public class TweetCard implements Controllers {
         addComment.setTextFill(Color.LEMONCHIFFON);
         addComment.setOnAction(event -> {
             String commentTextString = commentText.getText();
-            if(!commentTextString.equals("")){
-                TWEET_CONTROLLER.addComment(commentTextString , commentImageArray == null ? null :commentImageArray , tweetId);
+            if (!commentTextString.equals("")) {
+                //todo
+                new TweetController().addComment(commentTextString, commentImageArray == null ? null : commentImageArray, tweetId);
             }
         });
         commentImage.setStyle("-fx-background-color: #690081");
@@ -165,12 +181,12 @@ public class TweetCard implements Controllers {
         HBox row = new HBox(5);
         row.getChildren().addAll(commentImage, addComment);
         addCommentLayout.getChildren().addAll(commentText, row);
-        generalButtons.getChildren().addAll(save , forward, comments);
+        generalButtons.getChildren().addAll(save, forward, comments);
 
         likedNumber = new Label();
         likedNumber.setTextFill(Color.MAGENTA);
-        ArrayList<String> peopleLiked = TWEET_CONTROLLER.getLikedList(tweetId);
-        likedNumber.setText("liked by " + peopleLiked.size() + " people: "+ String.join(", ", peopleLiked));
+        ArrayList<String> peopleLiked = trimmedTweet.getLikedUsernames();
+        likedNumber.setText("liked by " + peopleLiked.size() + " people: " + String.join(", ", peopleLiked));
 
         if (finalMode != MODE.OWNER) {
 
@@ -178,7 +194,8 @@ public class TweetCard implements Controllers {
             retweet.setStyle("-fx-background-color: #690081");
             retweet.setTextFill(Color.LEMONCHIFFON);
             retweet.setOnAction(event -> {
-                TWEET_CONTROLLER.retweet(tweetId);
+                new TweetActionRequest(LoggedUser.getToken() ,LoggedUser.getId() , tweetId , TweetActionRequest.TWEET_ACTION.RETWEET).execute();
+
                 AlertBox.display("done!", "retweeted!");
             });
 
@@ -186,7 +203,7 @@ public class TweetCard implements Controllers {
             block.setStyle("-fx-background-color: #690081");
             block.setTextFill(Color.LEMONCHIFFON);
             block.setOnAction(event -> {
-                USER_CONTROLLER.blockUser(writeId);
+                new UserActionRequest(LoggedUser.getToken() ,LoggedUser.getId() , writeId , UserActionRequest.USER_ACTION.BLOCK).execute();
                 AlertBox.display("done!", "user blocked");
             });
 
@@ -194,7 +211,8 @@ public class TweetCard implements Controllers {
             mute.setStyle("-fx-background-color: #690081");
             mute.setTextFill(Color.LEMONCHIFFON);
             mute.setOnAction(event -> {
-                USER_CONTROLLER.muteUser(writeId);
+                new UserActionRequest(LoggedUser.getToken() ,LoggedUser.getId() , writeId , UserActionRequest.USER_ACTION.MUTE).execute();
+
                 AlertBox.display("done!", "user muted!");
             });
 
@@ -202,7 +220,8 @@ public class TweetCard implements Controllers {
             report.setStyle("-fx-background-color: #690081");
             report.setTextFill(Color.LEMONCHIFFON);
             report.setOnAction(event -> {
-                boolean isDeleted = TWEET_CONTROLLER.reportSpam(tweetId);
+                Response response1 = new TweetActionRequest(LoggedUser.getToken() ,LoggedUser.getId() , tweetId , TweetActionRequest.TWEET_ACTION.REPORT).execute();
+                boolean isDeleted = ((BooleanResponse)response1).isResult();
                 if (isDeleted) {
                     AlertBox.display("refresh", "you need to refresh the page");
                 } else {
@@ -210,41 +229,35 @@ public class TweetCard implements Controllers {
                 }
             });
 
-            boolean isLiked = TWEET_CONTROLLER.isLiked(tweetId);
+            boolean isLiked = trimmedTweet.getLikedUsernames().stream().anyMatch(it -> it.equals(LoggedUser.getUsername()));
             like = new Button(isLiked ? "liked" : "like");
             like.setStyle("-fx-background-color: #690081");
             like.setTextFill(Color.LEMONCHIFFON);
             like.setOnAction(event -> {
                 if (!isLiked) {
-                    TWEET_CONTROLLER.like(tweetId);
+                    new TweetActionRequest(LoggedUser.getToken() ,LoggedUser.getId() , tweetId , TweetActionRequest.TWEET_ACTION.LIKE).execute();
                     like.setText("liked");
                     updateLikedList();
                 }
             });
-            header.getChildren().addAll(profilePhoto, writerName );
-            header.getChildren().add(new VBox(5, dateTime , generalButtons));
+            header.getChildren().addAll(profilePhoto, writerName);
+            header.getChildren().add(new VBox(5, dateTime, generalButtons));
             buttons.getChildren().addAll(like, report, retweet, block, mute);
-            vBox.getChildren().addAll(header, tweetText, tweetPhoto , likedNumber, buttons ,  addCommentLayout , separator);
+            vBox.getChildren().addAll(header, tweetText, tweetPhoto, likedNumber, buttons, addCommentLayout, separator);
         } else {
-            vBox.getChildren().addAll(header, tweetText, tweetPhoto , likedNumber ,  addCommentLayout , separator);
+            vBox.getChildren().addAll(header, tweetText, tweetPhoto, likedNumber, addCommentLayout, separator);
         }
 
 
     }
 
-    public void updateLikedList(){
+    public void updateLikedList() {
         likedNumber.setTextFill(Color.MAGENTA);
-        ArrayList<String> peopleLiked = TWEET_CONTROLLER.getLikedList(tweetId);
-        likedNumber.setText("liked by " + peopleLiked.size() + " people: "+ String.join(", ", peopleLiked));
+        Response response = new TweetRequest(LoggedUser.getToken() , LoggedUser.getId() , tweetId).execute();
+        this.trimmedTweet = ((TweetResponse)response).getTrimmedTweet();
+        ArrayList<String> peopleLiked = trimmedTweet.getLikedUsernames();
+        likedNumber.setText("liked by " + peopleLiked.size() + " people: " + String.join(", ", peopleLiked));
 
-    }
-
-    public long getTweetId() {
-        return tweetId;
-    }
-
-    public void setTweetId(long tweetId) {
-        this.tweetId = tweetId;
     }
 
     public VBox getVBox() {
@@ -254,4 +267,5 @@ public class TweetCard implements Controllers {
     public void setVBox(VBox vBox) {
         this.vBox = vBox;
     }
+
 }

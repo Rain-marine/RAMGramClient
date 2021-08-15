@@ -2,6 +2,7 @@ package gui.controllers.mainmenu;
 
 import controllers.ProfileAccessController;
 import controllers.Controllers;
+import controllers.UserController;
 import gui.controllers.SceneLoader;
 import gui.controllers.popups.AlertBox;
 import gui.controllers.tweets.TweetCard;
@@ -11,24 +12,29 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import models.LoggedUser;
+import models.requests.ListRequest;
+import models.responses.ListResponse;
+import models.responses.Response;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class ExplorerGuiController implements Initializable, Controllers {
+public class ExplorerGuiController implements Initializable {
 
     @FXML
     private TextField searchField;
     @FXML
     private ScrollPane tweetsArea;
 
-    private ArrayList<Long> listOfTweets;
+
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        listOfTweets = TWEET_CONTROLLER.getTopTweets();
+        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.EXPLORER , 0L).execute();
+        ArrayList<Long> listOfTweets = ((ListResponse) response).getIds();
         VBox list = new VBox(0);
         for (Long tweet : listOfTweets) {
             list.getChildren().add(new TweetCard(tweet, TweetCard.MODE.EXPLORER).getVBox());
@@ -55,7 +61,8 @@ public class ExplorerGuiController implements Initializable, Controllers {
             AlertBox.display("Nerd Alert", "You gotta enter a name idiot!");
         } else {
             try {
-                long userId = USER_CONTROLLER.getUserByUsername(usernameToFind);
+                //todo
+                long userId = new UserController().getUserByUsername(usernameToFind);
                 ProfileAccessController profileAccessController = new ProfileAccessController(1, userId, 0);
                 SceneLoader.getInstance().changeScene(profileAccessController.checkAccessibility(), actionEvent);
 

@@ -17,7 +17,7 @@ public class ChatController implements Repository {
     }
 
     public List<Long> getChatsIds() {
-        List<Chat> chats = CHAT_REPOSITORY.getAllChats(LoggedUser.getLoggedUser().getId());
+        List<Chat> chats = CHAT_REPOSITORY.getAllChats(LoggedUser.getId());
         List<Long> chatIds = new ArrayList<>();
         for (Chat chat : chats) {
             chatIds.add(chat.getId());
@@ -26,8 +26,8 @@ public class ChatController implements Repository {
     }
 
     public void seeChat(long chatId) {
-        log.info("the chat " + chatId + " was seen by :" + LoggedUser.getLoggedUser().getUsername());
-        CHAT_REPOSITORY.clearUnSeenCount(chatId, LoggedUser.getLoggedUser().getId());
+        log.info("the chat " + chatId + " was seen by :" + LoggedUser.getUsername());
+        CHAT_REPOSITORY.clearUnSeenCount(chatId, LoggedUser.getId());
     }
 
     public void addMessageToChat(long chatId, String message, byte[] images) {

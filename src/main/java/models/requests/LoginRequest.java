@@ -23,15 +23,7 @@ public class LoginRequest implements Request {
 
     @Override
     public Response execute() {
-        try {
-            String s = NetworkData.objectMapper.writeValueAsString(this);
-            NetworkData.printWriter.println(s);
-            Response response = NetworkData.objectMapper.readValue(NetworkData.scanner.nextLine(), Response.class);
-            return response;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return NetworkData.sendRequest(this);
     }
 
     public String getUsername() {

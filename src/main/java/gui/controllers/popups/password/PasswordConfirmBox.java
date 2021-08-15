@@ -11,6 +11,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import models.LoggedUser;
+import models.requests.CheckPasswordRequest;
+import models.responses.BooleanResponse;
+import models.responses.Response;
 
 public class PasswordConfirmBox implements ConfirmBox {
     static boolean answer;
@@ -38,14 +42,18 @@ public class PasswordConfirmBox implements ConfirmBox {
 
         ConfirmButton.setOnAction(e -> {
             String password = passwordField.getText();
-            if(!password.equals("") && SETTING_CONTROLLER.isPasswordCorrect(password)){
-                answer = true;
-                window.close();
+            if(!password.equals("")){
+                Response response = new CheckPasswordRequest(password , LoggedUser.getId() , LoggedUser.getToken()).execute();
+                if(((BooleanResponse)response).isResult()){
+                    answer = true;
+                    window.close();
+                }
+                else {
+                    passwordError.setText("Password is incorrect");
+                    passwordField.setText("");
+                }
             }
-            else {
-                passwordError.setText("Password is incorrect");
-                passwordField.setText("");
-            }
+
 
         });
 

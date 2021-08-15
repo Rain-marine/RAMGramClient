@@ -36,4 +36,12 @@ public class LoggedUser {
     public static void setToken(String token) {
         LoggedUser.token = token;
     }
+
+    public static long getId() {
+        return trimmedLoggedUser.getId();
+    }
+
+    public static String getUsername() {
+        return trimmedLoggedUser.getUsername();
+    }
 }

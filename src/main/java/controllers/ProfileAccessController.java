@@ -76,7 +76,7 @@ public class ProfileAccessController implements Repository {
                 return "FXMLs/Profiles/PublicProfile.fxml";
             }
 
-            //have I send request?
+            //have I sent request?
             if (otherUser.getReceiverNotifications().stream().anyMatch(it -> ((it.getSender().getId() == loggedUserId)
                     && (it.getType() == NotificationType.FOLLOW_REQ)))) {
                 PendingRequestProfileGuiController.setPrevious(previousMenu);

@@ -7,6 +7,8 @@ import java.util.Date;
 
 public class TrimmedLoggedUser implements Controllers {
 
+    private long id;
+    private String lastSeenStatus;
     private boolean isPublic;
     private boolean isActive;
     private String username;
@@ -16,10 +18,6 @@ public class TrimmedLoggedUser implements Controllers {
     private String email;
     private Date birthday;
     private byte[] profilePic;
-
-    public TrimmedLoggedUser(long userId) {
-
-    }
 
     public TrimmedLoggedUser() {
     }
@@ -94,5 +92,21 @@ public class TrimmedLoggedUser implements Controllers {
 
     public void setPublic(boolean aPublic) {
         isPublic = aPublic;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getLastSeenStatus() {
+        return lastSeenStatus;
+    }
+
+    public void setLastSeenStatus(String lastSeenStatus) {
+        this.lastSeenStatus = lastSeenStatus;
     }
 }

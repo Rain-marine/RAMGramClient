@@ -9,12 +9,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import models.LoggedUser;
+import models.requests.ChangeLastSeenRequest;
 import util.ConfigLoader;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class PrivacySettingGuiController implements Initializable, Controllers {
+public class PrivacySettingGuiController implements Initializable {
     @FXML
     private ChoiceBox lastSeenChoice;
     @FXML
@@ -25,9 +26,6 @@ public class PrivacySettingGuiController implements Initializable, Controllers {
     private ChoiceBox emailChoice;
 
     private String lastSeenStatus;
-    private String numberStatus;
-    private String emailStatus;
-    private String birthdayStatus;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -41,14 +39,8 @@ public class PrivacySettingGuiController implements Initializable, Controllers {
     }
 
     private void reload() {
-        numberStatus = SETTING_CONTROLLER.getUserNumberStatus(LoggedUser.getLoggedUser()).toString();
-        emailStatus = SETTING_CONTROLLER.getUserEmailStatus(LoggedUser.getLoggedUser()).toString();
-        birthdayStatus = SETTING_CONTROLLER.getUserBirthdayStatus(LoggedUser.getLoggedUser()).toString();
-        lastSeenStatus = SETTING_CONTROLLER.getUserLastSeenStatus(LoggedUser.getLoggedUser().getUsername());
+        lastSeenStatus = LoggedUser.getTrimmedLoggedUser().getLastSeenStatus();
         lastSeenChoice.setValue(lastSeenStatus);
-        numberChoice.setValue(numberStatus);
-        emailChoice.setValue(emailStatus);
-        birthdayChoice.setValue(birthdayStatus);
     }
 
     public void mainMenuButtonClicked(ActionEvent actionEvent) {
@@ -65,25 +57,10 @@ public class PrivacySettingGuiController implements Initializable, Controllers {
 
     public void saveButtonClicked(ActionEvent actionEvent) {
         boolean hasAnythingChanged = false;
-        String newNumStatus = numberChoice.getValue().toString();
-        String newBDStatus = birthdayChoice.getValue().toString();
         String newLSStatus = lastSeenChoice.getValue().toString();
-        String newEmailStatus = emailChoice.getValue().toString();
-        if (!newBDStatus.equals(birthdayStatus)) {
-            hasAnythingChanged = true;
-            SETTING_CONTROLLER.changeBirthdayStatus(newBDStatus);
-        }
-        if (!newEmailStatus.equals(emailStatus)) {
-            hasAnythingChanged = true;
-            SETTING_CONTROLLER.changeEmailStatus(newEmailStatus);
-        }
-        if (!newNumStatus.equals(numberStatus)) {
-            hasAnythingChanged = true;
-            SETTING_CONTROLLER.changeNumberStatus(newNumStatus);
-        }
         if (!newLSStatus.equals(lastSeenStatus)) {
             hasAnythingChanged = true;
-            SETTING_CONTROLLER.changeLastSeenStatus(newLSStatus);
+            new ChangeLastSeenRequest(LoggedUser.getToken() , LoggedUser.getId() , newLSStatus).execute().unleash();
         }
         if (hasAnythingChanged)
             reload();

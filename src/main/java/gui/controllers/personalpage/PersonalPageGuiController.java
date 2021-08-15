@@ -66,8 +66,8 @@ public class PersonalPageGuiController implements Initializable , Controllers {
     }
 
     private void loadInfo() {
-        username = LoggedUser.getLoggedUser().getUsername();
-        fullName = LoggedUser.getLoggedUser().getFullName();
+        username = LoggedUser.getUsername();
+        fullName = LoggedUser.getTrimmedLoggedUser().getFullName();
         email = LoggedUser.getLoggedUser().getEmail();
         phoneNumber = LoggedUser.getLoggedUser().getPhoneNumber();
         bio = LoggedUser.getLoggedUser().getBio();

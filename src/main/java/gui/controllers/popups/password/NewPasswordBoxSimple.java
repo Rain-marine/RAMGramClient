@@ -10,6 +10,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import models.LoggedUser;
+import models.requests.ChangePasswordRequest;
+import models.requests.CheckPasswordRequest;
+import models.responses.Response;
 
 public class NewPasswordBoxSimple implements ConfirmBox {
 
@@ -32,7 +36,7 @@ public class NewPasswordBoxSimple implements ConfirmBox {
 
         ConfirmButton.setOnAction(e -> {
             String newPassword = newPasswordField.getText();
-            SETTING_CONTROLLER.changePassword(newPassword);
+            new ChangePasswordRequest( LoggedUser.getToken() , LoggedUser.getId() , newPassword).execute();
             window.close();
         });
 

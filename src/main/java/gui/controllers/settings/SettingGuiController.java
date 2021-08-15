@@ -12,6 +12,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import models.LoggedUser;
+import models.requests.*;
+import models.responses.BooleanResponse;
+import models.responses.Response;
 import util.ConfigLoader;
 
 import java.net.URL;
@@ -30,7 +33,8 @@ public class SettingGuiController implements Initializable, Controllers {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        isPublic = SETTING_CONTROLLER.isAccountPublic(LoggedUser.getLoggedUser().getUsername());
+        Response response = new IsPublicRequest(LoggedUser.getId(),LoggedUser.getToken()).execute();
+        isPublic = ((BooleanResponse)response).isResult();
         if(isPublic){
             privateButton.setStyle("-fx-background-color: #717171;");
             publicButton.setStyle("-fx-background-color: #D7A4FF;");
@@ -58,7 +62,7 @@ public class SettingGuiController implements Initializable, Controllers {
     public void deActiveButtonClicked(ActionEvent actionEvent) {
         boolean answer = SimpleConfirmBox.display("deactivation","Are you sure you want to deActivate your account?");
         if(answer){
-            SETTING_CONTROLLER.deActiveAccount();
+            new DeActiveRequest(LoggedUser.getToken() , LoggedUser.getId(), false).execute();
             SceneLoader.getInstance().noConfirmLogout(actionEvent);
         }
     }
@@ -73,7 +77,7 @@ public class SettingGuiController implements Initializable, Controllers {
     public void changeBDButtonClicked(ActionEvent actionEvent) {
         String birthday = datePicker.getValue() == null ? "" : datePicker.getValue().toString() ;
         if(!birthday.equals("")) {
-            USER_CONTROLLER.changeBirthday(DateFormat.stringToDate(birthday));
+            new ChangeBirthdayRequest(LoggedUser.getToken() , LoggedUser.getId() ,DateFormat.stringToDate(birthday)).execute().unleash();
         }
     }
 
@@ -82,7 +86,7 @@ public class SettingGuiController implements Initializable, Controllers {
         if(answer){
             boolean result = PasswordConfirmBox.display();
             if(result){
-                SETTING_CONTROLLER.deleteAccount();
+                new DeleteAccountRequest(LoggedUser.getToken() , LoggedUser.getId()).execute();
                 SceneLoader.getInstance().noConfirmLogout(actionEvent);
             }
         }
@@ -95,7 +99,7 @@ public class SettingGuiController implements Initializable, Controllers {
 
     public void publicButtonClicked(ActionEvent actionEvent) {
         if(!isPublic){
-            SETTING_CONTROLLER.changeAccountVisibility(true);
+            new ChangeAccountVisibilityRequest(LoggedUser.getToken() , LoggedUser.getId() , true).execute();
             privateButton.setStyle("-fx-background-color: #717171;");
             publicButton.setStyle("-fx-background-color: #D7A4FF;");
             isPublic = true;
@@ -105,7 +109,7 @@ public class SettingGuiController implements Initializable, Controllers {
 
     public void privateButtonClicked(ActionEvent actionEvent) {
         if(isPublic){
-            SETTING_CONTROLLER.changeAccountVisibility(false);
+            new ChangeAccountVisibilityRequest(LoggedUser.getToken() , LoggedUser.getId() , false).execute();
             publicButton.setStyle("-fx-background-color: #717171;");
             privateButton.setStyle("-fx-background-color: #D7A4FF;");
             isPublic = false;

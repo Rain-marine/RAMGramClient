@@ -5,22 +5,28 @@ import gui.controllers.SceneLoader;
 import gui.controllers.tweets.TweetCard;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import models.LoggedUser;
+import models.requests.ListRequest;
+import models.responses.ListResponse;
+import models.responses.Response;
 
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 
-public class TimeLineGuiController implements Controllers {
-
+public class TimeLineGuiController implements Initializable {
 
     @FXML
     private ScrollPane tweetsArea;
 
-    private ArrayList<Long> listOfTweets;
-
-    public void initialize() {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         VBox list = new VBox(0);
-        listOfTweets = TWEET_CONTROLLER.getFollowingTweets();
+        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.TIMELINE , 0L).execute();
+        ArrayList<Long> listOfTweets = ((ListResponse) response).getIds();
         for (long tweet : listOfTweets) {
             list.getChildren().add(new TweetCard(tweet , TweetCard.MODE.TIMELINE).getVBox());
         }
@@ -38,4 +44,7 @@ public class TimeLineGuiController implements Controllers {
     public void mainMenuButtonClicked(ActionEvent actionEvent) {
         SceneLoader.getInstance().mainMenu(actionEvent);
     }
+
+
+
 }
