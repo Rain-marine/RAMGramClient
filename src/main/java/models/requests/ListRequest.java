@@ -10,7 +10,7 @@ import org.codehaus.jackson.annotate.JsonTypeName;
 @JsonTypeName("list")
 public class ListRequest implements Request {
 
-    public enum TYPE {TIMELINE, EXPLORER , COMMENT ,CHAT ,MESSAGE , NOTIFICATION ,FACTION}
+    public enum TYPE {TIMELINE, EXPLORER , COMMENT ,CHAT ,MESSAGE , NOTIFICATION ,FACTION , SAVED_MESSAGES , SAVED_TWEET}
 
     private String token;
     private long userId;

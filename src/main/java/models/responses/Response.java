@@ -1,6 +1,7 @@
 package models.responses;
 
 
+import models.requests.ChatRequest;
 import models.requests.ListRequest;
 import models.requests.LoginRequest;
 import models.requests.TweetRequest;
@@ -17,6 +18,11 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         @JsonSubTypes.Type(value = LoggedUserResponse.class, name = "LoggedUser"),
         @JsonSubTypes.Type(value = TweetResponse.class, name = "tweet"),
         @JsonSubTypes.Type(value = ListResponse.class, name = "list"),
+        @JsonSubTypes.Type(value = MessageResponse.class, name = "message"),
+        @JsonSubTypes.Type(value = ChatInfoResponse.class, name = "chatInfo"),
+        @JsonSubTypes.Type(value = ChatResponse.class, name = "chat"),
+
+
 
 })
 

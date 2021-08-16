@@ -13,25 +13,30 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import models.LoggedUser;
+import models.requests.MessageRequest;
+import models.requests.TweetRequest;
+import models.responses.MessageResponse;
+import models.responses.Response;
+import models.responses.TweetResponse;
+import models.trimmed.TrimmedMessage;
 
 import java.util.ArrayList;
 
-public class MessageCard implements Controllers {
+public class MessageCard {
 
-    private long messageId;
+    private TrimmedMessage trimmedMessage;
+    private final long messageId;
     private VBox card;
-    private Label messageText;
-    private Label messageDate;
     private ImageView messageImage;
-    private ImageView profilePhoto;
-    private HBox buttonRow;
-    private HBox header;
-    private byte[] imageArray;
-    private byte[] profileImageArray;
+    private final HBox buttonRow;
+    private final HBox header;
     private MessageController.TYPE type;
-    private ArrayList<Button> buttons;
+    private final ArrayList<Button> buttons;
 
     public MessageCard(long messageId) {
+        Response response = new MessageRequest(LoggedUser.getToken() , LoggedUser.getId() , messageId).execute();
+        this.trimmedMessage = ((MessageResponse)response).getTrimmedMessage();
         this.messageId = messageId;
         this.card = new VBox(5);
         this.header = new HBox(3);
@@ -48,10 +53,10 @@ public class MessageCard implements Controllers {
         card.getChildren().clear();
         buttonRow.getChildren().clear();
         header.getChildren().clear();
-        this.messageText = new Label(MESSAGE_CONTROLLER.getMessageText(messageId));
-        this.messageDate = new Label(MESSAGE_CONTROLLER.getMessageDate(messageId));
+        Label messageText = new Label(trimmedMessage.getMessageText());
+        Label messageDate = new Label(trimmedMessage.getMessageDate());
 
-        imageArray = MESSAGE_CONTROLLER.getMessageImage(messageId);
+        byte[] imageArray = trimmedMessage.getImageArray();
 
         if(imageArray != null){
             messageImage.setImage(ImageController.byteArrayToImage(imageArray));
@@ -59,7 +64,7 @@ public class MessageCard implements Controllers {
             messageImage.setFitWidth(200);
         }
 
-        profileImageArray = MESSAGE_CONTROLLER.getSenderProfile(messageId);
+        byte[] profileImageArray = trimmedMessage.getProfileImageArray();
 
 
         messageText.setTextFill(Color.PURPLE);
@@ -69,11 +74,11 @@ public class MessageCard implements Controllers {
         messageDate.setTextFill(Color.DARKVIOLET);
         messageDate.setFont(Font.font(9));
 
-        String sender = MESSAGE_CONTROLLER.getMessageSender(messageId);
-        String grandSender = MESSAGE_CONTROLLER.getMessageGrandSender(messageId);
-        this.type = MESSAGE_CONTROLLER.getMessageType(messageId);
+        String sender = trimmedMessage.getSender();
+        String grandSender = trimmedMessage.getGrandSender();
+        this.type = trimmedMessage.getType();
 
-        profilePhoto = new ImageView();
+        ImageView profilePhoto = new ImageView();
         profilePhoto.setFitHeight(30);
         profilePhoto.setFitWidth(30);
         Rectangle clip = new Rectangle(
@@ -86,7 +91,7 @@ public class MessageCard implements Controllers {
 
         String forwardInfo = sender.equals(grandSender) ? "" : "forwarded from "+grandSender;
 
-        header.getChildren().addAll(profilePhoto , new Label(sender + ": ") , new Label(forwardInfo));
+        header.getChildren().addAll(profilePhoto, new Label(sender + ": ") , new Label(forwardInfo));
 
         initializeButtonRow();
 
@@ -127,7 +132,7 @@ public class MessageCard implements Controllers {
 
         delete.setOnAction(event -> {
             long id = Long.parseLong(delete.getId());
-            MESSAGE_CONTROLLER.deleteMessage(id);
+            new MessageController().deleteMessage(id);
             //TODO:     REFRESH
         });
 
@@ -144,7 +149,8 @@ public class MessageCard implements Controllers {
         });
 
         save.setOnAction(event -> {
-            MESSAGE_CONTROLLER.insertSavedMessage(Long.parseLong(save.getId()));
+            //todo
+            new MessageController().insertSavedMessage(Long.parseLong(save.getId()));
         });
 
     }

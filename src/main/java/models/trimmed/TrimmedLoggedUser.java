@@ -5,7 +5,7 @@ import models.LoggedUser;
 
 import java.util.Date;
 
-public class TrimmedLoggedUser implements Controllers {
+public class TrimmedLoggedUser{
 
     private long id;
     private String lastSeenStatus;

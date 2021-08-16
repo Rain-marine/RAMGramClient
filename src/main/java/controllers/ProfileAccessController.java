@@ -92,23 +92,4 @@ public class ProfileAccessController implements Repository {
         }
     }
 
-    public String checkFollowing() {
-        //Active, public, not block,
-        //am I following them?
-        List<User> loggedUserFollowing = loggedUser.getFollowings();
-        for (User user : loggedUserFollowing) {
-            if (user.getId() == otherUserId) {
-                FollowingProfileGuiController.setUser(otherUserId);
-                FollowingProfileGuiController.setPrevious(previousMenu);
-                FollowingProfileGuiController.setFactionId(factionId);
-                FollowingProfileGuiController.setProfileAccessController(this);
-                return "FXMLs/Profiles/FollowingProfile.fxml";
-            }
-        }
-
-        PublicProfileGuiController.setUser(otherUserId);
-        PublicProfileGuiController.setPrevious(previousMenu);
-        PublicProfileGuiController.setProfileAccessController(this);
-        return "FXMLs/Profiles/PublicProfile.fxml";
-    }
 }

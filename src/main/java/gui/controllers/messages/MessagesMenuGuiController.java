@@ -1,6 +1,5 @@
 package gui.controllers.messages;
 
-import controllers.Controllers;
 import gui.controllers.SceneLoader;
 import gui.controllers.popups.messaging.NewGroup;
 import gui.controllers.popups.messaging.SendNewMessage;
@@ -10,13 +9,17 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import models.LoggedUser;
+import models.requests.ListRequest;
+import models.responses.ListResponse;
+import models.responses.Response;
 import util.ConfigLoader;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class MessagesMenuGuiController implements Initializable, Controllers {
+public class MessagesMenuGuiController implements Initializable {
 
     @FXML
     private ScrollPane chatsArea;
@@ -28,7 +31,8 @@ public class MessagesMenuGuiController implements Initializable, Controllers {
 
     private void loadChats() {
         ChatShowerGuiController.setPreviousMenu(ChatShowerGuiController.PREVIOUS.DEFAULT);
-        List<Long> chatIds = CHAT_CONTROLLER.getChatsIds();
+        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.CHAT , 0L).execute();
+        List<Long> chatIds = ((ListResponse)response).getIds();
         if (chatIds.size() == 0){
             chatsArea.setContent(new Label("you have no chats"));
         }

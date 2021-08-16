@@ -1,6 +1,8 @@
 package models.requests;
 
 
+import models.responses.ChatInfoResponse;
+import models.responses.MessageResponse;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
@@ -26,6 +28,11 @@ import org.codehaus.jackson.map.ObjectMapper;
         @JsonSubTypes.Type(value = TweetActionRequest.class, name = "tweetAction"),
         @JsonSubTypes.Type(value = UserActionRequest.class, name = "userAction"),
         @JsonSubTypes.Type(value = AddCommentRequest.class, name = "addComment"),
+        @JsonSubTypes.Type(value = MessageRequest.class, name = "message"),
+        @JsonSubTypes.Type(value = ChatInfoRequest.class, name = "chatInfo"),
+        @JsonSubTypes.Type(value = ChatRequest.class, name = "chat"),
+
+
 
 
 })

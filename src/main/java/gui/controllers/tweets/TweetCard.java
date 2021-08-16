@@ -21,11 +21,9 @@ import javafx.scene.text.FontWeight;
 import models.LoggedUser;
 import models.Tweet;
 import models.User;
-import models.requests.AddCommentRequest;
-import models.requests.TweetActionRequest;
-import models.requests.TweetRequest;
-import models.requests.UserActionRequest;
+import models.requests.*;
 import models.responses.BooleanResponse;
+import models.responses.ListResponse;
 import models.responses.Response;
 import models.responses.TweetResponse;
 import models.trimmed.TrimmedTweet;
@@ -146,7 +144,8 @@ public class TweetCard {
             if (trimmedTweet.getCommentsIds().size() == 0) {
                 AlertBox.display("empty", "no comments to show");
             } else {
-                TweetShowerGuiController.setListOfTweets(trimmedTweet.getCommentsIds());
+                Response response3 = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.COMMENT , tweetId).execute();
+                TweetShowerGuiController.setListOfTweets(((ListResponse)response3).getIds());
                 TweetShowerGuiController.setPreviousMenu(finalMode == MODE.EXPLORER ? 1 : (finalMode == MODE.TIMELINE ? 2 : (finalMode == MODE.OWNER ? 6 : 5)));
                 SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("tweetShower"), event);
             }

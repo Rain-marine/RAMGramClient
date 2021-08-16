@@ -8,24 +8,34 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import models.LoggedUser;
+import models.requests.ChatRequest;
+import models.requests.MessageRequest;
+import models.responses.ChatResponse;
+import models.responses.MessageResponse;
+import models.responses.Response;
+import models.trimmed.TrimmedChat;
 import util.ConfigLoader;
 
-public class ChatCard implements Controllers {
+public class ChatCard {
 
+    private TrimmedChat trimmedChat;
     private final long chatId;
     private VBox card;
     private final boolean isGroup;
 
     public ChatCard(Long chatId) {
+        Response response = new ChatRequest(LoggedUser.getToken() , LoggedUser.getId() , chatId).execute();
+        this.trimmedChat = ((ChatResponse)response).getTrimmedChat();
         this.chatId = chatId;
         this.card = new VBox(5);
-        this.isGroup = CHAT_CONTROLLER.isGroup(chatId);
+        this.isGroup = trimmedChat.isGroup();
 
-        Label name = new Label(CHAT_CONTROLLER.getChatName(chatId));
+        Label name = new Label(trimmedChat.getName());
         name.setFont(Font.font(14));
         name.setTextFill(Color.INDIGO);
 
-        Label unseenCountLabel = new Label(CHAT_CONTROLLER.getUnseenCount(chatId));
+        Label unseenCountLabel = new Label(trimmedChat.getUnseenCount());
         unseenCountLabel.setFont(Font.font(11));
         unseenCountLabel.setTextFill(Color.MEDIUMVIOLETRED);
 

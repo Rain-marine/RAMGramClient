@@ -6,7 +6,7 @@ import repository.Repository;
 import java.util.ArrayList;
 
 
-public class TrimmedTweet implements Repository, Controllers {
+public class TrimmedTweet{
 
     private long Id;
     private long writerId;
@@ -19,18 +19,6 @@ public class TrimmedTweet implements Repository, Controllers {
     private String date;
 
     public TrimmedTweet() {
-    }
-
-    public TrimmedTweet(long id) {
-        Id = id;
-        this.writerId = TWEET_CONTROLLER.getWriterId(id);
-        this.tweetText = TWEET_CONTROLLER.getTweetText(id);
-        this.writerUsername = TWEET_CONTROLLER.getWriterUsername(id);
-        this.likedUsernames = TWEET_CONTROLLER.getLikedList(id);
-        this.tweetImage = TWEET_CONTROLLER.getTweetImage(id);
-        this.commentsIds = TWEET_CONTROLLER.getTweetComments(id);
-        this.writerProfile = USER_CONTROLLER.getProfilePhoto(writerId);
-        this.date = TWEET_CONTROLLER.getTweetDate(id);
     }
 
     public long getId() {

@@ -13,6 +13,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import gui.controllers.popups.messaging.AddMemberToGroupChat;
+import models.LoggedUser;
+import models.requests.ChatInfoRequest;
+import models.requests.ListRequest;
+import models.responses.ChatInfoResponse;
+import models.responses.ListResponse;
+import models.responses.Response;
+
 import javax.naming.SizeLimitExceededException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -37,9 +44,9 @@ public class GroupChatShowerGuiController implements Initializable, Controllers 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        CHAT_CONTROLLER.seeChat(groupId);
-        groupNameLabel.setText(CHAT_CONTROLLER.getChatName(groupId));
-        ArrayList<String> membersNames = CHAT_CONTROLLER.getMembersNames(groupId);
+        Response response = new ChatInfoRequest(LoggedUser.getToken() , LoggedUser.getId() ,groupId).execute();
+        groupNameLabel.setText(((ChatInfoResponse)response).getFrontUsername());
+        ArrayList<String> membersNames = ((ChatInfoResponse)response).getMembersNames();
         membersLabel.setText(String.join("\n" , membersNames));
         loadMessages();
 
@@ -72,7 +79,8 @@ public class GroupChatShowerGuiController implements Initializable, Controllers 
     private void loadMessages() {
         groupNameLabel.setText(CHAT_CONTROLLER.getChatName(groupId));
         VBox list = new VBox(5);
-        ArrayList<Long> messageIDs = CHAT_CONTROLLER.getMessages(groupId);
+        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.MESSAGE , groupId).execute();
+        ArrayList<Long> messageIDs = ((ListResponse)response).getIds();
         for (Long messageID : messageIDs) {
             list.getChildren().add(new MessageCard(messageID).getCard());
         }

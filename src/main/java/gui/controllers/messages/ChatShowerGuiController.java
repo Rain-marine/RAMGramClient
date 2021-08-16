@@ -5,6 +5,7 @@ import controllers.Controllers;
 import gui.controllers.ImageController;
 import gui.controllers.SceneLoader;
 import gui.controllers.popups.AlertBox;
+import gui.controllers.tweets.TweetShowerGuiController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -14,6 +15,12 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import models.LoggedUser;
+import models.requests.ChatInfoRequest;
+import models.requests.ListRequest;
+import models.responses.ChatInfoResponse;
+import models.responses.ListResponse;
+import models.responses.Response;
 
 import javax.naming.SizeLimitExceededException;
 import java.net.URL;
@@ -49,18 +56,18 @@ public class ChatShowerGuiController implements Initializable, Controllers {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        CHAT_CONTROLLER.seeChat(chatId);
         loadMessages();
     }
 
     private void loadMessages() {
-        long frontUserID = CHAT_CONTROLLER.getFrontUserId(chatId);
-        usernameLabel.setText(USER_CONTROLLER.getUsername(frontUserID));
-        profileImageview.setImage(ImageController.byteArrayToImage(USER_CONTROLLER.getProfilePhoto(frontUserID)));
-        lastSeenLabel.setText(SETTING_CONTROLLER.lastSeenForLoggedUser(frontUserID));
+        Response response = new ChatInfoRequest(LoggedUser.getToken() , LoggedUser.getId() ,chatId).execute();
+        usernameLabel.setText(((ChatInfoResponse)response).getFrontUsername());
+        profileImageview.setImage(ImageController.byteArrayToImage(((ChatInfoResponse)response).getFrontProfile()));
+        lastSeenLabel.setText(((ChatInfoResponse)response).getLastSeen());
 
         VBox list = new VBox(5);
-        ArrayList<Long> messageIDs = CHAT_CONTROLLER.getMessages(chatId);
+        Response response2 = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.MESSAGE , chatId).execute();
+        ArrayList<Long> messageIDs = ((ListResponse)response2).getIds();
         for (Long messageID : messageIDs) {
             list.getChildren().add(new MessageCard(messageID).getCard());
         }

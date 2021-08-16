@@ -30,13 +30,12 @@ public class TimeLineGuiController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        timer = new PauseTransition(Duration.seconds(Integer.parseInt(ConfigLoader.readProperty("refreshTime"))));
+        timer.setOnFinished(
+                e -> {
+                    updatePane();
+                });
         updatePane();
-//        timer = new PauseTransition(Duration.seconds(5));
-//        timer.setOnFinished(
-//                e -> {
-//                    updatePane();
-//                });
-//        timer.playFromStart();
 
     }
 
