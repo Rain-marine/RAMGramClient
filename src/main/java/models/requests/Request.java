@@ -30,7 +30,11 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         @JsonSubTypes.Type(value = ChatRequest.class, name = "chat"),
         @JsonSubTypes.Type(value = AddContentRequest.class, name = "addContent"),
         @JsonSubTypes.Type(value = LeaveGroupRequest.class, name = "leaveGroup"),
-        @JsonSubTypes.Type(value = DeleteMessageRequest.class, name = "deleteMessage"),
+        @JsonSubTypes.Type(value = MessageActionRequest.class, name = "messageAction"),
+        @JsonSubTypes.Type(value = ExploreRequest.class, name = "explore"),
+        @JsonSubTypes.Type(value = MessageAccessRequest.class, name = "messageAccess"),
+        @JsonSubTypes.Type(value = SendMessageRequest.class, name = "sendMessage"),
+
 
 
 

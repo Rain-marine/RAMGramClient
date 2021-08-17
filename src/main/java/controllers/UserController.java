@@ -3,6 +3,9 @@ package controllers;
 import models.Group;
 import models.LoggedUser;
 import models.User;
+import models.requests.ExploreRequest;
+import models.responses.ExploreResponse;
+import models.responses.Response;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import repository.Repository;
@@ -42,16 +45,12 @@ public class UserController implements Repository {
         FACTION_REPOSITORY.addUserToBlackList(loggedUser.getId(), userToBlock.getId());
     }
 
-    public void muteUser(long userId) {
-        USER_REPOSITORY.mute(LoggedUser.getLoggedUser().getId(), userId);
-    }
-
     public long getUserByUsername(String usernameToFind) throws NullPointerException {
-        User user = USER_REPOSITORY.getByUsername(usernameToFind);
-        if (user == null){
+        Response response = new ExploreRequest(LoggedUser.getToken() , LoggedUser.getId() , usernameToFind).execute();
+        if (((ExploreResponse)response).getFoundUserId() == 0){
             throw new NullPointerException();
         }
-        return user.getId();
+        return ((ExploreResponse)response).getFoundUserId();
     }
 
     public void reportUser(long userId) {
@@ -76,9 +75,6 @@ public class UserController implements Repository {
         USER_REPOSITORY.changeFullName(LoggedUser.getLoggedUser().getId(), newName);
     }
 
-    public void changeBirthday(Date birthday) {
-        USER_REPOSITORY.changeBirthdayDate(LoggedUser.getLoggedUser().getId(), birthday);
-    }
 
     public boolean changeEmail(String newEmail) {
         if (REGISTER_MANAGER.isEmailAvailable(newEmail)) {

@@ -1,7 +1,6 @@
 package gui.controllers.messages;
 
 import controllers.MessageController;
-import controllers.Controllers;
 import gui.controllers.ImageController;
 import gui.controllers.popups.messaging.EditMessage;
 import gui.controllers.popups.messaging.Forward;
@@ -14,17 +13,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import models.LoggedUser;
-import models.requests.*;
+import models.requests.AddContentRequest;
+import models.requests.MessageActionRequest;
+import models.requests.MessageRequest;
 import models.responses.MessageResponse;
 import models.responses.Response;
-import models.responses.TweetResponse;
 import models.trimmed.TrimmedMessage;
 
 import java.util.ArrayList;
 
 public class MessageCard {
 
-    private TrimmedMessage trimmedMessage;
+    private final TrimmedMessage trimmedMessage;
     private final long messageId;
     private VBox card;
     private ImageView messageImage;
@@ -131,7 +131,7 @@ public class MessageCard {
 
         delete.setOnAction(event -> {
             long id = Long.parseLong(delete.getId());
-            new DeleteMessageRequest(LoggedUser.getToken() , LoggedUser.getId() , id).execute();
+            new MessageActionRequest(LoggedUser.getToken() , LoggedUser.getId() , MessageActionRequest.TYPE.DELETE, id).execute();
             loadDeletedCard();
         });
 
@@ -158,23 +158,9 @@ public class MessageCard {
         buttonRow.getChildren().clear();
         header.getChildren().clear();
         Label messageText = new Label("message deleted");
-        Label messageDate = new Label(trimmedMessage.getMessageDate());
-
-        byte[] imageArray = trimmedMessage.getImageArray();
-
-        if (imageArray != null) {
-            messageImage.setImage(ImageController.byteArrayToImage(imageArray));
-            messageImage.setPreserveRatio(true);
-            messageImage.setFitWidth(200);
-        }
 
         byte[] profileImageArray = trimmedMessage.getProfileImageArray();
-
-
         String sender = trimmedMessage.getSender();
-        String grandSender = trimmedMessage.getGrandSender();
-        this.type = trimmedMessage.getType();
-
         ImageView profilePhoto = new ImageView();
         profilePhoto.setFitHeight(30);
         profilePhoto.setFitWidth(30);
@@ -186,13 +172,10 @@ public class MessageCard {
         profilePhoto.setClip(clip);
         profilePhoto.setImage(ImageController.byteArrayToImage(profileImageArray));
 
-        String forwardInfo = sender.equals(grandSender) ? "" : "forwarded from " + grandSender;
 
-        header.getChildren().addAll(profilePhoto, new Label(sender + ": "), new Label(forwardInfo));
+        header.getChildren().addAll(profilePhoto, new Label(sender + ": "));
 
-        initializeButtonRow();
-
-        card.getChildren().addAll(header, messageText, messageImage, messageDate, buttonRow);
+        card.getChildren().addAll(header, messageText);
         card.setId(String.valueOf(this.messageId));
     }
 

@@ -11,8 +11,10 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import models.LoggedUser;
+import models.requests.MessageActionRequest;
 
-public class EditMessage implements ConfirmBox, Controllers {
+public class EditMessage implements ConfirmBox {
 
     static boolean answer;
 
@@ -37,7 +39,7 @@ public class EditMessage implements ConfirmBox, Controllers {
 
         confirmButton.setOnAction(e -> {
             String text = newText.getText();
-            MESSAGE_CONTROLLER.editMessage(messageId ,text );
+            new MessageActionRequest(LoggedUser.getToken() , LoggedUser.getId() , MessageActionRequest.TYPE.EDIT, messageId , text).execute();
             answer = true;
             window.close();
         });

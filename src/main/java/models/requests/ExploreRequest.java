@@ -1,32 +1,31 @@
 package models.requests;
 
-import controllers.Controllers;
 import models.NetworkData;
-import models.responses.BooleanResponse;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
-@JsonTypeName("deleteMessage")
-public class DeleteMessageRequest implements Request {
+@JsonTypeName("explore")
+public class ExploreRequest implements Request{
 
     private String token;
     private long userId;
-    private long messageId;
+    private String usernameToFind;
 
-
-    public DeleteMessageRequest(String token, long userId, long messageId) {
+    public ExploreRequest(String token, long userId, String usernameToFind) {
         this.token = token;
         this.userId = userId;
-        this.messageId = messageId;
+        this.usernameToFind = usernameToFind;
     }
 
     @Override
     public Response execute() {
-       return NetworkData.sendRequest(this);
+        return NetworkData.sendRequest(this);
     }
 
-    public DeleteMessageRequest() {
+    public ExploreRequest() {
     }
+
+
 
     public String getToken() {
         return token;
@@ -44,11 +43,11 @@ public class DeleteMessageRequest implements Request {
         this.userId = userId;
     }
 
-    public long getMessageId() {
-        return messageId;
+    public String getUsernameToFind() {
+        return usernameToFind;
     }
 
-    public void setMessageId(long messageId) {
-        this.messageId = messageId;
+    public void setUsernameToFind(String usernameToFind) {
+        this.usernameToFind = usernameToFind;
     }
 }

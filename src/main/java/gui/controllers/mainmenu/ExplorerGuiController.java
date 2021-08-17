@@ -1,7 +1,6 @@
 package gui.controllers.mainmenu;
 
 import controllers.ProfileAccessController;
-import controllers.Controllers;
 import controllers.UserController;
 import gui.controllers.SceneLoader;
 import gui.controllers.popups.AlertBox;
@@ -61,7 +60,6 @@ public class ExplorerGuiController implements Initializable {
             AlertBox.display("Nerd Alert", "You gotta enter a name idiot!");
         } else {
             try {
-                //todo
                 long userId = new UserController().getUserByUsername(usernameToFind);
                 ProfileAccessController profileAccessController = new ProfileAccessController(1, userId, 0);
                 SceneLoader.getInstance().changeScene(profileAccessController.checkAccessibility(), actionEvent);
