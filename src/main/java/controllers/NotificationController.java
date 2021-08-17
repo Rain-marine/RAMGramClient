@@ -16,66 +16,6 @@ public class NotificationController implements Repository {
     public NotificationController() {
     }
 
-    public void sendFollowRequestToUser(long userId) {
-        User receiver = USER_REPOSITORY.getById(userId);
-        User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
-        Notification followRequestNotification = new Notification(loggedUser, receiver, NotificationType.FOLLOW_REQ);
-        NOTIFICATION_REPOSITORY.insert(followRequestNotification);
-        log.info( LoggedUser.getLoggedUser().getUsername() + " requested " + userId );
-    }
-
-    public void FollowUser(long userId) {
-        User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
-        User receiver = USER_REPOSITORY.getById(userId);
-        if (loggedUser.getFollowings().stream().noneMatch(it -> it.getId() == receiver.getId())) {
-            Notification followNotification = new Notification(loggedUser, receiver, NotificationType.START_FOLLOW);
-            NOTIFICATION_REPOSITORY.insert(followNotification);
-            NOTIFICATION_REPOSITORY.addNewFollower(receiver.getId(), loggedUser.getId());
-            //notificationRepository.addNewFollowing(loggedUser.getId(), receiver.getId());
-            log.info( LoggedUser.getLoggedUser().getUsername() + " followed " + userId );
-        }
-
-
-    }
-
-    public void unfollowUserWithNotification(long userId) {
-        User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
-        User receiver = USER_REPOSITORY.getById(userId);
-        Notification unfollowNotification = new Notification(loggedUser, receiver, NotificationType.UNFOLLOW);
-
-        NOTIFICATION_REPOSITORY.insert(unfollowNotification);
-        NOTIFICATION_REPOSITORY.removeFromFollowings(loggedUser.getId(), receiver.getId());
-        NOTIFICATION_REPOSITORY.removeFromFollowers(receiver.getId(), loggedUser.getId());
-
-        for (Group group : USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()).getGroups()) {
-            for (User member : group.getMembers()) {
-                if (member.getUsername().equals(receiver.getUsername())) {
-                    FACTION_REPOSITORY.removeUserFromGroup(receiver.getId(), group.getId());
-                    break;
-                }
-            }
-        }
-        log.info( LoggedUser.getLoggedUser().getUsername() + " unfollowed with notification " + userId );
-    }
-
-    public void unfollowUserWithoutNotification(long userId) {
-        User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
-
-        NOTIFICATION_REPOSITORY.removeFromFollowings(loggedUser.getId(), userId);
-        NOTIFICATION_REPOSITORY.removeFromFollowers(userId, loggedUser.getId());
-
-        List<Group> loggedUserGroups = USER_REPOSITORY.getById(loggedUser.getId()).getGroups();
-        for (Group group : loggedUserGroups) {
-            for (User member : group.getMembers()) {
-                if (member.getUsername().equals(USER_REPOSITORY.getById(userId).getUsername())) {
-                    FACTION_REPOSITORY.removeUserFromGroup(userId, group.getId());
-                    break;
-                }
-            }
-        }
-        log.info( LoggedUser.getLoggedUser().getUsername() + " unfollowed without notification " + userId );
-    }
-
     public List<Notification> getFollowingRequestsNotifications() {
         User user = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
         List<Notification> notifications = user.getReceiverNotifications();

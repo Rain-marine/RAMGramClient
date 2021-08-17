@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class MessageCard {
 
-    private final TrimmedMessage trimmedMessage;
+    private TrimmedMessage trimmedMessage;
     private final long messageId;
     private VBox card;
     private ImageView messageImage;
@@ -138,6 +138,8 @@ public class MessageCard {
         edit.setOnAction(event -> {
             boolean isEdited = EditMessage.display(Long.parseLong(edit.getId()));
             if (isEdited) {
+                Response response = new MessageRequest(LoggedUser.getToken(), LoggedUser.getId(), messageId).execute();
+                this.trimmedMessage = ((MessageResponse) response).getTrimmedMessage();
                 loadCard();
             }
 

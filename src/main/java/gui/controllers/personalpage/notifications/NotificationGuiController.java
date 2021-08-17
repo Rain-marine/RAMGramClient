@@ -19,10 +19,9 @@ public class NotificationGuiController implements Initializable, Controllers {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        if (USER_CONTROLLER.isAccountPublic(LoggedUser.getLoggedUser().getUsername())){
+        if (LoggedUser.getTrimmedLoggedUser().isPublic()){
             requestsToMeBtn.setDisable(true);
         }
-        
     }
 
 

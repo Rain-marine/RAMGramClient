@@ -11,6 +11,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
+import models.LoggedUser;
+import models.requests.UserActionRequest;
 import util.ConfigLoader;
 
 import java.net.URL;
@@ -60,7 +62,7 @@ public class PublicProfileGuiController implements Initializable, Controllers {
 
 
     public void followButtonClicked(ActionEvent actionEvent) {
-        NOTIFICATION_CONTROLLER.FollowUser(userId);
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionRequest.USER_ACTION.FOLLOW).execute();
         FollowingProfileGuiController.setUser(userId);
         FollowingProfileGuiController.setPrevious(previous);
         SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("followingProf"),actionEvent);
