@@ -1,11 +1,9 @@
 package gui.controllers.messages;
 
 import controllers.ProfileAccessController;
-import controllers.Controllers;
 import gui.controllers.ImageController;
 import gui.controllers.SceneLoader;
 import gui.controllers.popups.AlertBox;
-import gui.controllers.tweets.TweetShowerGuiController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import models.LoggedUser;
+import models.requests.AddContentRequest;
 import models.requests.ChatInfoRequest;
 import models.requests.ListRequest;
 import models.responses.ChatInfoResponse;
@@ -27,7 +26,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class ChatShowerGuiController implements Initializable, Controllers {
+public class ChatShowerGuiController implements Initializable {
 
     @FXML
     private ScrollPane messagesArea;
@@ -103,7 +102,7 @@ public class ChatShowerGuiController implements Initializable, Controllers {
             AlertBox.display("Nerd Alert" , "write something idiot");
         }
         else {
-            CHAT_CONTROLLER.addMessageToChat(chatId,messageText , chosenImageByteArray );
+            new AddContentRequest(LoggedUser.getToken() , LoggedUser.getId() , AddContentRequest.TYPE.MESSAGE , chosenImageByteArray ,messageText ,chatId ,0L).execute();
             chosenImageView.setImage(null);
             messageTextField.clear();
             loadMessages();

@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import models.LoggedUser;
+import models.requests.AddContentRequest;
 import models.requests.ListRequest;
 import models.responses.ListResponse;
 import models.responses.Response;
@@ -20,10 +21,9 @@ import models.responses.Response;
 import javax.naming.SizeLimitExceededException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
-public class SavedMessagesShowerGuiController implements Initializable, Controllers {
+public class SavedMessagesShowerGuiController implements Initializable {
 
     @FXML
     private ScrollPane messagesArea;
@@ -71,7 +71,7 @@ public class SavedMessagesShowerGuiController implements Initializable, Controll
             AlertBox.display("Nerd Alert" , "write something idiot");
         }
         else {
-            MESSAGE_CONTROLLER.addSavedMessage(messageText , chosenImageByteArray );
+            new AddContentRequest(LoggedUser.getToken() , LoggedUser.getId() , AddContentRequest.TYPE.NEW_SAVED_MESSAGE , chosenImageByteArray ,messageText ,0L ,0L).execute();
             chosenImageView.setImage(null);
             messageTextField.clear();
             loadMessages();

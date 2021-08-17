@@ -1,12 +1,9 @@
 package models.requests;
 
 
-import models.responses.ChatInfoResponse;
-import models.responses.MessageResponse;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.codehaus.jackson.map.ObjectMapper;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -31,6 +28,10 @@ import org.codehaus.jackson.map.ObjectMapper;
         @JsonSubTypes.Type(value = MessageRequest.class, name = "message"),
         @JsonSubTypes.Type(value = ChatInfoRequest.class, name = "chatInfo"),
         @JsonSubTypes.Type(value = ChatRequest.class, name = "chat"),
+        @JsonSubTypes.Type(value = AddContentRequest.class, name = "addContent"),
+        @JsonSubTypes.Type(value = LeaveGroupRequest.class, name = "leaveGroup"),
+        @JsonSubTypes.Type(value = DeleteMessageRequest.class, name = "deleteMessage"),
+
 
 
 

@@ -14,8 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import models.LoggedUser;
-import models.requests.MessageRequest;
-import models.requests.TweetRequest;
+import models.requests.*;
 import models.responses.MessageResponse;
 import models.responses.Response;
 import models.responses.TweetResponse;
@@ -35,8 +34,8 @@ public class MessageCard {
     private final ArrayList<Button> buttons;
 
     public MessageCard(long messageId) {
-        Response response = new MessageRequest(LoggedUser.getToken() , LoggedUser.getId() , messageId).execute();
-        this.trimmedMessage = ((MessageResponse)response).getTrimmedMessage();
+        Response response = new MessageRequest(LoggedUser.getToken(), LoggedUser.getId(), messageId).execute();
+        this.trimmedMessage = ((MessageResponse) response).getTrimmedMessage();
         this.messageId = messageId;
         this.card = new VBox(5);
         this.header = new HBox(3);
@@ -58,7 +57,7 @@ public class MessageCard {
 
         byte[] imageArray = trimmedMessage.getImageArray();
 
-        if(imageArray != null){
+        if (imageArray != null) {
             messageImage.setImage(ImageController.byteArrayToImage(imageArray));
             messageImage.setPreserveRatio(true);
             messageImage.setFitWidth(200);
@@ -89,13 +88,13 @@ public class MessageCard {
         profilePhoto.setClip(clip);
         profilePhoto.setImage(ImageController.byteArrayToImage(profileImageArray));
 
-        String forwardInfo = sender.equals(grandSender) ? "" : "forwarded from "+grandSender;
+        String forwardInfo = sender.equals(grandSender) ? "" : "forwarded from " + grandSender;
 
-        header.getChildren().addAll(profilePhoto, new Label(sender + ": ") , new Label(forwardInfo));
+        header.getChildren().addAll(profilePhoto, new Label(sender + ": "), new Label(forwardInfo));
 
         initializeButtonRow();
 
-        card.getChildren().addAll(header , messageText, messageImage , messageDate,buttonRow);
+        card.getChildren().addAll(header, messageText, messageImage, messageDate, buttonRow);
         card.setId(String.valueOf(this.messageId));
     }
 
@@ -108,7 +107,7 @@ public class MessageCard {
         buttons.add(save);
         buttonRow.getChildren().add(save);
 
-        switch (type){
+        switch (type) {
             case NONE -> buttonRow.getChildren().add(forward);
             case DELETE -> {
                 buttonRow.getChildren().addAll(forward, delete);
@@ -132,8 +131,8 @@ public class MessageCard {
 
         delete.setOnAction(event -> {
             long id = Long.parseLong(delete.getId());
-            new MessageController().deleteMessage(id);
-            //TODO:     REFRESH
+            new DeleteMessageRequest(LoggedUser.getToken() , LoggedUser.getId() , id).execute();
+            loadDeletedCard();
         });
 
         edit.setOnAction(event -> {
@@ -149,10 +148,52 @@ public class MessageCard {
         });
 
         save.setOnAction(event -> {
-            //todo
-            new MessageController().insertSavedMessage(Long.parseLong(save.getId()));
+            new AddContentRequest(LoggedUser.getToken() , LoggedUser.getId() , AddContentRequest.TYPE.SAVE_MESSAGE , null ,null,0L ,Long.parseLong(save.getId())).execute();
         });
 
+    }
+
+    private void loadDeletedCard() {
+        card.getChildren().clear();
+        buttonRow.getChildren().clear();
+        header.getChildren().clear();
+        Label messageText = new Label("message deleted");
+        Label messageDate = new Label(trimmedMessage.getMessageDate());
+
+        byte[] imageArray = trimmedMessage.getImageArray();
+
+        if (imageArray != null) {
+            messageImage.setImage(ImageController.byteArrayToImage(imageArray));
+            messageImage.setPreserveRatio(true);
+            messageImage.setFitWidth(200);
+        }
+
+        byte[] profileImageArray = trimmedMessage.getProfileImageArray();
+
+
+        String sender = trimmedMessage.getSender();
+        String grandSender = trimmedMessage.getGrandSender();
+        this.type = trimmedMessage.getType();
+
+        ImageView profilePhoto = new ImageView();
+        profilePhoto.setFitHeight(30);
+        profilePhoto.setFitWidth(30);
+        Rectangle clip = new Rectangle(
+                profilePhoto.getFitWidth(), profilePhoto.getFitHeight()
+        );
+        clip.setArcWidth(1000);
+        clip.setArcHeight(1000);
+        profilePhoto.setClip(clip);
+        profilePhoto.setImage(ImageController.byteArrayToImage(profileImageArray));
+
+        String forwardInfo = sender.equals(grandSender) ? "" : "forwarded from " + grandSender;
+
+        header.getChildren().addAll(profilePhoto, new Label(sender + ": "), new Label(forwardInfo));
+
+        initializeButtonRow();
+
+        card.getChildren().addAll(header, messageText, messageImage, messageDate, buttonRow);
+        card.setId(String.valueOf(this.messageId));
     }
 
     public VBox getCard() {

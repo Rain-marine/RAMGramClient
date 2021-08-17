@@ -1,6 +1,5 @@
 package gui.controllers.tweets;
 
-import controllers.Controllers;
 import gui.controllers.ImageController;
 import gui.controllers.SceneLoader;
 import gui.controllers.popups.AlertBox;
@@ -9,10 +8,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import models.LoggedUser;
+import models.requests.AddContentRequest;
 
 import javax.naming.SizeLimitExceededException;
 
-public class NewTweetGuiController implements Controllers {
+public class NewTweetGuiController{
 
     @FXML
     private TextField tweetText;
@@ -37,9 +38,10 @@ public class NewTweetGuiController implements Controllers {
         if (!tweetText.getText().equals("") || tweetImage != null){
             boolean answer = SimpleConfirmBox.display("confirmation" , "Are you sure?");
             if (answer){
-                TWEET_CONTROLLER.addTweet(tweetText.getText(),tweetImage);
+                new AddContentRequest(LoggedUser.getToken() , LoggedUser.getId() , AddContentRequest.TYPE.TWEET , tweetImage ,tweetText.getText() ,0L ,0L).execute();
                 AlertBox.display("Done!", "Tweet posted");
                 tweetText.setText("");
+                image.setImage(null);
             }
 
         }

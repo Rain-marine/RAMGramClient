@@ -14,7 +14,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import gui.controllers.popups.messaging.AddMemberToGroupChat;
 import models.LoggedUser;
+import models.requests.AddContentRequest;
 import models.requests.ChatInfoRequest;
+import models.requests.LeaveGroupRequest;
 import models.requests.ListRequest;
 import models.responses.ChatInfoResponse;
 import models.responses.ListResponse;
@@ -25,7 +27,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class GroupChatShowerGuiController implements Initializable, Controllers {
+public class GroupChatShowerGuiController implements Initializable {
 
     @FXML
     private Label groupNameLabel;
@@ -69,7 +71,7 @@ public class GroupChatShowerGuiController implements Initializable, Controllers 
             AlertBox.display("Nerd Alert" , "write something idiot");
         }
         else {
-            CHAT_CONTROLLER.addNewMessageToGroupChat(messageText , chosenImageByteArray , groupId );
+            new AddContentRequest(LoggedUser.getToken() , LoggedUser.getId() , AddContentRequest.TYPE.GROUP_MESSAGE , chosenImageByteArray ,messageText ,groupId,0L).execute();
             chosenImageView.setImage(null);
             messageTextField.clear();
             loadMessages();
@@ -77,7 +79,8 @@ public class GroupChatShowerGuiController implements Initializable, Controllers 
     }
 
     private void loadMessages() {
-        groupNameLabel.setText(CHAT_CONTROLLER.getChatName(groupId));
+        Response infoResponse = new ChatInfoRequest(LoggedUser.getToken() , LoggedUser.getId() ,groupId).execute();
+        groupNameLabel.setText(((ChatInfoResponse)infoResponse).getFrontUsername());
         VBox list = new VBox(5);
         Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.MESSAGE , groupId).execute();
         ArrayList<Long> messageIDs = ((ListResponse)response).getIds();
@@ -98,14 +101,15 @@ public class GroupChatShowerGuiController implements Initializable, Controllers 
     public void addMemberButtonClicked(ActionEvent actionEvent) {
         if (AddMemberToGroupChat.display(groupId))
         {
-            ArrayList<String> membersNames = CHAT_CONTROLLER.getMembersNames(groupId);
+            Response infoResponse = new ChatInfoRequest(LoggedUser.getToken() , LoggedUser.getId() ,groupId).execute();
+            ArrayList<String> membersNames = ((ChatInfoResponse)infoResponse).getMembersNames();
             membersLabel.setText(String.join("\n" , membersNames));
         }
 
     }
 
     public void leaveButtonClicked(ActionEvent actionEvent) {
-        CHAT_CONTROLLER.leaveGroup(groupId);
+        new LeaveGroupRequest(LoggedUser.getToken(),LoggedUser.getId() , groupId).execute();
         SceneLoader.getInstance().messaging(actionEvent);
 
     }
