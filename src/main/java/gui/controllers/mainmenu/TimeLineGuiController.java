@@ -21,7 +21,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class TimeLineGuiController implements Initializable {
+public class TimeLineGuiController implements Initializable , Controllers{
 
     @FXML
     private ScrollPane tweetsArea;
@@ -42,8 +42,7 @@ public class TimeLineGuiController implements Initializable {
     private void updatePane() {
         System.out.println("updating...");
         VBox list = new VBox(0);
-        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.TIMELINE , 0L).execute();
-        ArrayList<Long> listOfTweets = ((ListResponse) response).getIds();
+        ArrayList<Long> listOfTweets = TWEET_CONTROLLER.getFollowingTweets();
         for (long tweet : listOfTweets) {
             list.getChildren().add(new TweetCard(tweet , TweetCard.MODE.TIMELINE).getVBox());
         }

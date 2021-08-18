@@ -3,6 +3,9 @@ package controllers;
 import models.LoggedUser;
 import models.Tweet;
 import models.User;
+import models.requests.ListRequest;
+import models.responses.ListResponse;
+import models.responses.Response;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import repository.Repository;
@@ -30,61 +33,18 @@ public class TweetController implements Repository {
     }
 
     public ArrayList<Long> getAllTweets(long userId) {
-        User user = USER_REPOSITORY.getById(userId);
-        List<Tweet> userAllTweets = TWEET_REPOSITORY.getAllTweets(user.getId());
-        userAllTweets.addAll(user.getRetweetTweets());
-        List<Tweet> finalTweets =  userAllTweets.stream().sorted(Comparator.comparing(Tweet::getTweetDateTime)).
-                collect(Collectors.toList());
-        ArrayList<Long> finalTweetsIDs = new ArrayList<>();
-        for (Tweet finalTweet : finalTweets) {
-            finalTweetsIDs.add(finalTweet.getId());
-        }
-        return finalTweetsIDs;
+        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.TWEETS , userId).execute();
+        return ((ListResponse) response).getIds();
     }
 
     public ArrayList<Long> getTopTweets() {
-        User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
-        List<Tweet> topTweets = TWEET_REPOSITORY.getTopTweets(LoggedUser.getLoggedUser().getId());
-        ArrayList<Long> topTweetsIDs = new ArrayList<>();
-        for (Tweet topTweet : topTweets) {
-            User topTweetUser = USER_REPOSITORY.getById(topTweet.getUser().getId());
-            if (topTweetUser.getBlackList().stream().noneMatch(it -> it.getId() == LoggedUser.getLoggedUser().getId())) {
-                if(loggedUser.getMutedUsers().stream().noneMatch(it -> it.getId() == topTweetUser.getId()))
-                    topTweetsIDs.add(topTweet.getId());
-            }
-        }
-        return topTweetsIDs;
-
-
-
+        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.EXPLORER , 0L).execute();
+        return ((ListResponse) response).getIds();
     }
 
     public ArrayList<Long> getFollowingTweets() {
-        List<Tweet> followingTweets = new ArrayList<>();
-        User currentUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
-        List<User> following = factionsController.getActiveFollowings();
-        List<User> muted = currentUser.getMutedUsers();
-
-        for (User user : following) {
-            if (muted.stream().noneMatch(it -> it.getId() == user.getId())) {
-                followingTweets.addAll(getAllTweetsModel(user));
-            }
-        }
-        List<Tweet> finalTweetList = followingTweets.stream().sorted(Comparator.comparing(Tweet::getTweetDateTime).reversed()).
-                 collect(Collectors.toList());
-        ArrayList<Long> finalTweetsIDs = new ArrayList<>();
-        for (Tweet tweet : finalTweetList) {
-            finalTweetsIDs.add(tweet.getId());
-        }
-        return finalTweetsIDs;
-    }
-
-    private List<Tweet> getAllTweetsModel(User rawUser) {
-        User user = USER_REPOSITORY.getByUsername(rawUser.getUsername());
-        List<Tweet> userAllTweets = TWEET_REPOSITORY.getAllTweets(user.getId());
-        userAllTweets.addAll(user.getRetweetTweets());
-        return userAllTweets.stream().sorted(Comparator.comparing(Tweet::getTweetDateTime)).
-                collect(Collectors.toList());
+        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.TIMELINE , 0L).execute();
+        return ((ListResponse) response).getIds();
     }
 
     public void saveTweet(long tweetId) {
@@ -97,15 +57,6 @@ public class TweetController implements Repository {
     }
 
     public boolean reportSpam(long currentTweetId) {
-        Tweet reportedTweet = TWEET_REPOSITORY.getById(currentTweetId);
-        if (reportedTweet.getReportCounter() >= 2 ){
-            TWEET_REPOSITORY.delete(reportedTweet.getId());
-            return true;
-        }
-        else {
-            TWEET_REPOSITORY.increaseReportCount(currentTweetId);
-            USER_REPOSITORY.addReportedTweet(currentTweetId, LoggedUser.getLoggedUser().getId());
-        }
         return false;
     }
 

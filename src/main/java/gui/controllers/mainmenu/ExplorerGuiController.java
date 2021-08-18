@@ -1,5 +1,6 @@
 package gui.controllers.mainmenu;
 
+import controllers.Controllers;
 import controllers.ProfileAccessController;
 import controllers.UserController;
 import gui.controllers.SceneLoader;
@@ -20,7 +21,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class ExplorerGuiController implements Initializable {
+public class ExplorerGuiController implements Initializable, Controllers {
 
     @FXML
     private TextField searchField;
@@ -32,8 +33,7 @@ public class ExplorerGuiController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.EXPLORER , 0L).execute();
-        ArrayList<Long> listOfTweets = ((ListResponse) response).getIds();
+        ArrayList<Long> listOfTweets = TWEET_CONTROLLER.getTopTweets();
         VBox list = new VBox(0);
         for (Long tweet : listOfTweets) {
             list.getChildren().add(new TweetCard(tweet, TweetCard.MODE.EXPLORER).getVBox());

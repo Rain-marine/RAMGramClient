@@ -4,6 +4,7 @@ import models.Group;
 import models.LoggedUser;
 import models.User;
 import models.requests.ExploreRequest;
+import models.requests.UserActionRequest;
 import models.responses.ExploreResponse;
 import models.responses.Response;
 import org.apache.log4j.LogManager;
@@ -22,27 +23,7 @@ public class UserController implements Repository {
     }
 
     public void blockUser(long userToBlockId) {
-        User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
-        User userToBlock = USER_REPOSITORY.getById(userToBlockId);
-        for (User user : loggedUser.getFollowers())
-            if(user.getUsername().equals(userToBlock.getUsername())) {
-                NOTIFICATION_REPOSITORY.removeFromFollowers(loggedUser.getId(), user.getId());
-                break;
-            }
-        for (User user : USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()).getFollowings())
-            if(user.getUsername().equals(userToBlock.getUsername())) {
-                NOTIFICATION_REPOSITORY.removeFromFollowings(loggedUser.getId(), user.getId());
-                break;
-            }
-        for (Group group : USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()).getGroups()) {
-            for (User member : group.getMembers()) {
-                if(member.getUsername().equals(userToBlock.getUsername())) {
-                    FACTION_REPOSITORY.removeUserFromGroup(member.getId(), group.getId());
-                    break;
-                }
-            }
-        }
-        FACTION_REPOSITORY.addUserToBlackList(loggedUser.getId(), userToBlock.getId());
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userToBlockId , UserActionRequest.USER_ACTION.BLOCK).execute();
     }
 
     public long getUserByUsername(String usernameToFind) throws NullPointerException {
@@ -54,8 +35,8 @@ public class UserController implements Repository {
     }
 
     public void reportUser(long userId) {
-        USER_REPOSITORY.increaseReportCount(userId);
-        log.warn(userId + " account was reported");
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionRequest.USER_ACTION.REPORT).execute();
+
     }
 
     public boolean ChangeUsername(String newUsername) {
@@ -95,12 +76,10 @@ public class UserController implements Repository {
     }
 
     public void unblockUser(long userId) {
-        USER_REPOSITORY.unblock(LoggedUser.getLoggedUser().getId(), userId);
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionRequest.USER_ACTION.UNBLOCK).execute();
+
     }
 
-    public boolean isAccountPublic(String username) {
-        return USER_REPOSITORY.getByUsername(username).isPublic();
-    }
 
     public void changeProfilePhoto(byte[] newPhoto){
         USER_REPOSITORY.changeProfilePhoto(LoggedUser.getLoggedUser().getId(), newPhoto);
