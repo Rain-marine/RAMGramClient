@@ -34,6 +34,9 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         @JsonSubTypes.Type(value = ExploreRequest.class, name = "explore"),
         @JsonSubTypes.Type(value = MessageAccessRequest.class, name = "messageAccess"),
         @JsonSubTypes.Type(value = SendMessageRequest.class, name = "sendMessage"),
+        @JsonSubTypes.Type(value = NotificationRequest.class, name = "notification"),
+        @JsonSubTypes.Type(value = FactionActionRequest.class, name = "factionAction"),
+
 
 
 

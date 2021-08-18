@@ -3,12 +3,20 @@ package controllers;
 import models.Group;
 import models.LoggedUser;
 import models.User;
+import models.requests.ListRequest;
+import models.requests.MessageAccessRequest;
+import models.responses.BooleanResponse;
+import models.responses.FactionResponse;
+import models.responses.Response;
+import models.trimmed.TrimmedFaction;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import repository.Repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FactionsController implements Repository {
 
@@ -29,61 +37,37 @@ public class FactionsController implements Repository {
     }
 
     public boolean canAddToGroup(String username) {
-        User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
-        List<User> followings = loggedUser.getFollowings();
-        for (User user : followings) {
-            if(username.equals(user.getUsername())){
-                if(user.isActive())
-                    return true;
-            }
-        }
-        return false;
+        Response response = new MessageAccessRequest(LoggedUser.getToken() , LoggedUser.getId() , MessageAccessRequest.TYPE.FACTION , username).execute();
+        return ((BooleanResponse)response).isResult();
     }
 
-    public List<Group> getFactions() {
-        User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
-        return loggedUser.getGroups();
+    public List<TrimmedFaction> getFactions() {
+        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.FACTION , 0L).execute();
+        return ((FactionResponse)response).getTrimmedFactions();
     }
 
-    public List<User> getActiveFollowers() {
-        List<User> followers = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()).getFollowers();
-        List<User> activeFollowers = new ArrayList<>();
-        followers.forEach(following -> {
-            if (following.isActive())
-                activeFollowers.add(following);
-        });
-        return activeFollowers;
+    public HashMap<Long, String> getActiveFollowers() {
+        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.FOLLOWERS , 0L).execute();
+        return (((FactionResponse)response).getTrimmedFactions()).get(0).getMembers();
     }
 
-    public List<User> getActiveFollowings() {
-        List<User> followings = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()).getFollowings();
-        List<User> activeFollowings = new ArrayList<>();
-        followings.forEach(following -> {
-            if (following.isActive())
-                activeFollowings.add(following);
-        });
-        return activeFollowings;
+    public HashMap<Long, String> getActiveFollowings() {
+        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.BLACKLIST , 0L).execute();
+        return (((FactionResponse)response).getTrimmedFactions()).get(0).getMembers();
     }
 
-    public List<User> getActiveBlockedUsers() {
-        List<User> blockedUsers = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()).getBlackList();
-        List<User> activeBlockedUsers = new ArrayList<>();
-        blockedUsers.forEach(following -> {
-            if(following.isActive())
-                activeBlockedUsers.add(following);
-        });
-        return activeBlockedUsers;
+    public HashMap<Long, String> getActiveBlockedUsers() {
+        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.FOLLOWERS , 0L).execute();
+        return (((FactionResponse)response).getTrimmedFactions()).get(0).getMembers();
     }
 
-    public List<User> getGroupMembers(int factionId) {
-        Group faction = FACTION_REPOSITORY.getFactionById(factionId);
-        return faction.getMembers();
+    public HashMap<Long, String> getGroupMembers(int factionId) {
+        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.FACTION , 0L).execute();
+        return (((FactionResponse)response).getTrimmedFactions()).stream().filter(it -> it.getId() == factionId).findAny().orElseThrow().getMembers();
     }
 
-    public void deleteFaction(int groupId) {
-        FACTION_REPOSITORY.deleteFaction(groupId);
-        USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()).getGroups().remove(FACTION_REPOSITORY.getFactionById(groupId));
-        //LoggedUser.setLoggedUser(userRepository.getById(LoggedUser.getLoggedUser().getId()));
+    public void deleteFaction(int factionId) {
+
     }
 
     public void deleteUserFromFaction(int factionId, long userId) {
@@ -94,12 +78,9 @@ public class FactionsController implements Repository {
         FACTION_REPOSITORY.addUserToFaction(factionId, USER_REPOSITORY.getByUsername(username).getId());
     }
 
-    public ArrayList<String> getFactionNames() {
+    public List<String> getFactionNames() {
         ArrayList<String> factionNames = new ArrayList<>();
-        List<Group> factions = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId()).getGroups();
-        for (Group faction : factions) {
-            factionNames.add(faction.getName());
-        }
-        return factionNames;
+        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.FACTION , 0L).execute();
+        return (((FactionResponse)response).getTrimmedFactions()).stream().map(it -> it.getName()).collect(Collectors.toList());
     }
 }

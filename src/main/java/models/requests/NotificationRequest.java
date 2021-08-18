@@ -1,34 +1,30 @@
 package models.requests;
 
-import controllers.Controllers;
 import models.NetworkData;
-import models.responses.BooleanResponse;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
-@JsonTypeName("messageAccess")
-public class MessageAccessRequest implements Request {
+@JsonTypeName("notification")
+public class NotificationRequest implements Request {
 
-    public enum TYPE {USER, GROUP , FACTION}
+    public enum TYPE {SYSTEM , REQUESTS , REQ_TO_ME}
 
     private String token;
     private long userId;
     private TYPE type;
-    private String targetUsername;
 
-    public MessageAccessRequest(String token, long userId, TYPE type, String targetUsername) {
+    public NotificationRequest() {
+    }
+
+    public NotificationRequest(String token, long userId, TYPE type) {
         this.token = token;
         this.userId = userId;
         this.type = type;
-        this.targetUsername = targetUsername;
     }
 
     @Override
     public Response execute() {
         return NetworkData.sendRequest(this);
-    }
-
-    public MessageAccessRequest() {
     }
 
     public String getToken() {
@@ -53,13 +49,5 @@ public class MessageAccessRequest implements Request {
 
     public void setType(TYPE type) {
         this.type = type;
-    }
-
-    public String getTargetUsername() {
-        return targetUsername;
-    }
-
-    public void setTargetUsername(String targetUsername) {
-        this.targetUsername = targetUsername;
     }
 }

@@ -17,6 +17,7 @@ import models.User;
 import util.ConfigLoader;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -35,21 +36,21 @@ public class FactionUsersGuiController implements Initializable, Controllers {
     }
 
     private void loadUsers() {
-        List<User> members = FACTIONS_CONTROLLER.getGroupMembers(factionID);
+        HashMap<Long, String> members = FACTIONS_CONTROLLER.getGroupMembers(factionID);
         VBox list = new VBox(5);
-        for (User member : members) {
+        for (Long memberId : members.keySet()) {
             HBox userCard = new HBox(5);
-            Label name = new Label(member.getUsername());
+            Label name = new Label(members.get(memberId));
             Button deleteUser = new Button("remove");
-            deleteUser.setId(String.valueOf(member.getId()));
+            deleteUser.setId(String.valueOf(memberId));
             deleteUser.setOnAction(event -> {
                 FACTIONS_CONTROLLER.deleteUserFromFaction(factionID , Long.parseLong(deleteUser.getId()));
                 loadUsers();
             });
             Button profile = new Button("profile");
-            profile.setId(String.valueOf(member.getId()));
+            profile.setId(String.valueOf(memberId));
             profile.setOnAction(event -> {
-                ProfileAccessController profileAccessController = new ProfileAccessController(ConfigLoader.getPreviousMenuCode("factions"), member.getId(), factionID);
+                ProfileAccessController profileAccessController = new ProfileAccessController(ConfigLoader.getPreviousMenuCode("factions"), memberId, factionID);
                 SceneLoader.getInstance().changeScene(profileAccessController.checkAccessibility(), event);
             });
 

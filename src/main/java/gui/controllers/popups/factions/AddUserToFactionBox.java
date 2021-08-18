@@ -44,7 +44,7 @@ public class AddUserToFactionBox implements ConfirmBox, Controllers {
                     error.setText("Cannot add " + username + " to the group!.\nYou must follow The user");
                     textField.setText("");
                 }
-                else if(FACTIONS_CONTROLLER.getGroupMembers(factionId).stream().noneMatch(it -> it.getUsername().equals(username))) {
+                else if(!FACTIONS_CONTROLLER.getGroupMembers(factionId).containsValue(username)) {
                     FACTIONS_CONTROLLER.addUserToFaction(factionId, username);
                     error.setText("user Added");
                     answer = true;

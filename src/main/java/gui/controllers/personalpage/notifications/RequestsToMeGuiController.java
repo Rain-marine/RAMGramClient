@@ -11,6 +11,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import models.Notification;
+import models.trimmed.TrimmedNotification;
 import util.ConfigLoader;
 
 import java.net.URL;
@@ -29,30 +30,30 @@ public class RequestsToMeGuiController implements Initializable, Controllers {
     }
 
     private void loadNotifications() {
-        List<Notification> followingRequestNotification = NOTIFICATION_CONTROLLER.getFollowingRequestsNotifications();
+        List<TrimmedNotification> followingRequestNotification = NOTIFICATION_CONTROLLER.getFollowingRequestsNotifications();
         if (followingRequestNotification.size() == 0) {
             Label nothing = new Label("You have no requests \nCause everybody hates you\nAnd you look like a monkey");
             notifArea.setContent(nothing);
         }
         else{
             VBox list = new VBox(10);
-            for (Notification notification : followingRequestNotification) {
-                Label title = new Label( notification.getSender().getUsername() + " wants to follow you");
+            for (TrimmedNotification notification : followingRequestNotification) {
+                Label title = new Label( notification.getSender() + " wants to follow you");
                 Button accept = new Button("Accept");
                 accept.setOnAction(event -> {
-                    NOTIFICATION_CONTROLLER.acceptFollowRequest(notification);
+                    NOTIFICATION_CONTROLLER.acceptFollowRequest(notification.getId());
                     loadNotifications();
                 });
 
                 Button reject = new Button("Reject Quietly");
                 reject.setOnAction(event -> {
-                    NOTIFICATION_CONTROLLER.rejectFollowRequestWithoutNotification(notification);
+                    NOTIFICATION_CONTROLLER.rejectFollowRequestWithoutNotification(notification.getId());
                     loadNotifications();
                 });
 
                 Button rejectAndNotify = new Button("Reject & Notify");
                 rejectAndNotify.setOnAction(event -> {
-                    NOTIFICATION_CONTROLLER.rejectFollowRequestWithNotification(notification);
+                    NOTIFICATION_CONTROLLER.rejectFollowRequestWithNotification(notification.getId());
                     loadNotifications();
                 });
 

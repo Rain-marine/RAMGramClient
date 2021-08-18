@@ -12,6 +12,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import models.Group;
+import models.trimmed.TrimmedFaction;
 import util.ConfigLoader;
 
 import java.net.URL;
@@ -30,9 +31,9 @@ public class FactionListGuiController implements Initializable , Controllers {
     }
 
     private void loadFactions() {
-        List<Group> factions = FACTIONS_CONTROLLER.getFactions();
+        List<TrimmedFaction> factions = FACTIONS_CONTROLLER.getFactions();
         VBox list = new VBox(10);
-        for (Group faction : factions) {
+        for (TrimmedFaction faction : factions) {
             Label factionName = new Label(faction.getName());
             Button show = new Button("show");
             show.setId(String.valueOf(faction.getId()));

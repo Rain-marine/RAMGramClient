@@ -1,93 +1,56 @@
 package controllers;
 
 import models.*;
+import models.requests.NotificationRequest;
+import models.requests.UserActionRequest;
+import models.responses.NotificationResponse;
+import models.responses.Response;
+import models.trimmed.TrimmedNotification;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import repository.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 public class NotificationController implements Repository {
-    private final static Logger log = LogManager.getLogger(NotificationController.class);
 
     public NotificationController() {
     }
 
-    public List<Notification> getFollowingRequestsNotifications() {
-        User user = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
-        List<Notification> notifications = user.getReceiverNotifications();
-        List<Notification> followNotification = new ArrayList<>();
-        for (Notification notification : notifications) {
-            if (notification.getReceiver().getUsername().equals(LoggedUser.getLoggedUser().getUsername())) {
-                if (notification.getType() == NotificationType.FOLLOW_REQ)
-                    followNotification.add(notification);
-            }
-        }
-        return followNotification;
+    public List<TrimmedNotification> getFollowingRequestsNotifications() {
+        Response response = new NotificationRequest(LoggedUser.getToken(),LoggedUser.getId() , NotificationRequest.TYPE.REQ_TO_ME).execute();
+        return ((NotificationResponse)response).getTrimmedNotifications();
     }
 
-    public List<Notification> getYourFollowingRequestNotification() {
-        User user = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
-        List<Notification> notifications = user.getSenderNotifications();
-        List<Notification> followNotification = new ArrayList<>();
-        for (Notification notification : notifications) {
-            if (notification.getSender().getUsername().equals(LoggedUser.getLoggedUser().getUsername())) {
-                if (notification.getType() == NotificationType.FOLLOW_REQ)
-                    followNotification.add(notification);
-            }
-        }
-        return followNotification;
+    public List<TrimmedNotification> getYourFollowingRequestNotification() {
+        Response response = new NotificationRequest(LoggedUser.getToken(),LoggedUser.getId() , NotificationRequest.TYPE.REQUESTS).execute();
+        return ((NotificationResponse)response).getTrimmedNotifications();
     }
 
-    public List<Notification> getSystemNotification() {
-        User user = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
-        List<Notification> notifications = user.getReceiverNotifications();
-        List<Notification> followNotification = new ArrayList<>();
-        for (Notification notification : notifications) {
-            if (notification.getReceiver().getUsername().equals(LoggedUser.getLoggedUser().getUsername())) {
-                if (notification.getType() != NotificationType.FOLLOW_REQ)
-                    followNotification.add(notification);
-            }
-        }
-        return followNotification;
+    public List<TrimmedNotification> getSystemNotification() {
+        Response response = new NotificationRequest(LoggedUser.getToken(),LoggedUser.getId() , NotificationRequest.TYPE.SYSTEM).execute();
+        return ((NotificationResponse)response).getTrimmedNotifications();
     }
 
-    public void acceptFollowRequest(Notification notification) {
-        deleteNotification(notification);
+    public void acceptFollowRequest(long notification) {
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , notification , UserActionRequest.USER_ACTION.ACCEPT).execute();
 
-        NOTIFICATION_REPOSITORY.addNewFollower(LoggedUser.getLoggedUser().getId(), notification.getSender().getId());
-        //notificationRepository.addNewFollowing(notification.getSender().getId(), LoggedUser.getLoggedUser().getId());
-        log.info( LoggedUser.getLoggedUser().getUsername() + " accepted " + notification.getSender().getUsername() );
     }
 
-    public void rejectFollowRequestWithNotification(Notification notification) {
-        User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
-        User requestSender = USER_REPOSITORY.getById(notification.getSender().getId());
-        Notification rejectFollowRequest = new Notification(loggedUser, requestSender, NotificationType.FOLLOW_REQ_REJECT);
-        NOTIFICATION_REPOSITORY.insert(rejectFollowRequest);
+    public void rejectFollowRequestWithNotification(long notification) {
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , notification , UserActionRequest.USER_ACTION.REJECT).execute();
 
-        deleteNotification(notification);
     }
 
-    public void rejectFollowRequestWithoutNotification(Notification notification) {
-        deleteNotification(notification);
+    public void rejectFollowRequestWithoutNotification(long notification) {
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , notification , UserActionRequest.USER_ACTION.QUIET_REJECT).execute();
+
     }
 
-    public void deleteNotification(Notification notification) {
-        NOTIFICATION_REPOSITORY.deleteNotification(notification.getId());
-        User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
-        loggedUser.getReceiverNotifications().remove(notification);
+    public void deleteNotification(long notification) {
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , notification , UserActionRequest.USER_ACTION.DELETE_NOTIF).execute();
+
     }
 
-    public void deleteRequest(long rawUserId) {
-        User user = USER_REPOSITORY.getById(rawUserId);
-        long loggedUserId = LoggedUser.getLoggedUser().getId();
-        Notification request = user.getReceiverNotifications().stream()
-                .filter(it -> ((it.getSender().getId() == loggedUserId) && (it.getType() == NotificationType.FOLLOW_REQ)))
-                .collect(Collectors.toList()).get(0);
-        NOTIFICATION_REPOSITORY.deleteNotification(request.getId());
-    }
 }

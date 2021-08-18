@@ -22,6 +22,8 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         @JsonSubTypes.Type(value = ChatInfoResponse.class, name = "chatInfo"),
         @JsonSubTypes.Type(value = ChatResponse.class, name = "chat"),
         @JsonSubTypes.Type(value = ExploreResponse.class, name = "explore"),
+        @JsonSubTypes.Type(value = NotificationResponse.class, name = "notification"),
+        @JsonSubTypes.Type(value = FactionResponse.class, name = "faction"),
 
 
 

@@ -46,7 +46,7 @@ public class CreatFactionBox implements ConfirmBox, Controllers {
         Button cancelButton = new Button("Cancel");
         Button createButton = new Button("Create");
 
-        ArrayList<String> existingFactions = FACTIONS_CONTROLLER.getFactionNames();
+        List<String> existingFactions = FACTIONS_CONTROLLER.getFactionNames();
         List<String> users = new ArrayList<>();
 
 

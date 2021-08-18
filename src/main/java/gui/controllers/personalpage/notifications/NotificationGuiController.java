@@ -1,6 +1,5 @@
 package gui.controllers.personalpage.notifications;
 
-import controllers.Controllers;
 import gui.controllers.SceneLoader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,7 +11,7 @@ import util.ConfigLoader;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class NotificationGuiController implements Initializable, Controllers {
+public class NotificationGuiController implements Initializable {
 
     @FXML
     private Button requestsToMeBtn;

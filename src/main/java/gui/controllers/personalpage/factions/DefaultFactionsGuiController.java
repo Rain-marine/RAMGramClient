@@ -15,6 +15,7 @@ import models.User;
 import util.ConfigLoader;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -29,7 +30,7 @@ public class DefaultFactionsGuiController implements Initializable, Controllers 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        List<User> members = null;
+        HashMap<Long, String> members;
         int factionID = 0;
         switch (list){
             case FOLLOWER -> {
@@ -43,16 +44,17 @@ public class DefaultFactionsGuiController implements Initializable, Controllers 
             case BLACKLIST -> {members = FACTIONS_CONTROLLER.getActiveBlockedUsers();
                 factionID = -3;
             }
+            default -> throw new IllegalStateException("Unexpected value: " + list);
         }
         VBox userList = new VBox(5);
-        for (User member : members) {
+        for (Long memberId : members.keySet()) {
             HBox userCard = new HBox(5);
-            Label name = new Label(member.getUsername());
+            Label name = new Label(members.get(memberId));
             Button profile = new Button("profile");
-            profile.setId(String.valueOf(member.getId()));
+            profile.setId(String.valueOf(memberId));
             int finalFactionID = factionID;
             profile.setOnAction(event -> {
-                ProfileAccessController profileAccessController = new ProfileAccessController(4, member.getId(), finalFactionID);
+                ProfileAccessController profileAccessController = new ProfileAccessController(4, memberId, finalFactionID);
                 SceneLoader.getInstance().changeScene(profileAccessController.checkAccessibility(), event);
             });
             userCard.getChildren().addAll(name , profile);

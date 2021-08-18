@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import models.Notification;
+import models.trimmed.TrimmedNotification;
 import util.ConfigLoader;
 
 import java.net.URL;
@@ -22,26 +23,26 @@ public class SystemNotificationGuiController implements Initializable, Controlle
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        List<Notification> notifications = NOTIFICATION_CONTROLLER.getSystemNotification();
+        List<TrimmedNotification> notifications = NOTIFICATION_CONTROLLER.getSystemNotification();
         if (notifications.size() == 0) {
             Label nothing = new Label("You have no system notification!");
             notifArea.setContent(nothing);
         } else {
             VBox list = new VBox(10);
-            for (Notification notification : notifications) {
+            for (TrimmedNotification notification : notifications) {
                 Label info = new Label();
                 switch (notification.getType()) {
                     case UNFOLLOW -> {
-                        info.setText(notification.getSender().getUsername() + " unfollowed you!");
+                        info.setText(notification.getSender() + " unfollowed you!");
                     }
                     case START_FOLLOW -> {
-                        info.setText(notification.getSender().getUsername() + " started following you!");
+                        info.setText(notification.getSender() + " started following you!");
                     }
                     case FOLLOW_REQ_REJECT -> {
-                        info.setText(notification.getSender().getUsername() + " rejected your follow request!");
+                        info.setText(notification.getSender() + " rejected your follow request!");
                     }
                 }
-                NOTIFICATION_CONTROLLER.deleteNotification(notification);
+                NOTIFICATION_CONTROLLER.deleteNotification(notification.getId());
                 list.getChildren().add(info);
             }
             notifArea.setContent(list);

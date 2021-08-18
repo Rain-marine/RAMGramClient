@@ -7,7 +7,7 @@ import org.codehaus.jackson.annotate.JsonTypeName;
 @JsonTypeName("userAction")
 public class UserActionRequest implements Request {
 
-    public enum USER_ACTION {MUTE , BLOCK , REPORT , UNBLOCK , FOLLOW , UNFOLLOW , QUIET_UNFOLLOW, REQUEST , ACCEPT , REJECT , DELETE_REQUEST, QUIET_REJECT}
+    public enum USER_ACTION {MUTE , BLOCK , REPORT , UNBLOCK , FOLLOW , UNFOLLOW , QUIET_UNFOLLOW, REQUEST , ACCEPT , REJECT , DELETE_REQUEST, QUIET_REJECT , DELETE_NOTIF}
 
     private String token;
     private long userId;

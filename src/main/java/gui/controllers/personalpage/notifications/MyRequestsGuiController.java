@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
 import models.Notification;
+import models.trimmed.TrimmedNotification;
 import util.ConfigLoader;
 
 import java.net.URL;
@@ -22,14 +23,14 @@ public class MyRequestsGuiController implements Initializable, Controllers {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        List<Notification> notifications = NOTIFICATION_CONTROLLER.getYourFollowingRequestNotification();
+        List<TrimmedNotification> notifications = NOTIFICATION_CONTROLLER.getYourFollowingRequestNotification();
         if (notifications.size() == 0) {
             Label nothing = new Label("You haven't sent any new request!");
             notifArea.setContent(nothing);
         } else {
             VBox list = new VBox(10);
-            for (Notification notification : notifications) {
-                Label info = new Label(notification.getReceiver().getUsername());
+            for (TrimmedNotification notification : notifications) {
+                Label info = new Label(notification.getReceiver());
                 list.getChildren().add(info);
             }
             notifArea.setContent(list);
