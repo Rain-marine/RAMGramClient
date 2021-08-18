@@ -1,9 +1,6 @@
 package gui.controllers.tweets;
 
 import controllers.ProfileAccessController;
-import controllers.Controllers;
-import controllers.TweetController;
-import controllers.UserController;
 import gui.controllers.ImageController;
 import gui.controllers.SceneLoader;
 import gui.controllers.popups.AlertBox;
@@ -19,8 +16,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import models.LoggedUser;
-import models.Tweet;
-import models.User;
 import models.requests.*;
 import models.responses.BooleanResponse;
 import models.responses.ListResponse;
@@ -132,9 +127,7 @@ public class TweetCard {
         forward = new Button("forward");
         forward.setStyle("-fx-background-color: #690081");
         forward.setTextFill(Color.LEMONCHIFFON);
-        forward.setOnAction(event -> {
-            ForwardTweet.display(tweetId);
-        });
+        forward.setOnAction(event -> ForwardTweet.display(tweetId));
 
 
         comments = new Button("comments");

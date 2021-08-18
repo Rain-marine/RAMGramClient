@@ -19,7 +19,7 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         @JsonSubTypes.Type(value = ChangeBirthdayRequest.class, name = "changeBirthday"),
         @JsonSubTypes.Type(value = DeleteAccountRequest.class, name = "deleteAccount"),
         @JsonSubTypes.Type(value = ChangePasswordRequest.class, name = "changePass"),
-        @JsonSubTypes.Type(value = ChangeLastSeenRequest.class, name = "changeLastSeen"),
+        @JsonSubTypes.Type(value = ChangeInfoRequest.class, name = "changeInfo"),
         @JsonSubTypes.Type(value = TweetRequest.class, name = "tweet"),
         @JsonSubTypes.Type(value = ListRequest.class, name = "list"),
         @JsonSubTypes.Type(value = TweetActionRequest.class, name = "tweetAction"),
@@ -38,12 +38,9 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         @JsonSubTypes.Type(value = FactionActionRequest.class, name = "factionAction"),
         @JsonSubTypes.Type(value = UserRequest.class, name = "user"),
         @JsonSubTypes.Type(value = PermissionRequest.class, name = "permission"),
-
-
-
-
-
-
+        @JsonSubTypes.Type(value = RegisterRequest.class, name = "register"),
+        @JsonSubTypes.Type(value = LogoutRequest.class, name = "logout"),
+        @JsonSubTypes.Type(value = CloseRequest.class, name = "close"),
 
 })
 

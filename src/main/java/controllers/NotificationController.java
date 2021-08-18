@@ -1,19 +1,16 @@
 package controllers;
 
-import models.*;
+import models.LoggedUser;
 import models.requests.NotificationRequest;
 import models.requests.UserActionRequest;
 import models.responses.NotificationResponse;
 import models.responses.Response;
 import models.trimmed.TrimmedNotification;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import repository.Repository;
 
 import java.util.List;
 
 
-public class NotificationController implements Repository {
+public class NotificationController {
 
     public NotificationController() {
     }

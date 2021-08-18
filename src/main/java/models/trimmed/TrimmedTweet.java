@@ -1,8 +1,5 @@
 package models.trimmed;
 
-import controllers.Controllers;
-import repository.Repository;
-
 import java.util.ArrayList;
 
 

@@ -1,17 +1,11 @@
 package controllers;
 
-import models.*;
+import models.LoggedUser;
 import models.requests.SendMessageRequest;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import repository.Repository;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class ChatController implements Repository {
+public class ChatController {
 
     public ChatController() {
     }

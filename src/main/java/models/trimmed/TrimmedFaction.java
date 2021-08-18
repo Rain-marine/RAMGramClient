@@ -1,10 +1,6 @@
 package models.trimmed;
 
-import models.User;
-import repository.Repository;
-
 import java.util.HashMap;
-import java.util.List;
 
 public class TrimmedFaction {
 

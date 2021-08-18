@@ -57,6 +57,7 @@ public class PublicProfileGuiController implements Initializable, Controllers {
         new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionRequest.USER_ACTION.FOLLOW).execute();
         FollowingProfileGuiController.setUser(userId);
         FollowingProfileGuiController.setPrevious(previous);
+        FollowingProfileGuiController.setProfileAccessController(profileAccessController);
         SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("followingProf"),actionEvent);
     }
 
@@ -77,6 +78,7 @@ public class PublicProfileGuiController implements Initializable, Controllers {
         USER_CONTROLLER.blockUser(userId);
         BlockedProfileGuiController.setUser(userId);
         BlockedProfileGuiController.setPrevious(previous);
+        BlockedProfileGuiController.setProfileAccessController(profileAccessController);
         SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("blockedProf"),actionEvent);
     }
 

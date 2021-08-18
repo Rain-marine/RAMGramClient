@@ -1,12 +1,8 @@
 package gui.controllers.welcome;
 
-import controllers.AuthController;
-import exceptions.InvalidInputException;
 import gui.controllers.SceneLoader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -14,11 +10,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import models.LoggedUser;
-import models.NetworkData;
-import models.User;
 import models.requests.LoginRequest;
 import models.responses.LoginResponse;
-import models.responses.Response;
 import util.ConfigLoader;
 
 public class LoginGuiController {

@@ -115,6 +115,7 @@ public class FollowingProfileGuiController implements Initializable, Controllers
         BlockedProfileGuiController.setUser(userId);
         BlockedProfileGuiController.setPrevious(previous);
         BlockedProfileGuiController.setFactionId(factionId);
+        BlockedProfileGuiController.setProfileAccessController(profileAccessController);
         SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("blockedProf"),actionEvent);
     }
 

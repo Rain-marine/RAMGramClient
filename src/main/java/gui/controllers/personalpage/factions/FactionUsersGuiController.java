@@ -13,12 +13,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import models.User;
 import util.ConfigLoader;
 
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class FactionUsersGuiController implements Initializable, Controllers {

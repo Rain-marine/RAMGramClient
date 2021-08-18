@@ -8,7 +8,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
-import models.Notification;
 import models.trimmed.TrimmedNotification;
 import util.ConfigLoader;
 
@@ -32,15 +31,9 @@ public class SystemNotificationGuiController implements Initializable, Controlle
             for (TrimmedNotification notification : notifications) {
                 Label info = new Label();
                 switch (notification.getType()) {
-                    case UNFOLLOW -> {
-                        info.setText(notification.getSender() + " unfollowed you!");
-                    }
-                    case START_FOLLOW -> {
-                        info.setText(notification.getSender() + " started following you!");
-                    }
-                    case FOLLOW_REQ_REJECT -> {
-                        info.setText(notification.getSender() + " rejected your follow request!");
-                    }
+                    case UNFOLLOW -> info.setText(notification.getSender() + " unfollowed you!");
+                    case START_FOLLOW -> info.setText(notification.getSender() + " started following you!");
+                    case FOLLOW_REQ_REJECT -> info.setText(notification.getSender() + " rejected your follow request!");
                 }
                 NOTIFICATION_CONTROLLER.deleteNotification(notification.getId());
                 list.getChildren().add(info);

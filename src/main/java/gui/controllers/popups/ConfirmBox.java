@@ -11,10 +11,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public interface ConfirmBox {
-    SettingController SETTING_CONTROLLER =new SettingController();
     ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-    Image icon = new Image(classloader.getResourceAsStream("Images/warning.png"));
+    Image icon = new Image(Objects.requireNonNull(classloader.getResourceAsStream("Images/warning.png")));
 
 //        Alert alert = new Alert(Alert.AlertType.CONFIRMATION,message);
 //        alert.show();

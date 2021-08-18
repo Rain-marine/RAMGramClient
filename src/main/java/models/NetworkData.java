@@ -42,12 +42,20 @@ public class NetworkData {
         try {
             String s = objectMapper.writeValueAsString(request);
             printWriter.println(s);
-            Response response = objectMapper.readValue(NetworkData.scanner.nextLine(), Response.class);
-            return response;
+            return objectMapper.readValue(NetworkData.scanner.nextLine(), Response.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    public static void close() {
+        try {
+            scanner.close();
+            printWriter.close();
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

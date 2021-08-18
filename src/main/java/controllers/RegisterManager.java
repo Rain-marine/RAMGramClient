@@ -1,35 +1,28 @@
 package controllers;
 
-import models.User;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import repository.Repository;
+import models.requests.RegisterRequest;
+import models.responses.BooleanResponse;
+import models.responses.Response;
 
-import java.util.Date;
+public class RegisterManager {
 
-public class RegisterManager  implements Repository {
-    private final static Logger log = LogManager.getLogger(RegisterManager.class);
-
-
-    public void makeNewUser(String fullName, String username, String password, String email, String phoneNumber, String bio, String birthday)   {
-        Date birthdayDate = DateFormat.stringToDate(birthday);
-        User user = new User(username,fullName,email,password,phoneNumber, bio, birthdayDate);
-        USER_REPOSITORY.insert(user);
-        log.info(" new User: " + username);
+    public void makeNewUser(String fullName, String username, String password, String email, String phoneNumber, String bio, String birthday) {
+        String[] info = new String[]{fullName, username, password, email,  phoneNumber, bio, birthday};
+        new RegisterRequest(RegisterRequest.TYPE.INSERT, null, info).execute();
     }
 
     public boolean isUsernameAvailable(String username) {
-        User user = USER_REPOSITORY.getByUsername(username);
-        return (user == null);
+        Response response = new RegisterRequest(RegisterRequest.TYPE.USERNAME, username, null).execute();
+        return ((BooleanResponse) response).isResult();
     }
 
     public boolean isEmailAvailable(String email) {
-        User user = USER_REPOSITORY.getByEmail(email);
-        return user == null;
+        Response response = new RegisterRequest(RegisterRequest.TYPE.EMAIL, email, null).execute();
+        return ((BooleanResponse) response).isResult();
     }
 
     public boolean isPhoneNumberAvailable(String phoneNumber) {
-        User user = USER_REPOSITORY.getByPhoneNumber(phoneNumber);
-        return user == null;
+        Response response = new RegisterRequest(RegisterRequest.TYPE.NUMBER, phoneNumber, null).execute();
+        return ((BooleanResponse) response).isResult();
     }
 }

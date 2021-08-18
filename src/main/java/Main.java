@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import models.NetworkData;
+import models.requests.CloseRequest;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import util.ConfigLoader;
@@ -30,7 +31,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         try {
             final SettingController settingsController = new SettingController();
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(Objects.requireNonNull(ConfigLoader.loadFXML("loginFXMLAddress")))));
@@ -40,6 +41,8 @@ public class Main extends Application {
                 boolean answer = SimpleConfirmBox.display("Exit confirmation", "Are you sure to Exit?");
                 if (answer) {
                     settingsController.logout();
+                    new CloseRequest().execute();
+                    NetworkData.close();
                     primaryStage.close();
                 }
             });

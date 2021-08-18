@@ -1,7 +1,6 @@
 package models.trimmed;
 
 import models.NotificationType;
-import repository.Repository;
 
 public class TrimmedNotification {
 

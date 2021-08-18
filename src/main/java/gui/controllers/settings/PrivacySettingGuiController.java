@@ -1,6 +1,5 @@
 package gui.controllers.settings;
 
-import controllers.Controllers;
 import gui.controllers.SceneLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,7 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import models.LoggedUser;
-import models.requests.ChangeLastSeenRequest;
+import models.requests.ChangeInfoRequest;
 import util.ConfigLoader;
 
 import java.net.URL;
@@ -60,7 +59,7 @@ public class PrivacySettingGuiController implements Initializable {
         String newLSStatus = lastSeenChoice.getValue().toString();
         if (!newLSStatus.equals(lastSeenStatus)) {
             hasAnythingChanged = true;
-            new ChangeLastSeenRequest(LoggedUser.getToken() , LoggedUser.getId() , newLSStatus).execute().unleash();
+            new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoRequest.TYPE.LAST_SEEN, newLSStatus).execute().unleash();
         }
         if (hasAnythingChanged)
             reload();

@@ -11,7 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import models.Group;
 import models.trimmed.TrimmedFaction;
 import util.ConfigLoader;
 

@@ -2,16 +2,9 @@ package controllers;
 
 import gui.controllers.profiles.*;
 import models.LoggedUser;
-import models.NotificationType;
-import models.User;
 import models.requests.PermissionRequest;
 import models.responses.PermissionResponse;
 import models.responses.Response;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import repository.Repository;
-
-import java.util.List;
 
 public class ProfileAccessController {
 
@@ -19,14 +12,14 @@ public class ProfileAccessController {
     private final int previousMenu;
     private final long otherUserId;
     private final int factionId;
-    private boolean[] results = new boolean[6];
+    private boolean[] results;
 
     public ProfileAccessController(int previousMenu, long otherUserID, int factionId) {
         this.previousMenu = previousMenu;
         this.loggedUserId = LoggedUser.getId();
         this.otherUserId = otherUserID;
         this.factionId = factionId;
-        Response response = new PermissionRequest(LoggedUser.getToken(), LoggedUser.getId(), otherUserID, PermissionRequest.TYPE.PROFILE, null).execute();
+        Response response = new PermissionRequest(LoggedUser.getToken(), LoggedUser.getId(), otherUserID).execute();
         this.results = ((PermissionResponse) response).getPermissions();
     }
 
@@ -58,7 +51,6 @@ public class ProfileAccessController {
             }
 
             //am I blocked?
-
             if (results[3]) {
                 return "FXMLs/Profiles/NotVisibleProfile.fxml";
             }

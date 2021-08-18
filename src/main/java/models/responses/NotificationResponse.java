@@ -1,6 +1,5 @@
 package models.responses;
 
-import models.Notification;
 import models.trimmed.TrimmedNotification;
 import org.codehaus.jackson.annotate.JsonTypeName;
 

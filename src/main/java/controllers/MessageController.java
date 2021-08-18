@@ -1,20 +1,15 @@
 package controllers;
 
-import models.*;
+import models.LoggedUser;
 import models.requests.MessageAccessRequest;
 import models.requests.SendMessageRequest;
 import models.responses.BooleanResponse;
 import models.responses.ExploreResponse;
 import models.responses.Response;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import repository.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-public class MessageController implements Repository{
+public class MessageController{
 
     public MessageController() {
     }

@@ -11,12 +11,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import models.User;
 import util.ConfigLoader;
 
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class DefaultFactionsGuiController implements Initializable, Controllers {
@@ -31,7 +29,7 @@ public class DefaultFactionsGuiController implements Initializable, Controllers 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         HashMap<Long, String> members;
-        int factionID = 0;
+        int factionID;
         switch (list){
             case FOLLOWER -> {
                 members = FACTIONS_CONTROLLER.getActiveFollowers();

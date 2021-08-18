@@ -1,10 +1,8 @@
 package models.responses;
 
-import models.Group;
 import models.trimmed.TrimmedFaction;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @JsonTypeName("faction")
