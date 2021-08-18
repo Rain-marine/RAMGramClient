@@ -1,8 +1,6 @@
 package models.requests;
 
-import controllers.Controllers;
 import models.NetworkData;
-import models.responses.BooleanResponse;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonTypeName;
 

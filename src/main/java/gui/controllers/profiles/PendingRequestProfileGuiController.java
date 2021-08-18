@@ -30,15 +30,7 @@ public class PendingRequestProfileGuiController implements Initializable, Contro
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        byte[] byteArray = USER_CONTROLLER.getProfilePhoto(userId);
-        Rectangle clip = new Rectangle(
-                profilePhotoImage.getFitWidth(), profilePhotoImage.getFitHeight()
-        );
-        clip.setArcWidth(1000);
-        clip.setArcHeight(1000);
-        profilePhotoImage.setClip(clip);
-        profilePhotoImage.setImage(ImageController.byteArrayToImage(byteArray));
-        info.setText(InfoLoader.load(userId));
+        InfoLoader.loadInfo(userId, profilePhotoImage, info);
     }
 
 

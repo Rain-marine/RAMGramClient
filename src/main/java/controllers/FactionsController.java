@@ -1,39 +1,33 @@
 package controllers;
 
-import models.Group;
 import models.LoggedUser;
-import models.User;
+import models.requests.FactionActionRequest;
 import models.requests.ListRequest;
 import models.requests.MessageAccessRequest;
 import models.responses.BooleanResponse;
 import models.responses.FactionResponse;
 import models.responses.Response;
 import models.trimmed.TrimmedFaction;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import repository.Repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FactionsController implements Repository {
+public class FactionsController {
 
     public FactionsController() {
     }
 
     public void insertNewFaction(String name, List<String> users) {
-        User loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
-        Group newGroup = new Group(name, loggedUser);
-
-        List<User> members = new ArrayList<>();
-        for (String username : users) {
-            if (members.stream().noneMatch(it -> it.getUsername().equals(username)))
-                members.add(USER_REPOSITORY.getByUsername(username));
-        }
-        newGroup.setMembers(members);
-        FACTION_REPOSITORY.insert(newGroup);
+        new FactionActionRequest(LoggedUser.getToken() ,
+                LoggedUser.getId() ,
+                FactionActionRequest.TYPE.NEW_FACTION ,
+                0,
+                0L,
+                users,
+                name
+        ).execute();
     }
 
     public boolean canAddToGroup(String username) {
@@ -67,18 +61,39 @@ public class FactionsController implements Repository {
     }
 
     public void deleteFaction(int factionId) {
-
+        new FactionActionRequest(LoggedUser.getToken() ,
+                LoggedUser.getId() ,
+                FactionActionRequest.TYPE.DELETE_FACTION ,
+                factionId,
+                0L,
+                null,
+                null
+                ).execute();
     }
 
     public void deleteUserFromFaction(int factionId, long userId) {
-        FACTION_REPOSITORY.deleteUserFromFaction(factionId, userId);
-    }
+        new FactionActionRequest(LoggedUser.getToken() ,
+                LoggedUser.getId() ,
+                FactionActionRequest.TYPE.DELETE_MEMBER ,
+                factionId,
+                userId,
+                null,
+                null
+        ).execute();    }
 
     public void addUserToFaction(int factionId, String username) {
-        FACTION_REPOSITORY.addUserToFaction(factionId, USER_REPOSITORY.getByUsername(username).getId());
+        new FactionActionRequest(LoggedUser.getToken() ,
+                LoggedUser.getId() ,
+                FactionActionRequest.TYPE.ADD_MEMBER ,
+                factionId,
+                0L,
+                null,
+                username
+        ).execute();
     }
 
     public List<String> getFactionNames() {
+        //todo: check
         ArrayList<String> factionNames = new ArrayList<>();
         Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.FACTION , 0L).execute();
         return (((FactionResponse)response).getTrimmedFactions()).stream().map(it -> it.getName()).collect(Collectors.toList());

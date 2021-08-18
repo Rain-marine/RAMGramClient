@@ -66,13 +66,13 @@ public class PersonalPageGuiController implements Initializable , Controllers {
     }
 
     private void loadInfo() {
-        username = LoggedUser.getUsername();
+        username = LoggedUser.getTrimmedLoggedUser().getUsername();
         fullName = LoggedUser.getTrimmedLoggedUser().getFullName();
-        email = LoggedUser.getLoggedUser().getEmail();
-        phoneNumber = LoggedUser.getLoggedUser().getPhoneNumber();
-        bio = LoggedUser.getLoggedUser().getBio();
-        birthday = LoggedUser.getLoggedUser().getBirthday();
-        byte[] byteArray = LoggedUser.getLoggedUser().getProfilePhoto();
+        email = LoggedUser.getTrimmedLoggedUser().getEmail();
+        phoneNumber = LoggedUser.getTrimmedLoggedUser().getPhoneNumber();
+        bio = LoggedUser.getTrimmedLoggedUser().getBio();
+        birthday = LoggedUser.getTrimmedLoggedUser().getBirthday();
+        byte[] byteArray = LoggedUser.getTrimmedLoggedUser().getProfilePic();
 
         Rectangle clip = new Rectangle(
                 profilePhotoImage.getFitWidth(), profilePhotoImage.getFitHeight()
@@ -147,6 +147,7 @@ public class PersonalPageGuiController implements Initializable , Controllers {
         if (!newBio.equals(bio)) {
             userController.changeBio(newBio);
         }
+
         LoggedUser.update();
         loadInfo();
 

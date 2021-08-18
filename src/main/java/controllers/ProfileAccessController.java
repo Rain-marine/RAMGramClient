@@ -4,31 +4,30 @@ import gui.controllers.profiles.*;
 import models.LoggedUser;
 import models.NotificationType;
 import models.User;
+import models.requests.PermissionRequest;
+import models.responses.PermissionResponse;
+import models.responses.Response;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import repository.Repository;
 
 import java.util.List;
 
-public class ProfileAccessController implements Repository {
-    private final static Logger log = LogManager.getLogger(ProfileAccessController.class);
+public class ProfileAccessController {
 
-
-    private final User loggedUser;
     private final long loggedUserId;
-    private final User otherUser;
     private final int previousMenu;
     private final long otherUserId;
     private final int factionId;
+    private boolean[] results = new boolean[6];
 
     public ProfileAccessController(int previousMenu, long otherUserID, int factionId) {
-        this.loggedUser = USER_REPOSITORY.getById(LoggedUser.getLoggedUser().getId());
-        this.otherUser = USER_REPOSITORY.getById(otherUserID);
         this.previousMenu = previousMenu;
-        this.loggedUserId = loggedUser.getId();
+        this.loggedUserId = LoggedUser.getId();
         this.otherUserId = otherUserID;
         this.factionId = factionId;
-        log.info(LoggedUser.getLoggedUser().getUsername() + " checked " + otherUserID + " profile");
+        Response response = new PermissionRequest(LoggedUser.getToken(), LoggedUser.getId(), otherUserID, PermissionRequest.TYPE.PROFILE, null).execute();
+        this.results = ((PermissionResponse) response).getPermissions();
     }
 
     public String checkAccessibility() {
@@ -36,40 +35,36 @@ public class ProfileAccessController implements Repository {
         if (otherUserId == loggedUserId)
             return "FXMLs/PersonalPage/PersonalPageMenu.fxml";
         //is Active>
-        if (!otherUser.isActive()) {
+        if (!results[0]) {
             return "FXMLs/Profiles/NotVisibleProfile.fxml";
         } else {
             //have I blocked them?
-            List<User> loggedUserBlacklist = loggedUser.getBlackList();
-            for (User user : loggedUserBlacklist) {
-                if (user.getId() == otherUserId) {
-                    BlockedProfileGuiController.setUser(otherUserId);
-                    BlockedProfileGuiController.setPrevious(previousMenu);
-                    BlockedProfileGuiController.setFactionId(factionId);
-                    BlockedProfileGuiController.setProfileAccessController(this);
-                    return "FXMLs/Profiles/BlockedProfile.fxml";
-                }
+
+            if (results[1]) {
+                BlockedProfileGuiController.setUser(otherUserId);
+                BlockedProfileGuiController.setPrevious(previousMenu);
+                BlockedProfileGuiController.setFactionId(factionId);
+                BlockedProfileGuiController.setProfileAccessController(this);
+                return "FXMLs/Profiles/BlockedProfile.fxml";
             }
             //am I following them?
-            List<User> loggedUserFollowing = loggedUser.getFollowings();
-            for (User user : loggedUserFollowing) {
-                if (user.getId() == otherUserId) {
-                    FollowingProfileGuiController.setUser(otherUserId);
-                    FollowingProfileGuiController.setPrevious(previousMenu);
-                    FollowingProfileGuiController.setFactionId(factionId);
-                    FollowingProfileGuiController.setProfileAccessController(this);
-                    return "FXMLs/Profiles/FollowingProfile.fxml";
-                }
+
+            if (results[2]) {
+                FollowingProfileGuiController.setUser(otherUserId);
+                FollowingProfileGuiController.setPrevious(previousMenu);
+                FollowingProfileGuiController.setFactionId(factionId);
+                FollowingProfileGuiController.setProfileAccessController(this);
+                return "FXMLs/Profiles/FollowingProfile.fxml";
             }
+
             //am I blocked?
-            List<User> blackList = otherUser.getBlackList();
-            for (User user : blackList) {
-                if (user.getId() == loggedUserId) {
-                    return "FXMLs/Profiles/NotVisibleProfile.fxml";
-                }
+
+            if (results[3]) {
+                return "FXMLs/Profiles/NotVisibleProfile.fxml";
             }
+
             //is their account private?
-            if (otherUser.isPublic()) {
+            if (results[4]) {
                 PublicProfileGuiController.setUser(otherUserId);
                 PublicProfileGuiController.setPrevious(previousMenu);
                 PublicProfileGuiController.setProfileAccessController(this);
@@ -77,8 +72,7 @@ public class ProfileAccessController implements Repository {
             }
 
             //have I sent request?
-            if (otherUser.getReceiverNotifications().stream().anyMatch(it -> ((it.getSender().getId() == loggedUserId)
-                    && (it.getType() == NotificationType.FOLLOW_REQ)))) {
+            if (results[5]) {
                 PendingRequestProfileGuiController.setPrevious(previousMenu);
                 PendingRequestProfileGuiController.setUser(otherUserId);
                 return "FXMLs/Profiles/PendingRequestProfile.fxml";

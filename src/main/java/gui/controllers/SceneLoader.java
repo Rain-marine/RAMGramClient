@@ -74,7 +74,7 @@ public class SceneLoader implements Controllers {
     }
 
     public void yourTweets(ActionEvent actionEvent){
-        ArrayList<Long> listOfTweets = TWEET_CONTROLLER.getAllTweets(LoggedUser.getLoggedUser().getId());
+        ArrayList<Long> listOfTweets = TWEET_CONTROLLER.getAllTweets(LoggedUser.getId());
         TweetShowerGuiController.setListOfTweets(listOfTweets);
         TweetShowerGuiController.setPreviousMenu(ConfigLoader.getPreviousMenuCode("personalPage"));
         SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("yourTweets"), actionEvent);

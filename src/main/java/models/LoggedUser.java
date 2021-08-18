@@ -1,7 +1,12 @@
 package models;
 
 import controllers.UserController;
+import models.requests.UpdateLoggedUserRequest;
+import models.responses.LoggedUserResponse;
+import models.responses.Response;
 import models.trimmed.TrimmedLoggedUser;
+
+import java.time.format.ResolverStyle;
 
 public class LoggedUser {
     private static User loggedUser;
@@ -18,7 +23,8 @@ public class LoggedUser {
     }
 
     public static void update() {
-        loggedUser = USER_CONTROLLER.getById(loggedUser.getId());
+        Response response = new UpdateLoggedUserRequest(LoggedUser.getId()).execute();
+        setTrimmedLoggedUser(((LoggedUserResponse)response).getTrimmedLoggedUser());
     }
 
     public static TrimmedLoggedUser getTrimmedLoggedUser() {
