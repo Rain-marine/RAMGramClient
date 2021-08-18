@@ -49,12 +49,12 @@ public class FactionsController {
     }
 
     public HashMap<Long, String> getActiveFollowings() {
-        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.BLACKLIST , 0L).execute();
+        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.FOLLOWINGS, 0L).execute();
         return (((FactionResponse)response).getTrimmedFactions()).get(0).getMembers();
     }
 
     public HashMap<Long, String> getActiveBlockedUsers() {
-        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.FOLLOWERS , 0L).execute();
+        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.BLACKLIST , 0L).execute();
         return (((FactionResponse)response).getTrimmedFactions()).get(0).getMembers();
     }
 
