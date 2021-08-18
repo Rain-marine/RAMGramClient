@@ -2,28 +2,27 @@ package models.requests;
 
 import models.NetworkData;
 import models.responses.Response;
+import models.types.MessageActionType;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("messageAction")
 public class MessageActionRequest implements Request {
 
-    public enum TYPE {EDIT , DELETE}
-
     private String token;
     private long userId;
     private long messageId;
     private String newText;
-    private TYPE type;
+    private MessageActionType type;
 
 
-    public MessageActionRequest(String token, long userId, TYPE type ,long messageId ) {
+    public MessageActionRequest(String token, long userId, MessageActionType type , long messageId ) {
         this.token = token;
         this.userId = userId;
         this.messageId = messageId;
         this.type = type;
     }
 
-    public MessageActionRequest(String token, long userId, TYPE type, long messageId, String newText) {
+    public MessageActionRequest(String token, long userId, MessageActionType type, long messageId, String newText) {
         this.token = token;
         this.userId = userId;
         this.messageId = messageId;
@@ -71,11 +70,11 @@ public class MessageActionRequest implements Request {
         this.newText = newText;
     }
 
-    public TYPE getType() {
+    public MessageActionType getType() {
         return type;
     }
 
-    public void setType(TYPE type) {
+    public void setType(MessageActionType type) {
         this.type = type;
     }
 }

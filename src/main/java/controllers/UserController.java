@@ -7,6 +7,8 @@ import models.requests.UserActionRequest;
 import models.responses.BooleanResponse;
 import models.responses.ExploreResponse;
 import models.responses.Response;
+import models.types.ChangeInfoType;
+import models.types.UserActionType;
 
 public class UserController{
 
@@ -14,7 +16,7 @@ public class UserController{
     }
 
     public void blockUser(long userToBlockId) {
-        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userToBlockId , UserActionRequest.USER_ACTION.BLOCK).execute();
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userToBlockId , UserActionType.BLOCK).execute();
     }
 
     public long getUserByUsername(String usernameToFind) throws NullPointerException {
@@ -26,39 +28,39 @@ public class UserController{
     }
 
     public void reportUser(long userId) {
-        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionRequest.USER_ACTION.REPORT).execute();
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionType.REPORT).execute();
 
     }
 
     public boolean ChangeUsername(String newUsername) {
-        Response response = new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoRequest.TYPE.USERNAME , newUsername).execute();
+        Response response = new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoType.USERNAME , newUsername).execute();
         return ((BooleanResponse)response).isResult();
     }
 
     public void changeBio(String newBio) {
-        new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoRequest.TYPE.BIO , newBio).execute();
+        new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoType.BIO , newBio).execute();
     }
 
     public void changeName(String newName) {
-        new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoRequest.TYPE.FULL_NAME ,newName).execute();
+        new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoType.FULL_NAME ,newName).execute();
     }
 
     public boolean changeEmail(String newEmail) {
-        Response response = new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoRequest.TYPE.EMAIL , newEmail).execute();
+        Response response = new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoType.EMAIL , newEmail).execute();
         return ((BooleanResponse)response).isResult();
     }
 
     public boolean changeNumber(String newNumber) {
-        Response response = new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoRequest.TYPE.NUMBER , newNumber).execute();
+        Response response = new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoType.NUMBER , newNumber).execute();
         return ((BooleanResponse)response).isResult();
     }
 
     public void unblockUser(long userId) {
-        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionRequest.USER_ACTION.UNBLOCK).execute();
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionType.UNBLOCK).execute();
     }
 
     public void changeProfilePhoto(byte[] newPhoto){
-        new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoRequest.TYPE.PROFILE , newPhoto).execute();
+        new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoType.PROFILE , newPhoto).execute();
     }
 
 }

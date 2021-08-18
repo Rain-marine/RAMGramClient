@@ -4,19 +4,18 @@ import controllers.Controllers;
 import models.NetworkData;
 import models.responses.BooleanResponse;
 import models.responses.Response;
+import models.types.MessageAccessType;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("messageAccess")
 public class MessageAccessRequest implements Request {
 
-    public enum TYPE {USER, GROUP , FACTION}
-
     private String token;
     private long userId;
-    private TYPE type;
+    private MessageAccessType type;
     private String targetUsername;
 
-    public MessageAccessRequest(String token, long userId, TYPE type, String targetUsername) {
+    public MessageAccessRequest(String token, long userId, MessageAccessType type, String targetUsername) {
         this.token = token;
         this.userId = userId;
         this.type = type;
@@ -47,11 +46,11 @@ public class MessageAccessRequest implements Request {
         this.userId = userId;
     }
 
-    public TYPE getType() {
+    public MessageAccessType getType() {
         return type;
     }
 
-    public void setType(TYPE type) {
+    public void setType(MessageAccessType type) {
         this.type = type;
     }
 

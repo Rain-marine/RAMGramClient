@@ -1,6 +1,6 @@
 package models.trimmed;
 
-import models.NotificationType;
+import models.types.NotificationType;
 
 public class TrimmedNotification {
 

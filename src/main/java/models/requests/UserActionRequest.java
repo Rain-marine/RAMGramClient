@@ -2,19 +2,18 @@ package models.requests;
 
 import models.NetworkData;
 import models.responses.Response;
+import models.types.UserActionType;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("userAction")
 public class UserActionRequest implements Request {
 
-    public enum USER_ACTION {MUTE , BLOCK , REPORT , UNBLOCK , FOLLOW , UNFOLLOW , QUIET_UNFOLLOW, REQUEST , ACCEPT , REJECT , DELETE_REQUEST, QUIET_REJECT , DELETE_NOTIF}
-
     private String token;
     private long userId;
     private long otherId;
-    private USER_ACTION action;
+    private UserActionType action;
 
-    public UserActionRequest(String token, long userId, long otherUserId, USER_ACTION action) {
+    public UserActionRequest(String token, long userId, long otherUserId, UserActionType action) {
         this.token = token;
         this.userId = userId;
         this.otherId = otherUserId;
@@ -53,11 +52,11 @@ public class UserActionRequest implements Request {
         this.otherId = otherId;
     }
 
-    public USER_ACTION getAction() {
+    public UserActionType getAction() {
         return action;
     }
 
-    public void setAction(USER_ACTION action) {
+    public void setAction(UserActionType action) {
         this.action = action;
     }
 }

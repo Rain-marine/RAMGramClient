@@ -2,17 +2,17 @@ package models.requests;
 
 import models.NetworkData;
 import models.responses.Response;
+import models.types.RegisterType;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("register")
 public class RegisterRequest implements Request {
 
-    public enum TYPE { USERNAME , EMAIL , NUMBER , INSERT}
     private String infoCheck;
-    private TYPE type;
+    private RegisterType type;
     private String[] finalInfo;
 
-    public RegisterRequest(TYPE type , String infoCheck, String[] finalInfo) {
+    public RegisterRequest(RegisterType type , String infoCheck, String[] finalInfo) {
         this.infoCheck = infoCheck;
         this.type = type;
         this.finalInfo = finalInfo;
@@ -34,11 +34,11 @@ public class RegisterRequest implements Request {
         this.infoCheck = infoCheck;
     }
 
-    public TYPE getType() {
+    public RegisterType getType() {
         return type;
     }
 
-    public void setType(TYPE type) {
+    public void setType(RegisterType type) {
         this.type = type;
     }
 

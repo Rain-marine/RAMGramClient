@@ -2,23 +2,22 @@ package models.requests;
 
 import models.NetworkData;
 import models.responses.Response;
+import models.types.AddContentType;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("addContent")
 public class AddContentRequest implements Request {
 
-    public enum TYPE {TWEET , MESSAGE , SAVE_MESSAGE , NEW_SAVED_MESSAGE, GROUP_MESSAGE}
-
     private String token;
     private long userId;
-    private TYPE type;
+    private AddContentType type;
     private byte[] image;
     private String text;
     private long superId;
     private long selfId;
 
 
-    public AddContentRequest(String token, long userId, TYPE type, byte[] image, String text, long superId, long selfId) {
+    public AddContentRequest(String token, long userId,AddContentType type, byte[] image, String text, long superId, long selfId) {
         this.token = token;
         this.userId = userId;
         this.type = type;
@@ -53,11 +52,11 @@ public class AddContentRequest implements Request {
         this.userId = userId;
     }
 
-    public TYPE getType() {
+    public AddContentType getType() {
         return type;
     }
 
-    public void setType(TYPE type) {
+    public void setType(AddContentType type) {
         this.type = type;
     }
 

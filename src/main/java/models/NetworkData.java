@@ -1,6 +1,7 @@
 package models;
 
 import models.requests.Request;
+import models.responses.ConnectionErrorResponse;
 import models.responses.Response;
 import org.codehaus.jackson.map.ObjectMapper;
 import util.ConfigLoader;
@@ -19,15 +20,14 @@ public class NetworkData {
     public NetworkData() throws IOException {
         objectMapper = new ObjectMapper();
         try {
-            socket = new Socket(ConfigLoader.readNetworkProperty("host"),Integer.parseInt(ConfigLoader.readNetworkProperty("port")));
+            socket = new Socket(ConfigLoader.readNetworkProperty("host"), Integer.parseInt(ConfigLoader.readNetworkProperty("port")));
             try {
                 scanner = new Scanner(socket.getInputStream());
                 printWriter = new PrintWriter(socket.getOutputStream(), true);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             socket = new Socket("localhost", Integer.parseInt(ConfigLoader.readNetworkProperty("defaultPort")));
             try {
                 scanner = new Scanner(socket.getInputStream());
@@ -38,11 +38,19 @@ public class NetworkData {
         }
     }
 
-    public static Response sendRequest(Request request){
+    public static Response sendRequest(Request request) {
         try {
             String s = objectMapper.writeValueAsString(request);
             printWriter.println(s);
-            return objectMapper.readValue(NetworkData.scanner.nextLine(), Response.class);
+            Response response = objectMapper.readValue(NetworkData.scanner.nextLine(), Response.class);
+            try {
+                ConnectionErrorResponse errorResponse = (ConnectionErrorResponse) response;
+                System.err.println(errorResponse.getMessage() + "\nTerminate the application");
+            }
+            catch (ClassCastException classCastException){
+                return response;
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }

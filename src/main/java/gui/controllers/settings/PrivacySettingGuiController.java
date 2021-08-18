@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import models.LoggedUser;
 import models.requests.ChangeInfoRequest;
+import models.types.ChangeInfoType;
 import util.ConfigLoader;
 
 import java.net.URL;
@@ -16,23 +17,12 @@ import java.util.ResourceBundle;
 
 public class PrivacySettingGuiController implements Initializable {
     @FXML
-    private ChoiceBox lastSeenChoice;
-    @FXML
-    private ChoiceBox birthdayChoice;
-    @FXML
-    private ChoiceBox numberChoice;
-    @FXML
-    private ChoiceBox emailChoice;
+    private ChoiceBox<String> lastSeenChoice;
 
     private String lastSeenStatus;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ObservableList options = FXCollections.observableArrayList();
-        options.addAll("NONE", "FOLLOWING", "ALL");
-        birthdayChoice.getItems().addAll(options);
-        numberChoice.getItems().addAll(options);
-        emailChoice.getItems().addAll(options);
         lastSeenChoice.getItems().addAll("nobody", "everybody", "following");
         reload();
     }
@@ -56,10 +46,10 @@ public class PrivacySettingGuiController implements Initializable {
 
     public void saveButtonClicked(ActionEvent actionEvent) {
         boolean hasAnythingChanged = false;
-        String newLSStatus = lastSeenChoice.getValue().toString();
+        String newLSStatus = lastSeenChoice.getValue();
         if (!newLSStatus.equals(lastSeenStatus)) {
             hasAnythingChanged = true;
-            new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoRequest.TYPE.LAST_SEEN, newLSStatus).execute().unleash();
+            new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoType.LAST_SEEN, newLSStatus).execute().unleash();
         }
         if (hasAnythingChanged)
             reload();

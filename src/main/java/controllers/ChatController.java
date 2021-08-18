@@ -2,6 +2,7 @@ package controllers;
 
 import models.LoggedUser;
 import models.requests.SendMessageRequest;
+import models.types.SendMessageType;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class ChatController {
     public void createGroupChat(List<String> members, String name) {
         new SendMessageRequest(LoggedUser.getToken() ,
                 LoggedUser.getId() ,
-                SendMessageRequest.TYPE.NEW_GROUP ,
+                SendMessageType.NEW_GROUP ,
                 0L ,
                 members ,
                 null ,
@@ -27,7 +28,7 @@ public class ChatController {
     public void addMemberToGroupChat(String member, long chatId) {
         new SendMessageRequest(LoggedUser.getToken() ,
                 LoggedUser.getId() ,
-                SendMessageRequest.TYPE.ADD_MEMBER ,
+                SendMessageType.ADD_MEMBER ,
                 chatId ,
                 null ,
                 null ,

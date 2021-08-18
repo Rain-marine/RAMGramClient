@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import models.LoggedUser;
 import models.requests.UserActionRequest;
+import models.types.UserActionType;
 import util.ConfigLoader;
 
 import java.net.URL;
@@ -51,7 +52,7 @@ public class PendingRequestProfileGuiController implements Initializable, Contro
 
 
     public void removeReqButtonClicked(ActionEvent actionEvent) {
-        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionRequest.USER_ACTION.DELETE_REQUEST).execute();
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionType.DELETE_REQUEST).execute();
         PrivateProfileGuiController.setPrevious(previous);
         PrivateProfileGuiController.setUser(userId);
         SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("privateProf"),actionEvent);

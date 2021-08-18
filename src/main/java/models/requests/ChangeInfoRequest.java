@@ -2,26 +2,26 @@ package models.requests;
 
 import models.NetworkData;
 import models.responses.Response;
+import models.types.ChangeInfoType;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("changeInfo")
 public class ChangeInfoRequest implements Request {
 
-    public enum TYPE { FULL_NAME ,USERNAME , EMAIL , NUMBER , BIO , LAST_SEEN , PROFILE}
     private String token;
     private long userId;
     private String newInfo;
     private byte[] newPhoto;
-    private TYPE type;
+    private ChangeInfoType type;
 
-    public ChangeInfoRequest(String token, long userId,TYPE type, String newInfo) {
+    public ChangeInfoRequest(String token, long userId,ChangeInfoType type, String newInfo) {
         this.token = token;
         this.userId = userId;
         this.newInfo = newInfo;
         this.type = type;
     }
 
-    public ChangeInfoRequest(String token, long userId, TYPE type, byte[] newPhoto) {
+    public ChangeInfoRequest(String token, long userId, ChangeInfoType type, byte[] newPhoto) {
         this.token = token;
         this.userId = userId;
         this.newPhoto = newPhoto;
@@ -60,11 +60,11 @@ public class ChangeInfoRequest implements Request {
         this.newInfo = newInfo;
     }
 
-    public TYPE getType() {
+    public ChangeInfoType getType() {
         return type;
     }
 
-    public void setType(TYPE type) {
+    public void setType(ChangeInfoType type) {
         this.type = type;
     }
 

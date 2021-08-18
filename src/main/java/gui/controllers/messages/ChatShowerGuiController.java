@@ -20,6 +20,8 @@ import models.requests.ListRequest;
 import models.responses.ChatInfoResponse;
 import models.responses.ListResponse;
 import models.responses.Response;
+import models.types.AddContentType;
+import models.types.ListType;
 
 import javax.naming.SizeLimitExceededException;
 import java.net.URL;
@@ -65,7 +67,7 @@ public class ChatShowerGuiController implements Initializable {
         lastSeenLabel.setText(((ChatInfoResponse)response).getLastSeen());
 
         VBox list = new VBox(5);
-        Response response2 = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.MESSAGE , chatId).execute();
+        Response response2 = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.MESSAGE , chatId).execute();
         ArrayList<Long> messageIDs = ((ListResponse)response2).getIds();
         for (Long messageID : messageIDs) {
             list.getChildren().add(new MessageCard(messageID).getCard());
@@ -102,7 +104,7 @@ public class ChatShowerGuiController implements Initializable {
             AlertBox.display("Nerd Alert" , "write something idiot");
         }
         else {
-            new AddContentRequest(LoggedUser.getToken() , LoggedUser.getId() , AddContentRequest.TYPE.MESSAGE , chosenImageByteArray ,messageText ,chatId ,0L).execute();
+            new AddContentRequest(LoggedUser.getToken() , LoggedUser.getId() , AddContentType.MESSAGE , chosenImageByteArray ,messageText ,chatId ,0L).execute();
             chosenImageView.setImage(null);
             messageTextField.clear();
             loadMessages();

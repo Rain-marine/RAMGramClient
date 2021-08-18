@@ -13,6 +13,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.LoggedUser;
 import models.requests.MessageActionRequest;
+import models.types.MessageActionType;
 
 public class EditMessage implements ConfirmBox {
 
@@ -39,7 +40,7 @@ public class EditMessage implements ConfirmBox {
 
         confirmButton.setOnAction(e -> {
             String text = newText.getText();
-            new MessageActionRequest(LoggedUser.getToken() , LoggedUser.getId() , MessageActionRequest.TYPE.EDIT, messageId , text).execute();
+            new MessageActionRequest(LoggedUser.getToken() , LoggedUser.getId() , MessageActionType.EDIT, messageId , text).execute();
             answer = true;
             window.close();
         });

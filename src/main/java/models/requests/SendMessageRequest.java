@@ -4,6 +4,7 @@ import controllers.Controllers;
 import models.NetworkData;
 import models.responses.BooleanResponse;
 import models.responses.Response;
+import models.types.SendMessageType;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 import java.util.ArrayList;
@@ -12,11 +13,9 @@ import java.util.List;
 @JsonTypeName("sendMessage")
 public class SendMessageRequest implements Request {
 
-    public enum TYPE {SEND, NEW_GROUP, FORWARD, FORWARD_TWEET, ADD_MEMBER , CHAT}
-
     private String token;
     private long userId;
-    private TYPE type;
+    private SendMessageType type;
     private long contentId;
     private List<String> users;
     private List<String> factions;
@@ -24,7 +23,7 @@ public class SendMessageRequest implements Request {
     private byte[] contentImage;
     private String targetUsername;
 
-    public SendMessageRequest(String token, long userId, TYPE type, long contentId, List<String> users, List<String> factions, String content, byte[] contentImage, String targetUsername) {
+    public SendMessageRequest(String token, long userId, SendMessageType type, long contentId, List<String> users, List<String> factions, String content, byte[] contentImage, String targetUsername) {
         this.token = token;
         this.userId = userId;
         this.type = type;
@@ -60,11 +59,11 @@ public class SendMessageRequest implements Request {
         this.userId = userId;
     }
 
-    public TYPE getType() {
+    public SendMessageType getType() {
         return type;
     }
 
-    public void setType(TYPE type) {
+    public void setType(SendMessageType type) {
         this.type = type;
     }
 

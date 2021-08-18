@@ -21,6 +21,8 @@ import models.requests.ListRequest;
 import models.responses.ChatInfoResponse;
 import models.responses.ListResponse;
 import models.responses.Response;
+import models.types.AddContentType;
+import models.types.ListType;
 
 import javax.naming.SizeLimitExceededException;
 import java.net.URL;
@@ -71,7 +73,7 @@ public class GroupChatShowerGuiController implements Initializable {
             AlertBox.display("Nerd Alert" , "write something idiot");
         }
         else {
-            new AddContentRequest(LoggedUser.getToken() , LoggedUser.getId() , AddContentRequest.TYPE.GROUP_MESSAGE , chosenImageByteArray ,messageText ,groupId,0L).execute();
+            new AddContentRequest(LoggedUser.getToken() , LoggedUser.getId() , AddContentType.GROUP_MESSAGE , chosenImageByteArray ,messageText ,groupId,0L).execute();
             chosenImageView.setImage(null);
             messageTextField.clear();
             loadMessages();
@@ -82,7 +84,7 @@ public class GroupChatShowerGuiController implements Initializable {
         Response infoResponse = new ChatInfoRequest(LoggedUser.getToken() , LoggedUser.getId() ,groupId).execute();
         groupNameLabel.setText(((ChatInfoResponse)infoResponse).getFrontUsername());
         VBox list = new VBox(5);
-        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.MESSAGE , groupId).execute();
+        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.MESSAGE , groupId).execute();
         ArrayList<Long> messageIDs = ((ListResponse)response).getIds();
         for (Long messageID : messageIDs) {
             list.getChildren().add(new MessageCard(messageID).getCard());

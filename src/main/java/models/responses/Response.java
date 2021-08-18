@@ -1,10 +1,6 @@
 package models.responses;
 
 
-import models.requests.ChatRequest;
-import models.requests.ListRequest;
-import models.requests.LoginRequest;
-import models.requests.TweetRequest;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
 
@@ -26,13 +22,12 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
         @JsonSubTypes.Type(value = FactionResponse.class, name = "faction"),
         @JsonSubTypes.Type(value = UserResponse.class, name = "user"),
         @JsonSubTypes.Type(value = PermissionResponse.class, name = "permission"),
-
+        @JsonSubTypes.Type(value = ConnectionErrorResponse.class, name = "error"),
 
 
 
 })
 
 public interface Response {
-
     void unleash();
 }

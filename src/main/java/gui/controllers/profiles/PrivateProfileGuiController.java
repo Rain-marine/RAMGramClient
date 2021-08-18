@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import models.LoggedUser;
 import models.requests.UserActionRequest;
+import models.types.UserActionType;
 import util.ConfigLoader;
 
 import java.net.URL;
@@ -51,7 +52,7 @@ public class PrivateProfileGuiController implements Initializable, Controllers {
 
 
     public void followButtonClicked(ActionEvent actionEvent) {
-        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionRequest.USER_ACTION.REQUEST).execute();
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionType.REQUEST).execute();
         PendingRequestProfileGuiController.setUser(userId);
         PendingRequestProfileGuiController.setPrevious(previous);
         SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("pendingProf"),actionEvent);

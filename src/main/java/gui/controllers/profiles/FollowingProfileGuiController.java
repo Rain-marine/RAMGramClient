@@ -16,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import models.LoggedUser;
 import models.requests.UserActionRequest;
+import models.types.UserActionType;
 import util.ConfigLoader;
 
 import java.net.URL;
@@ -79,13 +80,13 @@ public class FollowingProfileGuiController implements Initializable, Controllers
     }
 
     public void unfollowNotify(ActionEvent actionEvent) {
-        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionRequest.USER_ACTION.UNFOLLOW).execute();
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionType.UNFOLLOW).execute();
         ProfileAccessController profileAccessController = new ProfileAccessController(previous,userId,factionId);
         SceneLoader.getInstance().changeScene(profileAccessController.checkAccessibility(),actionEvent);
     }
 
     public void unfollowWithoutNotif(ActionEvent actionEvent) {
-        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionRequest.USER_ACTION.QUIET_UNFOLLOW).execute();
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionType.QUIET_UNFOLLOW).execute();
         ProfileAccessController profileAccessController = new ProfileAccessController(previous,userId,factionId);
         SceneLoader.getInstance().changeScene(profileAccessController.checkAccessibility(),actionEvent);
     }

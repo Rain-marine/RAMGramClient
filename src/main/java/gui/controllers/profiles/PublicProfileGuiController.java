@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.shape.Rectangle;
 import models.LoggedUser;
 import models.requests.UserActionRequest;
+import models.types.UserActionType;
 import util.ConfigLoader;
 
 import java.net.URL;
@@ -54,7 +55,7 @@ public class PublicProfileGuiController implements Initializable, Controllers {
 
 
     public void followButtonClicked(ActionEvent actionEvent) {
-        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionRequest.USER_ACTION.FOLLOW).execute();
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionType.FOLLOW).execute();
         FollowingProfileGuiController.setUser(userId);
         FollowingProfileGuiController.setPrevious(previous);
         FollowingProfileGuiController.setProfileAccessController(profileAccessController);

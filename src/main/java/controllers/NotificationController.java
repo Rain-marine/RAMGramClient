@@ -6,6 +6,7 @@ import models.requests.UserActionRequest;
 import models.responses.NotificationResponse;
 import models.responses.Response;
 import models.trimmed.TrimmedNotification;
+import models.types.UserActionType;
 
 import java.util.List;
 
@@ -31,22 +32,22 @@ public class NotificationController {
     }
 
     public void acceptFollowRequest(long notification) {
-        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , notification , UserActionRequest.USER_ACTION.ACCEPT).execute();
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , notification , UserActionType.ACCEPT).execute();
 
     }
 
     public void rejectFollowRequestWithNotification(long notification) {
-        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , notification , UserActionRequest.USER_ACTION.REJECT).execute();
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , notification , UserActionType.REJECT).execute();
 
     }
 
     public void rejectFollowRequestWithoutNotification(long notification) {
-        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , notification , UserActionRequest.USER_ACTION.QUIET_REJECT).execute();
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , notification , UserActionType.QUIET_REJECT).execute();
 
     }
 
     public void deleteNotification(long notification) {
-        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , notification , UserActionRequest.USER_ACTION.DELETE_NOTIF).execute();
+        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , notification , UserActionType.DELETE_NOTIF).execute();
 
     }
 

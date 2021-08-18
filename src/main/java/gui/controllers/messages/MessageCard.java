@@ -19,6 +19,8 @@ import models.requests.MessageRequest;
 import models.responses.MessageResponse;
 import models.responses.Response;
 import models.trimmed.TrimmedMessage;
+import models.types.AddContentType;
+import models.types.MessageActionType;
 
 import java.util.ArrayList;
 
@@ -131,7 +133,7 @@ public class MessageCard {
 
         delete.setOnAction(event -> {
             long id = Long.parseLong(delete.getId());
-            new MessageActionRequest(LoggedUser.getToken() , LoggedUser.getId() , MessageActionRequest.TYPE.DELETE, id).execute();
+            new MessageActionRequest(LoggedUser.getToken() , LoggedUser.getId() , MessageActionType.DELETE, id).execute();
             loadDeletedCard();
         });
 
@@ -145,13 +147,9 @@ public class MessageCard {
 
         });
 
-        forward.setOnAction(event -> {
-            Forward.display(Long.parseLong(forward.getId()));
-        });
+        forward.setOnAction(event -> Forward.display(Long.parseLong(forward.getId())));
 
-        save.setOnAction(event -> {
-            new AddContentRequest(LoggedUser.getToken() , LoggedUser.getId() , AddContentRequest.TYPE.SAVE_MESSAGE , null ,null,0L ,Long.parseLong(save.getId())).execute();
-        });
+        save.setOnAction(event -> new AddContentRequest(LoggedUser.getToken() , LoggedUser.getId() , AddContentType.SAVE_MESSAGE , null ,null,0L ,Long.parseLong(save.getId())).execute());
 
     }
 

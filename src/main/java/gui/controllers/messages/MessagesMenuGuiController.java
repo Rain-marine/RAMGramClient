@@ -13,6 +13,7 @@ import models.LoggedUser;
 import models.requests.ListRequest;
 import models.responses.ListResponse;
 import models.responses.Response;
+import models.types.ListType;
 import util.ConfigLoader;
 
 import java.net.URL;
@@ -31,7 +32,7 @@ public class MessagesMenuGuiController implements Initializable {
 
     private void loadChats() {
         ChatShowerGuiController.setPreviousMenu(ChatShowerGuiController.PREVIOUS.DEFAULT);
-        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListRequest.TYPE.CHAT , 0L).execute();
+        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.CHAT , 0L).execute();
         List<Long> chatIds = ((ListResponse)response).getIds();
         if (chatIds.size() == 0){
             chatsArea.setContent(new Label("you have no chats"));
