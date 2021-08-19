@@ -51,6 +51,7 @@ public class TweetShowerGuiController implements Initializable, Controllers {
     }
 
     public void logoutButtonClicked(ActionEvent actionEvent) {
+
         SceneLoader.getInstance().logout(actionEvent);
     }
 

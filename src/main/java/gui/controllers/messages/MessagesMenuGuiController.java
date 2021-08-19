@@ -3,12 +3,14 @@ package gui.controllers.messages;
 import gui.controllers.SceneLoader;
 import gui.controllers.popups.messaging.NewGroup;
 import gui.controllers.popups.messaging.SendNewMessage;
+import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import models.LoggedUser;
 import models.requests.ListRequest;
 import models.responses.ListResponse;
@@ -25,6 +27,9 @@ public class MessagesMenuGuiController implements Initializable {
     @FXML
     private ScrollPane chatsArea;
 
+    private PauseTransition timer;
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadChats();
@@ -32,6 +37,15 @@ public class MessagesMenuGuiController implements Initializable {
 
     private void loadChats() {
         ChatShowerGuiController.setPreviousMenu(ChatShowerGuiController.PREVIOUS.DEFAULT);
+        timer = new PauseTransition(Duration.seconds(Integer.parseInt(ConfigLoader.readProperty("refreshTime"))));
+        timer.setOnFinished(
+                e -> {
+                    updatePane();
+                });
+        updatePane();
+    }
+
+    private void updatePane() {
         Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.CHAT , 0L).execute();
         List<Long> chatIds = ((ListResponse)response).getIds();
         if (chatIds.size() == 0){
@@ -44,17 +58,21 @@ public class MessagesMenuGuiController implements Initializable {
             }
             chatsArea.setContent(list);
         }
+        timer.playFromStart();
     }
 
     public void backButtonClicked(ActionEvent actionEvent) {
+        timer.stop();
         SceneLoader.getInstance().mainMenu(actionEvent);
     }
 
     public void logoutButtonClicked(ActionEvent actionEvent) {
+        timer.stop();
         SceneLoader.getInstance().logout(actionEvent);
     }
 
     public void mainMenuButtonClicked(ActionEvent actionEvent) {
+        timer.stop();
         SceneLoader.getInstance().mainMenu(actionEvent);
     }
 

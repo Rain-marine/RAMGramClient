@@ -4,6 +4,7 @@ import controllers.ProfileAccessController;
 import gui.controllers.ImageController;
 import gui.controllers.SceneLoader;
 import gui.controllers.popups.AlertBox;
+import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -13,6 +14,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 import models.LoggedUser;
 import models.requests.AddContentRequest;
 import models.requests.ChatInfoRequest;
@@ -22,6 +24,7 @@ import models.responses.ListResponse;
 import models.responses.Response;
 import models.types.AddContentType;
 import models.types.ListType;
+import util.ConfigLoader;
 
 import javax.naming.SizeLimitExceededException;
 import java.net.URL;
@@ -46,10 +49,14 @@ public class ChatShowerGuiController implements Initializable {
     private TextField messageTextField;
     @FXML
     private ImageView chosenImageView;
-    
-    private byte[] chosenImageByteArray = null;
 
-    public enum PREVIOUS { DEFAULT , PROFILE}
+    private PauseTransition timer;
+    private byte[] chosenImageByteArray = null;
+    private ArrayList<Long> messageIDs;
+    private Response response;
+    private Response messageResponse;
+
+    public enum PREVIOUS {DEFAULT, PROFILE}
 
     private static long chatId;
     private static PREVIOUS previousMenu;
@@ -57,36 +64,46 @@ public class ChatShowerGuiController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        timer = new PauseTransition(Duration.seconds(Integer.parseInt(ConfigLoader.readProperty("refreshTime"))));
+        timer.setOnFinished(
+                e -> {
+                    loadMessages();
+                });
         loadMessages();
     }
 
     private void loadMessages() {
-        Response response = new ChatInfoRequest(LoggedUser.getToken() , LoggedUser.getId() ,chatId).execute();
-        usernameLabel.setText(((ChatInfoResponse)response).getFrontUsername());
-        profileImageview.setImage(ImageController.byteArrayToImage(((ChatInfoResponse)response).getFrontProfile()));
-        lastSeenLabel.setText(((ChatInfoResponse)response).getLastSeen());
+        timer.stop();
+        response = new ChatInfoRequest(LoggedUser.getToken(), LoggedUser.getId(), chatId).execute();
+        usernameLabel.setText(((ChatInfoResponse) response).getFrontUsername());
+        profileImageview.setImage(ImageController.byteArrayToImage(((ChatInfoResponse) response).getFrontProfile()));
+        lastSeenLabel.setText(((ChatInfoResponse) response).getLastSeen());
 
         VBox list = new VBox(5);
-        Response response2 = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.MESSAGE , chatId).execute();
-        ArrayList<Long> messageIDs = ((ListResponse)response2).getIds();
+        messageResponse = new ListRequest(LoggedUser.getToken(), LoggedUser.getId(), ListType.MESSAGE, chatId).execute();
+        messageIDs = ((ListResponse) messageResponse).getIds();
         for (Long messageID : messageIDs) {
             list.getChildren().add(new MessageCard(messageID).getCard());
         }
         messagesArea.setContent(list);
+        timer.playFromStart();
     }
 
     public void backButtonClicked(ActionEvent actionEvent) {
-        switch (previousMenu){
+        timer.stop();
+        switch (previousMenu) {
             case DEFAULT -> SceneLoader.getInstance().messaging(actionEvent);
             case PROFILE -> SceneLoader.getInstance().changeScene(profileAccessController.checkAccessibility(), actionEvent);
         }
     }
 
     public void logoutButtonClicked(ActionEvent actionEvent) {
+        timer.stop();
         SceneLoader.getInstance().logout(actionEvent);
     }
 
     public void mainMenuButtonClicked(ActionEvent actionEvent) {
+        timer.stop();
         SceneLoader.getInstance().mainMenu(actionEvent);
     }
 
@@ -100,11 +117,10 @@ public class ChatShowerGuiController implements Initializable {
 
     public void sendButtonClicked(ActionEvent actionEvent) {
         String messageText = messageTextField.getText();
-        if (messageText.equals("") && chosenImageByteArray == null){
-            AlertBox.display("Nerd Alert" , "write something idiot");
-        }
-        else {
-            new AddContentRequest(LoggedUser.getToken() , LoggedUser.getId() , AddContentType.MESSAGE , chosenImageByteArray ,messageText ,chatId ,0L).execute();
+        if (messageText.equals("") && chosenImageByteArray == null) {
+            AlertBox.display("Nerd Alert", "write something idiot");
+        } else {
+            new AddContentRequest(LoggedUser.getToken(), LoggedUser.getId(), AddContentType.MESSAGE, chosenImageByteArray, messageText, chatId, 0L).execute();
             chosenImageView.setImage(null);
             messageTextField.clear();
             loadMessages();
@@ -112,14 +128,16 @@ public class ChatShowerGuiController implements Initializable {
     }
 
     public void choosePicButtonClicked(ActionEvent actionEvent) {
+        timer.pause();
         try {
             chosenImageByteArray = ImageController.pickImage();
-            if (chosenImageByteArray != null){
+            if (chosenImageByteArray != null) {
                 chosenImageView.setImage(ImageController.byteArrayToImage(chosenImageByteArray));
             }
         } catch (SizeLimitExceededException e) {
-            AlertBox.display("too large" , "Image size too large");
+            AlertBox.display("too large", "Image size too large");
         }
+        timer.play();
     }
 
     public static PREVIOUS getPreviousMenu() {

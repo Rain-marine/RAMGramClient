@@ -27,6 +27,8 @@ public class TimeLineGuiController implements Initializable , Controllers{
     private ScrollPane tweetsArea;
 
     private PauseTransition timer;
+    private ArrayList<Long> listOfTweets;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -42,23 +44,26 @@ public class TimeLineGuiController implements Initializable , Controllers{
     private void updatePane() {
         System.out.println("updating...");
         VBox list = new VBox(0);
-        ArrayList<Long> listOfTweets = TWEET_CONTROLLER.getFollowingTweets();
+        listOfTweets = TWEET_CONTROLLER.getFollowingTweets();
         for (long tweet : listOfTweets) {
             list.getChildren().add(new TweetCard(tweet , TweetCard.MODE.TIMELINE).getVBox());
         }
         tweetsArea.setContent(list);
-//        timer.playFromStart();
+        timer.playFromStart();
     }
 
     public void logoutButtonClicked(ActionEvent actionEvent) {
+        timer.stop();
         SceneLoader.getInstance().logout(actionEvent);
     }
 
     public void backButtonClicked(ActionEvent actionEvent) {
+        timer.stop();
         SceneLoader.getInstance().mainMenu(actionEvent);
     }
 
     public void mainMenuButtonClicked(ActionEvent actionEvent) {
+        timer.stop();
         SceneLoader.getInstance().mainMenu(actionEvent);
     }
 

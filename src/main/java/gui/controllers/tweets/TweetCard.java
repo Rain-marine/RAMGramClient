@@ -144,6 +144,7 @@ public class TweetCard {
             String commentTextString = commentText.getText();
             if ((!commentTextString.equals("")) || (commentImageArray != null)) {
                 new AddCommentRequest(LoggedUser.getToken() , LoggedUser.getId() , tweetId , commentTextString ,commentImageArray == null ? null : commentImageArray).execute();
+                commentText.clear();
             }
         });
         commentImage.setStyle("-fx-background-color: #690081");
