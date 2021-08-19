@@ -15,20 +15,23 @@ public class ChatRequest implements Request{
     private long userId;
     private long chatId;
     private ChatType mode;
+    private String sender;
 
     public ChatRequest(String token, long userId, long chatId) {
         this.token = token;
         this.userId = userId;
         this.chatId = chatId;
         this.mode = ChatType.NORMAL;
+        this.sender = null;
     }
 
 
-    public ChatRequest(String token, long userId, long chatId , ChatType mode) {
+    public ChatRequest(String token, long userId, long chatId , ChatType mode , String sender) {
         this.token = token;
         this.userId = userId;
         this.chatId = chatId;
         this.mode = mode;
+        this.sender =sender;
     }
 
 
@@ -71,5 +74,13 @@ public class ChatRequest implements Request{
 
     public void setMode(ChatType mode) {
         this.mode = mode;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
     }
 }

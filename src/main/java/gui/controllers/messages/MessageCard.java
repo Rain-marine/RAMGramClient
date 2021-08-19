@@ -6,6 +6,7 @@ import gui.controllers.ImageController;
 import gui.controllers.SceneLoader;
 import gui.controllers.popups.messaging.EditMessage;
 import gui.controllers.popups.messaging.Forward;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -166,20 +167,26 @@ public class MessageCard {
             }
             case CHAT-> {
                 long chatId = Long.parseLong(trimmedMessage.getMessageText());
-                Response response = new ChatRequest(LoggedUser.getToken() , LoggedUser.getId() , chatId , ChatType.VIEW).execute();
-                TrimmedChat trimmedChat = ((ChatResponse) response).getTrimmedChat();
                 Button goToChat = new Button("Show");
-                goToChat.setId(String.valueOf(chatId));
-                goToChat.setOnAction(event -> {
-                    if (trimmedChat.isGroup()){
-                        GroupChatShowerGuiController.setGroupId(chatId);
-                        SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("groupChat"), event);
-                    }
-                    else{
-                        ChatShowerGuiController.setChatId(chatId);
-                        SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("chat"), event);
-                    }
-                });
+                Response response = new ChatRequest(LoggedUser.getToken() , LoggedUser.getId() , chatId , ChatType.VIEW , trimmedMessage.getSender()).execute();
+                try{
+                    TrimmedChat trimmedChat = ((ChatResponse) response).getTrimmedChat();
+                    goToChat.setOnAction(event -> {
+                        if (trimmedChat.isGroup()){
+                            GroupChatShowerGuiController.setGroupId(trimmedChat.getId());
+                            SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("groupChat"), event);
+                        }
+                        else{
+                            ChatShowerGuiController.setChatId(trimmedChat.getId());
+                            SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("chat"), event);
+                        }
+                    });
+                }catch (ClassCastException e){
+                    goToChat.setOnAction(event -> {
+                        Alert alert = new Alert(Alert.AlertType.ERROR, "Access Denied!");
+                        alert.show();
+                    });
+                }
                 buttonRow.getChildren().add(goToChat);
             }
             case INVITE -> {
