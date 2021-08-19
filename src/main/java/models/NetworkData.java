@@ -1,5 +1,6 @@
 package models;
 
+import javafx.scene.control.Alert;
 import models.requests.Request;
 import models.responses.ConnectionErrorResponse;
 import models.responses.Response;
@@ -46,6 +47,9 @@ public class NetworkData {
             try {
                 ConnectionErrorResponse errorResponse = (ConnectionErrorResponse) response;
                 System.err.println(errorResponse.getMessage() + "\nTerminate the application");
+                Alert alert = new Alert(Alert.AlertType.ERROR, errorResponse.getMessage());
+                alert.show();
+
             }
             catch (ClassCastException classCastException){
                 return response;
