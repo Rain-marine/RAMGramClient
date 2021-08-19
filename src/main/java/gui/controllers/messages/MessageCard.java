@@ -1,7 +1,9 @@
 package gui.controllers.messages;
 
+import controllers.ChatController;
 import controllers.MessageController;
 import gui.controllers.ImageController;
+import gui.controllers.SceneLoader;
 import gui.controllers.popups.messaging.EditMessage;
 import gui.controllers.popups.messaging.Forward;
 import javafx.scene.control.Button;
@@ -14,13 +16,17 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import models.LoggedUser;
 import models.requests.AddContentRequest;
+import models.requests.ChatRequest;
 import models.requests.MessageActionRequest;
 import models.requests.MessageRequest;
+import models.responses.ChatResponse;
 import models.responses.MessageResponse;
 import models.responses.Response;
+import models.trimmed.TrimmedChat;
 import models.trimmed.TrimmedMessage;
 import models.types.AddContentType;
 import models.types.MessageActionType;
+import util.ConfigLoader;
 
 import java.util.ArrayList;
 
@@ -94,9 +100,12 @@ public class MessageCard {
 
         header.getChildren().addAll(profilePhoto, new Label(sender + ": "), new Label(forwardInfo));
 
+
+        Label status = new Label(trimmedMessage.getSender().equals(LoggedUser.getUsername()) ? trimmedMessage.getStatus().toString() : "");
+
         initializeButtonRow();
 
-        card.getChildren().addAll(header, messageText, messageImage, messageDate, buttonRow);
+        card.getChildren().addAll(header, messageText, messageImage, status, messageDate, buttonRow);
         card.setId(String.valueOf(this.messageId));
     }
 
@@ -151,6 +160,37 @@ public class MessageCard {
 
         save.setOnAction(event -> new AddContentRequest(LoggedUser.getToken() , LoggedUser.getId() , AddContentType.SAVE_MESSAGE , null ,null,0L ,Long.parseLong(save.getId())).execute());
 
+        switch (trimmedMessage.getLink()){
+            case NONE -> {
+            }
+            case CHAT-> {
+                long chatId = Long.parseLong(trimmedMessage.getMessageText());
+                Response response = new ChatRequest(LoggedUser.getToken() , LoggedUser.getId() , chatId).execute();
+                TrimmedChat trimmedChat = ((ChatResponse) response).getTrimmedChat();
+                Button goToChat = new Button("Show");
+                goToChat.setId(String.valueOf(chatId));
+                goToChat.setOnAction(event -> {
+                    if (trimmedChat.isGroup()){
+                        GroupChatShowerGuiController.setGroupId(chatId);
+                        SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("groupChat"), event);
+                    }
+                    else{
+                        ChatShowerGuiController.setChatId(chatId);
+                        SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("chat"), event);
+                    }
+                });
+                buttonRow.getChildren().add(goToChat);
+            }
+            case INVITE -> {
+                long groupId = Long.parseLong(trimmedMessage.getMessageText());
+                Button join = new Button("join");
+                join.setOnAction(event -> {
+                    new ChatController().addMemberToGroupChat(LoggedUser.getUsername() , groupId);
+                    GroupChatShowerGuiController.setGroupId(groupId);
+                    SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("groupChat"), event);
+                });
+            }
+        }
     }
 
     private void loadDeletedCard() {
