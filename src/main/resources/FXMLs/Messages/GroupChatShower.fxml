@@ -92,6 +92,22 @@
                                     <Font size="18.0" />
                                  </font>
                               </Label>
+                              <TextField fx:id="hour" layoutX="243.0" layoutY="301.0" prefHeight="22.0" prefWidth="58.0" promptText="hour" />
+                              <TextField fx:id="minute" layoutX="242.0" layoutY="332.0" prefHeight="18.0" prefWidth="59.0" promptText="minute" />
+                              <Button fx:id="sendBtn1" alignment="CENTER" layoutX="185.0" layoutY="366.0" mnemonicParsing="false" onAction="#sendScheduledButtonClicked" prefHeight="42.0" prefWidth="115.0" style="-fx-background-color: #4b016e;" text="Send Scheduled" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                                 <font>
+                                    <Font name="Gabriola" size="18.0" />
+                                 </font>
+                                 <effect>
+                                    <ColorAdjust />
+                                 </effect>
+                              </Button>
                            </children>
                         </AnchorPane>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />

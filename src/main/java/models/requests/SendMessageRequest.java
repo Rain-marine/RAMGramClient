@@ -35,6 +35,8 @@ public class SendMessageRequest implements Request {
         this.targetUsername = targetUsername;
     }
 
+
+
     @Override
     public Response execute() {
        return NetworkData.sendRequest(this);
@@ -114,4 +116,5 @@ public class SendMessageRequest implements Request {
     public void setTargetUsername(String targetUsername) {
         this.targetUsername = targetUsername;
     }
+
 }

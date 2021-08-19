@@ -4,6 +4,8 @@ import controllers.Controllers;
 import gui.controllers.ImageController;
 import gui.controllers.SceneLoader;
 import gui.controllers.popups.AlertBox;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -41,6 +43,11 @@ public class GroupChatShowerGuiController implements Initializable {
     private ImageView chosenImageView;
     @FXML
     private Label membersLabel;
+    @FXML
+    private TextField hour;
+    @FXML
+    private TextField minute;
+
 
     private byte[] chosenImageByteArray = null;
 
@@ -48,13 +55,27 @@ public class GroupChatShowerGuiController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Response response = new ChatInfoRequest(LoggedUser.getToken() , LoggedUser.getId() ,groupId).execute();
-        groupNameLabel.setText(((ChatInfoResponse)response).getFrontUsername());
-        ArrayList<String> membersNames = ((ChatInfoResponse)response).getMembersNames();
-        membersLabel.setText(String.join("\n" , membersNames));
+
+        hour.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                hour.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+
+        minute.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                minute.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+
+        Response response = new ChatInfoRequest(LoggedUser.getToken(), LoggedUser.getId(), groupId).execute();
+        groupNameLabel.setText(((ChatInfoResponse) response).getFrontUsername());
+        ArrayList<String> membersNames = ((ChatInfoResponse) response).getMembersNames();
+        membersLabel.setText(String.join("\n", membersNames));
         loadMessages();
 
     }
+
     public void backButtonClicked(ActionEvent actionEvent) {
         SceneLoader.getInstance().messaging(actionEvent);
     }
@@ -69,11 +90,10 @@ public class GroupChatShowerGuiController implements Initializable {
 
     public void sendButtonClicked(ActionEvent actionEvent) {
         String messageText = messageTextField.getText();
-        if (messageText.equals("") && chosenImageByteArray == null){
-            AlertBox.display("Nerd Alert" , "write something idiot");
-        }
-        else {
-            new AddContentRequest(LoggedUser.getToken() , LoggedUser.getId() , AddContentType.GROUP_MESSAGE , chosenImageByteArray ,messageText ,groupId,0L).execute();
+        if (messageText.equals("") && chosenImageByteArray == null) {
+            AlertBox.display("Nerd Alert", "write something idiot");
+        } else {
+            new AddContentRequest(LoggedUser.getToken(), LoggedUser.getId(), AddContentType.GROUP_MESSAGE, chosenImageByteArray, messageText, groupId, 0L).execute();
             chosenImageView.setImage(null);
             messageTextField.clear();
             loadMessages();
@@ -81,11 +101,11 @@ public class GroupChatShowerGuiController implements Initializable {
     }
 
     private void loadMessages() {
-        Response infoResponse = new ChatInfoRequest(LoggedUser.getToken() , LoggedUser.getId() ,groupId).execute();
-        groupNameLabel.setText(((ChatInfoResponse)infoResponse).getFrontUsername());
+        Response infoResponse = new ChatInfoRequest(LoggedUser.getToken(), LoggedUser.getId(), groupId).execute();
+        groupNameLabel.setText(((ChatInfoResponse) infoResponse).getFrontUsername());
         VBox list = new VBox(5);
-        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.MESSAGE , groupId).execute();
-        ArrayList<Long> messageIDs = ((ListResponse)response).getIds();
+        Response response = new ListRequest(LoggedUser.getToken(), LoggedUser.getId(), ListType.MESSAGE, groupId).execute();
+        ArrayList<Long> messageIDs = ((ListResponse) response).getIds();
         for (Long messageID : messageIDs) {
             list.getChildren().add(new MessageCard(messageID).getCard());
         }
@@ -101,17 +121,16 @@ public class GroupChatShowerGuiController implements Initializable {
     }
 
     public void addMemberButtonClicked(ActionEvent actionEvent) {
-        if (AddMemberToGroupChat.display(groupId))
-        {
-            Response infoResponse = new ChatInfoRequest(LoggedUser.getToken() , LoggedUser.getId() ,groupId).execute();
-            ArrayList<String> membersNames = ((ChatInfoResponse)infoResponse).getMembersNames();
-            membersLabel.setText(String.join("\n" , membersNames));
+        if (AddMemberToGroupChat.display(groupId)) {
+            Response infoResponse = new ChatInfoRequest(LoggedUser.getToken(), LoggedUser.getId(), groupId).execute();
+            ArrayList<String> membersNames = ((ChatInfoResponse) infoResponse).getMembersNames();
+            membersLabel.setText(String.join("\n", membersNames));
         }
 
     }
 
     public void leaveButtonClicked(ActionEvent actionEvent) {
-        new LeaveGroupRequest(LoggedUser.getToken(),LoggedUser.getId() , groupId).execute();
+        new LeaveGroupRequest(LoggedUser.getToken(), LoggedUser.getId(), groupId).execute();
         SceneLoader.getInstance().messaging(actionEvent);
 
     }
@@ -119,11 +138,33 @@ public class GroupChatShowerGuiController implements Initializable {
     public void choosePicButtonClicked(ActionEvent actionEvent) {
         try {
             chosenImageByteArray = ImageController.pickImage();
-            if (chosenImageByteArray != null){
+            if (chosenImageByteArray != null) {
                 chosenImageView.setImage(ImageController.byteArrayToImage(chosenImageByteArray));
             }
         } catch (SizeLimitExceededException e) {
-            AlertBox.display("too large" , "Image size too large");
+            AlertBox.display("too large", "Image size too large");
         }
     }
+
+    public void sendScheduledButtonClicked(ActionEvent actionEvent) {
+        String messageText = messageTextField.getText();
+        if (messageText.equals("") && chosenImageByteArray == null) {
+            AlertBox.display("Nerd Alert", "write something idiot");
+        }
+        else {
+            if (hour.getText().equals("") && minute.getText().equals("")) {
+                AlertBox.display("Nerd Alert", "enter the time idiot");
+            } else {
+                long hours = Long.parseLong(hour.getText())*3600;
+                long minutes = Long.parseLong(minute.getText())*60;
+                new AddContentRequest(LoggedUser.getToken(), LoggedUser.getId(), AddContentType.SCHEDULED, chosenImageByteArray, messageText, groupId, hours+minutes).execute();
+                chosenImageView.setImage(null);
+                messageTextField.clear();
+                hour.clear();
+                minute.clear();
+            }
+        }
+
+    }
+
 }
