@@ -25,6 +25,7 @@ import models.responses.Response;
 import models.trimmed.TrimmedChat;
 import models.trimmed.TrimmedMessage;
 import models.types.AddContentType;
+import models.types.ChatType;
 import models.types.MessageActionType;
 import util.ConfigLoader;
 
@@ -165,7 +166,7 @@ public class MessageCard {
             }
             case CHAT-> {
                 long chatId = Long.parseLong(trimmedMessage.getMessageText());
-                Response response = new ChatRequest(LoggedUser.getToken() , LoggedUser.getId() , chatId).execute();
+                Response response = new ChatRequest(LoggedUser.getToken() , LoggedUser.getId() , chatId , ChatType.VIEW).execute();
                 TrimmedChat trimmedChat = ((ChatResponse) response).getTrimmedChat();
                 Button goToChat = new Button("Show");
                 goToChat.setId(String.valueOf(chatId));

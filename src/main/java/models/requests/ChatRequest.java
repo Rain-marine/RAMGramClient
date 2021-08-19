@@ -5,6 +5,7 @@ import models.responses.BooleanResponse;
 import models.responses.ChatResponse;
 import models.responses.Response;
 import models.trimmed.TrimmedChat;
+import models.types.ChatType;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("chat")
@@ -13,12 +14,23 @@ public class ChatRequest implements Request{
     private String token;
     private long userId;
     private long chatId;
+    private ChatType mode;
 
     public ChatRequest(String token, long userId, long chatId) {
         this.token = token;
         this.userId = userId;
         this.chatId = chatId;
+        this.mode = ChatType.NORMAL;
     }
+
+
+    public ChatRequest(String token, long userId, long chatId , ChatType mode) {
+        this.token = token;
+        this.userId = userId;
+        this.chatId = chatId;
+        this.mode = mode;
+    }
+
 
     public ChatRequest() {
     }
@@ -51,5 +63,13 @@ public class ChatRequest implements Request{
 
     public void setChatId(long chatId) {
         this.chatId = chatId;
+    }
+
+    public ChatType getMode() {
+        return mode;
+    }
+
+    public void setMode(ChatType mode) {
+        this.mode = mode;
     }
 }
