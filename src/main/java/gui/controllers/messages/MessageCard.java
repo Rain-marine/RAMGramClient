@@ -189,6 +189,7 @@ public class MessageCard {
                     GroupChatShowerGuiController.setGroupId(groupId);
                     SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("groupChat"), event);
                 });
+                buttonRow.getChildren().add(join);
             }
         }
     }

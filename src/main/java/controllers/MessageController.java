@@ -1,14 +1,17 @@
 package controllers;
 
 import models.LoggedUser;
+import models.requests.AddContentRequest;
 import models.requests.MessageAccessRequest;
 import models.requests.SendMessageRequest;
 import models.responses.BooleanResponse;
 import models.responses.ExploreResponse;
 import models.responses.Response;
+import models.types.AddContentType;
 import models.types.MessageAccessType;
 import models.types.SendMessageType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessageController{
@@ -80,9 +83,32 @@ public class MessageController{
     }
 
     public void sendLink(String username, long chatId) {
+        new SendMessageRequest(LoggedUser.getToken() ,
+                LoggedUser.getId() ,
+                SendMessageType.LINK ,
+                0L,
+                new ArrayList<>() {{
+                    add(username);
+                }},
+                null ,
+                String.valueOf(chatId),
+                null ,
+                null).execute();
+
     }
 
     public void sendInvitation(String username, long chatId) {
+        new SendMessageRequest(LoggedUser.getToken() ,
+                LoggedUser.getId() ,
+                SendMessageType.INVITE ,
+                0L,
+                new ArrayList<>() {{
+                    add(username);
+                }},
+                null ,
+                String.valueOf(chatId),
+                null ,
+                null).execute();
     }
 
 
