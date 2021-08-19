@@ -4,6 +4,7 @@ import controllers.ProfileAccessController;
 import gui.controllers.ImageController;
 import gui.controllers.SceneLoader;
 import gui.controllers.popups.AlertBox;
+import gui.controllers.popups.messaging.SendLinkOrAdd;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -55,6 +56,7 @@ public class ChatShowerGuiController implements Initializable {
     private ArrayList<Long> messageIDs;
     private Response response;
     private Response messageResponse;
+
 
     public enum PREVIOUS {DEFAULT, PROFILE}
 
@@ -139,6 +141,11 @@ public class ChatShowerGuiController implements Initializable {
         }
         timer.play();
     }
+
+    public void getLinkButtonClicked(ActionEvent actionEvent) {
+        SendLinkOrAdd.display(chatId , SendLinkOrAdd.Mode.LINK);
+    }
+
 
     public static PREVIOUS getPreviousMenu() {
         return previousMenu;

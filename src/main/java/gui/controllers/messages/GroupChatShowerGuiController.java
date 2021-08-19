@@ -1,12 +1,9 @@
 package gui.controllers.messages;
 
-import controllers.Controllers;
 import gui.controllers.ImageController;
 import gui.controllers.SceneLoader;
 import gui.controllers.popups.AlertBox;
 import javafx.animation.PauseTransition;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,7 +12,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-import gui.controllers.popups.messaging.AddMemberToGroupChat;
+import gui.controllers.popups.messaging.SendLinkOrAdd;
 import javafx.util.Duration;
 import models.LoggedUser;
 import models.requests.AddContentRequest;
@@ -135,7 +132,7 @@ public class GroupChatShowerGuiController implements Initializable {
     }
 
     public void addMemberButtonClicked(ActionEvent actionEvent) {
-        if (AddMemberToGroupChat.display(groupId)) {
+        if (SendLinkOrAdd.display(groupId , SendLinkOrAdd.Mode.ADD)) {
             Response infoResponse = new ChatInfoRequest(LoggedUser.getToken(), LoggedUser.getId(), groupId).execute();
             ArrayList<String> membersNames = ((ChatInfoResponse) infoResponse).getMembersNames();
             membersLabel.setText(String.join("\n", membersNames));
@@ -183,4 +180,11 @@ public class GroupChatShowerGuiController implements Initializable {
 
     }
 
+    public void getLinkButtonClicked(ActionEvent actionEvent) {
+        SendLinkOrAdd.display(groupId , SendLinkOrAdd.Mode.LINK);
+    }
+
+    public void inviteLinkButtonClicked(ActionEvent actionEvent) {
+        SendLinkOrAdd.display(groupId , SendLinkOrAdd.Mode.INVITE);
+    }
 }

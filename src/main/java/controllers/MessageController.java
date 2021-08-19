@@ -79,6 +79,12 @@ public class MessageController{
         return ((ExploreResponse)response).getFoundUserId();
     }
 
+    public void sendLink(String username, long chatId) {
+    }
+
+    public void sendInvitation(String username, long chatId) {
+    }
+
 
     public enum TYPE {EDIT, DELETE, BOTH, NONE}
 

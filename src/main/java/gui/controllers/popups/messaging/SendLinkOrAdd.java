@@ -13,12 +13,12 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class AddMemberToGroupChat implements Controllers , ConfirmBox {
+public class SendLinkOrAdd implements Controllers , ConfirmBox {
 
     static boolean answer;
+    public enum Mode {INVITE , LINK ,ADD}
 
-
-    public static boolean display(long chatId){
+    public static boolean display(long chatId , Mode mode){
         Stage window = new Stage();
         Label message = new Label();
         window.initModality(Modality.APPLICATION_MODAL);
@@ -46,7 +46,12 @@ public class AddMemberToGroupChat implements Controllers , ConfirmBox {
             String username = memberNameTextField.getText();
             if(!username.equals("")){
                 if (MESSAGE_CONTROLLER.canSendMessageToUser(username)) {
-                    CHAT_CONTROLLER.addMemberToGroupChat(username , chatId);
+                    switch (mode){
+                        case ADD -> CHAT_CONTROLLER.addMemberToGroupChat(username , chatId);
+                        case INVITE -> MESSAGE_CONTROLLER.sendInvitation(username , chatId);
+                        case LINK -> MESSAGE_CONTROLLER.sendLink(username , chatId);
+                    }
+
                     answer = true;
                     window.close();
                 }

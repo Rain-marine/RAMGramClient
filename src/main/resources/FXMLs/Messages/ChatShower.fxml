@@ -82,6 +82,20 @@
                                  </font>
                               </Label>
                               <ImageView fx:id="chosenImageView" fitHeight="82.0" fitWidth="89.0" layoutX="14.0" layoutY="353.0" pickOnBounds="true" preserveRatio="true" />
+                              <Button fx:id="backButton1" alignment="CENTER" layoutX="23.0" layoutY="173.0" mnemonicParsing="false" onAction="#getLinkButtonClicked" prefHeight="38.0" prefWidth="83.0" style="-fx-background-color: #4b016e;" text="Get Link" textAlignment="JUSTIFY" textFill="WHITE" wrapText="true">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                                 <font>
+                                    <Font name="Gabriola" size="18.0" />
+                                 </font>
+                                 <effect>
+                                    <ColorAdjust />
+                                 </effect>
+                              </Button>
                            </children>
                         </AnchorPane>
                         <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
