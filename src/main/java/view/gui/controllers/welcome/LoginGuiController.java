@@ -1,5 +1,6 @@
 package view.gui.controllers.welcome;
 
+import util.Load;
 import view.SceneLoader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -32,7 +33,8 @@ public class LoginGuiController {
                 LoginResponse response = (LoginResponse) new LoginRequest(username, password).execute();
                 response.unleash();
                 if (response.isLoginValid()) {
-                    //todo: send requests, update LoggedUser , LoadClass
+                    System.out.println("you are now logged in. wait while we set up a few things...");
+                    Load.getInstance().sendRequests();
                     if (LoggedUser.getTrimmedLoggedUser().isActive()) {
                         SceneLoader.getInstance().mainMenu(actionEvent);
                     } else {

@@ -13,8 +13,7 @@ public class LoggedUser {
     public enum Mode {ONLINE , OFFLINE}
 
     public static void update() {
-        Response response = new UpdateLoggedUserRequest(LoggedUser.getId()).execute();
-        setTrimmedLoggedUser(((LoggedUserResponse)response).getTrimmedLoggedUser());
+        new UpdateLoggedUserRequest(LoggedUser.getId()).execute().unleash();
     }
 
     public static TrimmedLoggedUser getTrimmedLoggedUser() {

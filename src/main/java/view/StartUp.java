@@ -1,6 +1,10 @@
 package view;
 
 import controllers.SettingController;
+import models.LoggedUser;
+import models.requests.ChangeAccountVisibilityRequest;
+import models.requests.ChangeBirthdayRequest;
+import models.requests.DeActiveRequest;
 import util.Load;
 import util.Save;
 import view.popups.SimpleConfirmBox;

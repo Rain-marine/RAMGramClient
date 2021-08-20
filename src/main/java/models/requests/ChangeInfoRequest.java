@@ -1,9 +1,11 @@
 package models.requests;
 
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.Response;
 import models.types.ChangeInfoType;
 import org.codehaus.jackson.annotate.JsonTypeName;
+import util.Save;
 
 @JsonTypeName("changeInfo")
 public class ChangeInfoRequest implements Request {
@@ -14,7 +16,7 @@ public class ChangeInfoRequest implements Request {
     private byte[] newPhoto;
     private ChangeInfoType type;
 
-    public ChangeInfoRequest(String token, long userId,ChangeInfoType type, String newInfo) {
+    public ChangeInfoRequest(String token, long userId, ChangeInfoType type, String newInfo) {
         this.token = token;
         this.userId = userId;
         this.newInfo = newInfo;
@@ -33,6 +35,11 @@ public class ChangeInfoRequest implements Request {
 
     @Override
     public Response execute() {
+        if (LoggedUser.getMode() == LoggedUser.Mode.OFFLINE) {
+            this.token = LoggedUser.getToken();
+            Save.getInstance().update(this);
+            return null;
+        }
         return NetworkData.sendRequest(this);
     }
 

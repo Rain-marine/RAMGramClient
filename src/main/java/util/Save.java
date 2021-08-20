@@ -8,8 +8,6 @@ import models.requests.Request;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Save {
 
@@ -24,9 +22,10 @@ public class Save {
         return instance;
     }
 
-    public void update(Request event, String type) {
+    public void update(Request event) {
         try {
-            File file = new File(ConfigLoader.readProperty("offlineDataAdd")+type +".json");
+            String type = event.getClass().getName().substring(16);
+            File file = new File(ConfigLoader.readProperty("offlineSettingAdd")+"/"+type +".json");
             if (!file.exists()) {
                 file.createNewFile();
             }
@@ -37,7 +36,6 @@ public class Save {
             fileWriter.close();
         }catch (IOException e){
             e.printStackTrace();
-            System.out.printf("", e.getCause());
         }
     }
 
