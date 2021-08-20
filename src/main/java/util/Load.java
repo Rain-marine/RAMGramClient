@@ -28,6 +28,33 @@ public class Load {
 
 
     public void loadLoggedUser() {
+        LoggedUser.setTrimmedLoggedUser(getOfflineUser());
+        LoggedUser.setToken("");
+    }
+
+
+    public void sendRequests() {
+        if (checkSendCondition()) {
+            try {
+                ArrayList<Request> requests = loadAllEvents();
+                requests.forEach(Request::execute);
+                FileUtils.cleanDirectory(new File(ConfigLoader.readProperty("offlineSettingAdd") + "/"));
+                LoggedUser.update();
+
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "something went wrong while updating offline setting \n"
+                        + e.getMessage());
+                alert.show();
+            }
+        }
+    }
+
+    private boolean checkSendCondition() {
+        return (getOfflineUser().getId() == LoggedUser.getId());
+    }
+
+    private TrimmedLoggedUser getOfflineUser(){
         Gson gson = new Gson();
         File file = new File(ConfigLoader.readProperty("loggedUserData"));
         BufferedReader br = null;
@@ -38,27 +65,7 @@ public class Load {
         }
         Type type = new TypeToken<TrimmedLoggedUser>() {
         }.getType();
-        LoggedUser.setTrimmedLoggedUser(gson.fromJson(br, type));
-        LoggedUser.setToken("");
-    }
-
-
-    public void sendRequests() {
-        try {
-            ArrayList<Request> requests = loadAllEvents();
-            requests.forEach(Request::execute);
-            for (Request request : requests) {
-                System.out.println(request);
-            }
-            FileUtils.cleanDirectory(new File(ConfigLoader.readProperty("offlineSettingAdd")+"/"));
-            LoggedUser.update();
-
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR, "something went wrong while updating offline setting \n"
-                    + e.getMessage());
-            alert.show();
-        }
+         return gson.fromJson(br, type);
     }
 
 

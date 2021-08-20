@@ -3,6 +3,7 @@ package view.gui.controllers.personalpage;
 import controllers.DateFormat;
 import controllers.UserController;
 import controllers.Controllers;
+import javafx.scene.control.Button;
 import view.ImageController;
 import view.SceneLoader;
 import view.popups.AlertBox;
@@ -20,7 +21,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.ResourceBundle;
 
-public class PersonalPageGuiController implements Initializable , Controllers {
+public class PersonalPageGuiController implements Initializable, Controllers {
 
 
     @FXML
@@ -43,7 +44,16 @@ public class PersonalPageGuiController implements Initializable , Controllers {
     private Label emailEdit;
     @FXML
     private ImageView profilePhotoImage;
-
+    @FXML
+    private Button factionsButton;
+    @FXML
+    private Button yourTweetsButton;
+    @FXML
+    private Button newTweetButton;
+    @FXML
+    private Button notificationButton;
+    @FXML
+    private Button logoutButton;
 
     private String username;
     private String fullName;
@@ -51,7 +61,6 @@ public class PersonalPageGuiController implements Initializable , Controllers {
     private String phoneNumber;
     private String email;
     private Date birthday;
-    private UserController userController = new UserController();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -62,7 +71,15 @@ public class PersonalPageGuiController implements Initializable , Controllers {
         emailTextField.setFocusTraversable(false);
         phoneNumberTextField.setFocusTraversable(false);
         bioTextField.setFocusTraversable(false);
-
+        if (LoggedUser.getMode() == LoggedUser.Mode.ONLINE)
+            LoggedUser.update();
+        else {
+            yourTweetsButton.setDisable(true);
+            newTweetButton.setDisable(true);
+            factionsButton.setDisable(true);
+            notificationButton.setDisable(true);
+            logoutButton.setDisable(true);
+        }
     }
 
     private void loadInfo() {
@@ -107,33 +124,47 @@ public class PersonalPageGuiController implements Initializable , Controllers {
         usernameEdit.setText("");
         emailEdit.setText("");
         phoneNumberEdit.setText("");
+
         String newUsername = usernameTextField.getText();
         if (!newUsername.equals(username)) {
-            if (!userController.ChangeUsername(newUsername)) {
-                usernameEdit.setText("username already exists");
+            if (LoggedUser.getMode() == LoggedUser.Mode.OFFLINE)
+                usernameEdit.setText("can't change username in offline mode");
+            else {
+                if (!USER_CONTROLLER.ChangeUsername(newUsername)) {
+                    usernameEdit.setText("username already exists");
+                }
             }
         }
 
         String newEmail = emailTextField.getText();
         if (!newEmail.equals(email)) {
-            if (!newEmail.contains("@") || !newEmail.contains(".")) {
-                emailEdit.setText("invalid email address");
-            } else if (!userController.changeEmail(newEmail)) {
-                usernameEdit.setText("email already exists");
+            if (LoggedUser.getMode() == LoggedUser.Mode.OFFLINE)
+                emailEdit.setText("can't change email in offline mode");
+            else {
+                if (!newEmail.contains("@") || !newEmail.contains(".")) {
+                    emailEdit.setText("invalid email address");
+                } else if (!USER_CONTROLLER.changeEmail(newEmail)) {
+                    emailEdit.setText("email already exists");
+                }
             }
         }
 
         String newName = nameTextField.getText();
         if (!newName.equals(fullName)) {
-            userController.changeName(newName);
+            USER_CONTROLLER.changeName(newName);
+            LoggedUser.getTrimmedLoggedUser().setFullName(newName);
         }
 
         String newNumber = phoneNumberTextField.getText();
         try {
             Integer.parseInt(newNumber);
             if (!newNumber.equals(phoneNumber)) {
-                if (!userController.changeNumber(newNumber)) {
-                    emailEdit.setText("phone number already exists");
+                if (LoggedUser.getMode() == LoggedUser.Mode.OFFLINE)
+                    phoneNumberEdit.setText("can't change number in offline mode");
+                else {
+                    if (!USER_CONTROLLER.changeNumber(newNumber)) {
+                        phoneNumberEdit.setText("phone number already exists");
+                    }
                 }
             }
 
@@ -145,10 +176,11 @@ public class PersonalPageGuiController implements Initializable , Controllers {
 
         String newBio = bioTextField.getText();
         if (!newBio.equals(bio)) {
-            userController.changeBio(newBio);
+            USER_CONTROLLER.changeBio(newBio);
+            LoggedUser.getTrimmedLoggedUser().setBio(newBio);
         }
-
-        LoggedUser.update();
+        if (LoggedUser.getMode() == LoggedUser.Mode.ONLINE)
+            LoggedUser.update();
         loadInfo();
 
 
@@ -167,7 +199,7 @@ public class PersonalPageGuiController implements Initializable , Controllers {
     }
 
     public void notificationButtonClicked(ActionEvent actionEvent) {
-        SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("notificationAdd"),actionEvent);
+        SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("notificationAdd"), actionEvent);
     }
 
 
@@ -175,11 +207,11 @@ public class PersonalPageGuiController implements Initializable , Controllers {
         byte[] byteArray;
         try {
             byteArray = ImageController.pickImage();
-            userController.changeProfilePhoto(byteArray);
+            USER_CONTROLLER.changeProfilePhoto(byteArray);
             LoggedUser.update();
             loadInfo();
         } catch (SizeLimitExceededException e) {
-            AlertBox.display("size limit error","Image size is too large. \nImage size should be less than 2MB");
+            AlertBox.display("size limit error", "Image size is too large. \nImage size should be less than 2MB");
         }
     }
 }

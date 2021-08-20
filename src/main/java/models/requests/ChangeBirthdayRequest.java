@@ -31,10 +31,10 @@ public class ChangeBirthdayRequest implements Request {
     @Override
     public Response execute() {
         if (LoggedUser.getMode() == LoggedUser.Mode.OFFLINE) {
-            this.token = LoggedUser.getToken();
             Save.getInstance().update(this);
             return null;
         }
+        this.token = LoggedUser.getToken();
         return NetworkData.sendRequest(this);
     }
 

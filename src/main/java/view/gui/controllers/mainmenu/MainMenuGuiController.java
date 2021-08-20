@@ -70,7 +70,6 @@ public class MainMenuGuiController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         if (LoggedUser.getMode() == LoggedUser.Mode.OFFLINE){
-            personalPageButton.setDisable(true);
             timeLineButton.setDisable(true);
             messagingButton.setDisable(true);
             explorerButton.setDisable(true);

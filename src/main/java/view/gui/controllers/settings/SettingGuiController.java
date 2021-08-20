@@ -2,6 +2,8 @@ package view.gui.controllers.settings;
 
 import controllers.DateFormat;
 import controllers.Controllers;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 import view.SceneLoader;
 import view.popups.SimpleConfirmBox;
 import view.popups.password.NewPasswordBoxSimple;
@@ -72,6 +74,16 @@ public class SettingGuiController implements Initializable, Controllers {
         boolean answer = SimpleConfirmBox.display("deactivation","Are you sure you want to deActivate your account?");
         if(answer){
             new DeActiveRequest(LoggedUser.getToken() , LoggedUser.getId(), false).execute();
+            if(LoggedUser.getMode() == LoggedUser.Mode.OFFLINE){
+                LoggedUser.getTrimmedLoggedUser().setActive(false);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setContentText("your account will deActivate whenever you connect to server \nyou'll exit now");
+                alert.setOnHidden(we -> {
+                    SETTING_CONTROLLER.logout();
+                    Platform.exit();
+                });
+                alert.show();
+            }
             SceneLoader.getInstance().noConfirmLogout(actionEvent);
         }
     }
@@ -86,7 +98,7 @@ public class SettingGuiController implements Initializable, Controllers {
     public void changeBDButtonClicked(ActionEvent actionEvent) {
         String birthday = datePicker.getValue() == null ? "" : datePicker.getValue().toString() ;
         if(!birthday.equals("")) {
-            new ChangeBirthdayRequest(LoggedUser.getToken() , LoggedUser.getId() ,DateFormat.stringToDate(birthday)).execute().unleash();
+            new ChangeBirthdayRequest(LoggedUser.getToken() , LoggedUser.getId() ,DateFormat.stringToDate(birthday)).execute();
         }
     }
 
