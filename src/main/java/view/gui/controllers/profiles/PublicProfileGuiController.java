@@ -55,7 +55,7 @@ public class PublicProfileGuiController implements Initializable, Controllers {
 
 
     public void followButtonClicked(ActionEvent actionEvent) {
-        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionType.FOLLOW).execute();
+        new UserActionRequest( userId , UserActionType.FOLLOW).execute();
         FollowingProfileGuiController.setUser(userId);
         FollowingProfileGuiController.setPrevious(previous);
         FollowingProfileGuiController.setProfileAccessController(profileAccessController);

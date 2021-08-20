@@ -9,7 +9,7 @@ import models.requests.DeActiveRequest;
 public class DeactiveSelfProfileGuiController implements Controllers {
 
     public void activateButtonClicked(ActionEvent actionEvent) {
-        new DeActiveRequest(LoggedUser.getToken() , LoggedUser.getId(), true).execute();
+        new DeActiveRequest( true).execute();
         SceneLoader.getInstance().mainMenu(actionEvent);
     }
 

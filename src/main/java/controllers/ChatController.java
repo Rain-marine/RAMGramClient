@@ -13,8 +13,7 @@ public class ChatController {
 
 
     public void createGroupChat(List<String> members, String name) {
-        new SendMessageRequest(LoggedUser.getToken() ,
-                LoggedUser.getId() ,
+        new SendMessageRequest(
                 SendMessageType.NEW_GROUP ,
                 0L ,
                 members ,
@@ -26,8 +25,7 @@ public class ChatController {
     }
 
     public void addMemberToGroupChat(String member, long chatId) {
-        new SendMessageRequest(LoggedUser.getToken() ,
-                LoggedUser.getId() ,
+        new SendMessageRequest(
                 SendMessageType.ADD_MEMBER ,
                 chatId ,
                 null ,

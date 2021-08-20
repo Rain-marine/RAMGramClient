@@ -75,20 +75,25 @@ public class ChatShowerGuiController implements Initializable {
     }
 
     private void loadMessages() {
-        timer.stop();
-        response = new ChatInfoRequest(LoggedUser.getToken(), LoggedUser.getId(), chatId).execute();
-        usernameLabel.setText(((ChatInfoResponse) response).getFrontUsername());
-        profileImageview.setImage(ImageController.byteArrayToImage(((ChatInfoResponse) response).getFrontProfile()));
-        lastSeenLabel.setText(((ChatInfoResponse) response).getLastSeen());
+        try {
+            timer.stop();
+            response = new ChatInfoRequest(chatId).execute();
+            usernameLabel.setText(((ChatInfoResponse) response).getFrontUsername());
+            profileImageview.setImage(ImageController.byteArrayToImage(((ChatInfoResponse) response).getFrontProfile()));
+            lastSeenLabel.setText(((ChatInfoResponse) response).getLastSeen());
 
-        VBox list = new VBox(5);
-        messageResponse = new ListRequest(LoggedUser.getToken(), LoggedUser.getId(), ListType.MESSAGE, chatId).execute();
-        messageIDs = ((ListResponse) messageResponse).getIds();
-        for (Long messageID : messageIDs) {
-            list.getChildren().add(new MessageCard(messageID).getCard());
+            VBox list = new VBox(5);
+            messageResponse = new ListRequest(ListType.MESSAGE, chatId).execute();
+            messageIDs = ((ListResponse) messageResponse).getIds();
+            for (Long messageID : messageIDs) {
+                list.getChildren().add(new MessageCard(messageID).getCard());
+            }
+            messagesArea.setContent(list);
+            timer.playFromStart();
         }
-        messagesArea.setContent(list);
-        timer.playFromStart();
+        catch (ClassCastException ignored){
+
+        }
     }
 
     public void backButtonClicked(ActionEvent actionEvent) {
@@ -122,7 +127,7 @@ public class ChatShowerGuiController implements Initializable {
         if (messageText.equals("") && chosenImageByteArray == null) {
             AlertBox.display("Nerd Alert", "write something idiot");
         } else {
-            new AddContentRequest(LoggedUser.getToken(), LoggedUser.getId(), AddContentType.MESSAGE, chosenImageByteArray, messageText, chatId, 0L).execute();
+            new AddContentRequest(AddContentType.MESSAGE, chosenImageByteArray, messageText, chatId, 0L).execute();
             chosenImageView.setImage(null);
             messageTextField.clear();
             loadMessages();

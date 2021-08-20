@@ -39,7 +39,7 @@ public class NewTweetGuiController{
         if (!tweetText.getText().equals("") || tweetImage != null){
             boolean answer = SimpleConfirmBox.display("confirmation" , "Are you sure?");
             if (answer){
-                new AddContentRequest(LoggedUser.getToken() , LoggedUser.getId() , AddContentType.TWEET , tweetImage ,tweetText.getText() ,0L ,0L).execute();
+                new AddContentRequest(AddContentType.TWEET , tweetImage ,tweetText.getText() ,0L ,0L).execute();
                 AlertBox.display("Done!", "Tweet posted");
                 tweetText.setText("");
                 image.setImage(null);

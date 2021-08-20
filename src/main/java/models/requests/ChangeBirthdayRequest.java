@@ -19,9 +19,9 @@ public class ChangeBirthdayRequest implements Request {
     private long userId;
     private Date newBirthday;
 
-    public ChangeBirthdayRequest(String token, long userId, Date newBirthday) {
-        this.token = token;
-        this.userId = userId;
+    public ChangeBirthdayRequest(Date newBirthday) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.newBirthday = newBirthday;
     }
 

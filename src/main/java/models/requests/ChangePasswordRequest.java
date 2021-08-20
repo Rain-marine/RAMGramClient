@@ -1,6 +1,7 @@
 package models.requests;
 
 import controllers.Controllers;
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.BooleanResponse;
 import models.responses.Response;
@@ -13,9 +14,9 @@ public class ChangePasswordRequest implements Request {
     private long userId;
     private String newPass;
 
-    public ChangePasswordRequest(String token, long userId, String newPass) {
-        this.token = token;
-        this.userId = userId;
+    public ChangePasswordRequest(String newPass) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.newPass = newPass;
     }
 

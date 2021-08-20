@@ -1,6 +1,7 @@
 package models.requests;
 
 import controllers.Controllers;
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.BooleanResponse;
 import models.responses.Response;
@@ -15,9 +16,9 @@ public class TweetActionRequest implements Request {
     private long tweetId;
     private TweetActionType action;
 
-    public TweetActionRequest(String token, long userId, long tweetId, TweetActionType action) {
-        this.token = token;
-        this.userId = userId;
+    public TweetActionRequest(long tweetId, TweetActionType action) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.tweetId = tweetId;
         this.action = action;
     }

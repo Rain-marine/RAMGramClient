@@ -34,7 +34,7 @@ public class NewPasswordBoxSimple implements ConfirmBox {
 
         ConfirmButton.setOnAction(e -> {
             String newPassword = newPasswordField.getText();
-            new ChangePasswordRequest( LoggedUser.getToken() , LoggedUser.getId() , newPassword).execute();
+            new ChangePasswordRequest(newPassword).execute();
             window.close();
         });
 

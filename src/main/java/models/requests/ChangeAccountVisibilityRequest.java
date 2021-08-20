@@ -15,9 +15,9 @@ public class ChangeAccountVisibilityRequest implements Request {
     private long userId;
     private boolean isPublic;
 
-    public ChangeAccountVisibilityRequest(String token, long userId, boolean isPublic) {
-        this.token = token;
-        this.userId = userId;
+    public ChangeAccountVisibilityRequest( boolean isPublic) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.isPublic = isPublic;
     }
 

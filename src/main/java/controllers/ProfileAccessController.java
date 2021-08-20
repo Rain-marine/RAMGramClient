@@ -19,7 +19,7 @@ public class ProfileAccessController {
         this.loggedUserId = LoggedUser.getId();
         this.otherUserId = otherUserID;
         this.factionId = factionId;
-        Response response = new PermissionRequest(LoggedUser.getToken(), LoggedUser.getId(), otherUserID).execute();
+        Response response = new PermissionRequest( otherUserID).execute();
         this.results = ((PermissionResponse) response).getPermissions();
     }
 

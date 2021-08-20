@@ -1,6 +1,7 @@
 package models.requests;
 
 import controllers.Controllers;
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.BooleanResponse;
 import models.responses.Response;
@@ -13,16 +14,14 @@ public class DeleteAccountRequest implements Request {
     private String token;
     private long userId;
 
-    public DeleteAccountRequest(String token, long userId) {
-        this.token = token;
-        this.userId = userId;
-    }
-
     public DeleteAccountRequest() {
     }
 
+
     @Override
     public Response execute() {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         return NetworkData.sendRequest(this);
     }
 

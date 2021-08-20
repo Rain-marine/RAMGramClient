@@ -20,16 +20,15 @@ public class MessageController{
     }
 
     public boolean canSendMessageToUser(String userToSendMessage) {
-        return (Boolean) new MessageAccessRequest(LoggedUser.getToken() , LoggedUser.getId() , MessageAccessType.USER , userToSendMessage).execute().unleash();
+        return (Boolean) new MessageAccessRequest( MessageAccessType.USER , userToSendMessage).execute().unleash();
     }
 
     public boolean canSendMessageToGroup(String groupToSendMessage) {
-        return (Boolean)  new MessageAccessRequest(LoggedUser.getToken() , LoggedUser.getId() , MessageAccessType.GROUP , groupToSendMessage).execute().unleash();
+        return (Boolean)  new MessageAccessRequest( MessageAccessType.GROUP , groupToSendMessage).execute().unleash();
     }
 
     public void sendMessage(String message, byte[] image, List<String> users, List<String> groupsToSendMessage) {
-        new SendMessageRequest(LoggedUser.getToken() ,
-                LoggedUser.getId() ,
+        new SendMessageRequest(
                 SendMessageType.SEND ,
                 0L ,
                 users ,
@@ -42,8 +41,7 @@ public class MessageController{
 
 
     public void forwardTweet(long tweetId , String receiver) {
-        new SendMessageRequest(LoggedUser.getToken() ,
-                LoggedUser.getId() ,
+        new SendMessageRequest(
                 SendMessageType.FORWARD_TWEET ,
                 tweetId ,
                 null ,
@@ -54,8 +52,7 @@ public class MessageController{
     }
 
     public void forward(long messageID, List<String> users, List<String> factions) {
-        new SendMessageRequest(LoggedUser.getToken() ,
-                LoggedUser.getId() ,
+        new SendMessageRequest(
                 SendMessageType.FORWARD ,
                 messageID ,
                 users ,
@@ -68,8 +65,7 @@ public class MessageController{
 
 
     public long getChatWithUser(long userId) {
-        Response response = new SendMessageRequest(LoggedUser.getToken() ,
-                LoggedUser.getId() ,
+        Response response = new SendMessageRequest(
                 SendMessageType.CHAT ,
                 userId ,
                 null ,
@@ -81,8 +77,7 @@ public class MessageController{
     }
 
     public void sendLink(String username, long chatId) {
-        new SendMessageRequest(LoggedUser.getToken() ,
-                LoggedUser.getId() ,
+        new SendMessageRequest(
                 SendMessageType.LINK ,
                 0L,
                 new ArrayList<>() {{
@@ -96,8 +91,7 @@ public class MessageController{
     }
 
     public void sendInvitation(String username, long chatId) {
-        new SendMessageRequest(LoggedUser.getToken() ,
-                LoggedUser.getId() ,
+        new SendMessageRequest(
                 SendMessageType.INVITE ,
                 0L,
                 new ArrayList<>() {{

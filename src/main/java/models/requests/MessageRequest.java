@@ -1,5 +1,6 @@
 package models.requests;
 
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.BooleanResponse;
 import models.responses.MessageResponse;
@@ -14,9 +15,9 @@ public class MessageRequest implements Request{
     private long userId;
     private long messageId;
 
-    public MessageRequest(String token, long userId, long messageId) {
-        this.token = token;
-        this.userId = userId;
+    public MessageRequest( long messageId) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.messageId = messageId;
     }
 

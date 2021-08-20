@@ -1,5 +1,6 @@
 package models.requests;
 
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.Response;
 import models.types.MessageActionType;
@@ -15,9 +16,9 @@ public class MessageActionRequest implements Request {
     private MessageActionType type;
 
 
-    public MessageActionRequest(String token, long userId, MessageActionType type , long messageId ) {
-        this.token = token;
-        this.userId = userId;
+    public MessageActionRequest(MessageActionType type , long messageId ) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.messageId = messageId;
         this.type = type;
     }

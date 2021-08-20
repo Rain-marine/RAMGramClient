@@ -2,6 +2,7 @@ package models.requests;
 
 
 import controllers.Controllers;
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.BooleanResponse;
 import models.responses.Response;
@@ -15,10 +16,10 @@ public class CheckPasswordRequest implements Request {
     private long userId;
     private String token;
 
-    public CheckPasswordRequest(String password, long userId, String token) {
+    public CheckPasswordRequest(String password) {
         this.password = password;
-        this.userId = userId;
-        this.token = token;
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
     }
 
     public CheckPasswordRequest() {

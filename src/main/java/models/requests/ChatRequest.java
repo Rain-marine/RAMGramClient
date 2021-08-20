@@ -1,5 +1,6 @@
 package models.requests;
 
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.BooleanResponse;
 import models.responses.ChatResponse;
@@ -17,9 +18,9 @@ public class ChatRequest implements Request{
     private ChatType mode;
     private String sender;
 
-    public ChatRequest(String token, long userId, long chatId) {
-        this.token = token;
-        this.userId = userId;
+    public ChatRequest( long chatId) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.chatId = chatId;
         this.mode = ChatType.NORMAL;
         this.sender = null;

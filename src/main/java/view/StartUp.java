@@ -25,7 +25,7 @@ import java.util.Objects;
 public class StartUp {
 
 
-    public void onlineInitialize(Stage primaryStage){
+    public void onlineInitialize(Stage primaryStage) {
         try {
             Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource(Objects.requireNonNull(ConfigLoader.loadFXML("loginFXMLAddress")))));
             primaryStage.setTitle("RAMGram");
@@ -33,7 +33,8 @@ public class StartUp {
                 e.consume();
                 boolean answer = SimpleConfirmBox.display("Exit confirmation", "Are you sure to Exit?");
                 if (answer) {
-                    new SettingController().logout();
+                    if (LoggedUser.getTrimmedLoggedUser() != null)
+                        new SettingController().logout();
                     new CloseRequest().execute();
                     NetworkData.close();
                     primaryStage.close();
@@ -44,8 +45,7 @@ public class StartUp {
             primaryStage.setScene(new Scene(root));
             primaryStage.setResizable(Boolean.parseBoolean(ConfigLoader.readProperty("appWindowResizable")));
             primaryStage.show();
-        }
-        catch (IOException fxmlLoadException){
+        } catch (IOException fxmlLoadException) {
             System.err.println("FXML URLs configuration is missing");
         }
     }
@@ -53,15 +53,14 @@ public class StartUp {
     public void offlineInitialize(Stage primaryStage) {
         try {
             Load.getInstance().loadLoggedUser();
-            if(!LoggedUser.getTrimmedLoggedUser().isActive()){
+            if (!LoggedUser.getTrimmedLoggedUser().isActive()) {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setContentText("deActivated accounts can't run in offline mode \nyou'll exit now");
                 alert.setOnHidden(we -> {
                     Platform.exit();
                 });
                 alert.show();
-            }
-            else {
+            } else {
                 Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource(Objects.requireNonNull(ConfigLoader.loadFXML("mainMenuAdd")))));
                 primaryStage.setTitle("RAMGram");
                 primaryStage.setOnCloseRequest(e -> {
@@ -78,8 +77,7 @@ public class StartUp {
                 primaryStage.setResizable(Boolean.parseBoolean(ConfigLoader.readProperty("appWindowResizable")));
                 primaryStage.show();
             }
-        }
-        catch (IOException fxmlLoadException){
+        } catch (IOException fxmlLoadException) {
             System.err.println("FXML URLs configuration is missing");
         }
     }

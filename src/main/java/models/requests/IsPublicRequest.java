@@ -1,6 +1,7 @@
 package models.requests;
 
 import controllers.Controllers;
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.BooleanResponse;
 import models.responses.Response;
@@ -14,16 +15,14 @@ public class IsPublicRequest implements Request, Controllers {
     private long userId;
     private String token;
 
-    public IsPublicRequest(long userId, String token) {
-        this.userId = userId;
-        this.token = token;
-    }
 
     public IsPublicRequest() {
     }
 
     @Override
     public Response execute() {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
        return NetworkData.sendRequest(this);
     }
 

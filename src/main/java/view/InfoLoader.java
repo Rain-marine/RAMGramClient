@@ -12,7 +12,7 @@ import models.trimmed.TrimmedUser;
 public class InfoLoader {
 
     public static void loadInfo(long userId, ImageView profilePhotoImage, Label info) {
-        Response response = new UserRequest(LoggedUser.getToken() , LoggedUser.getId() , userId).execute();
+        Response response = new UserRequest( userId).execute();
         TrimmedUser user = ((UserResponse)response).getTrimmedUser();
         byte[] byteArray = user.getProfilePhoto();
         Rectangle clip = new Rectangle(

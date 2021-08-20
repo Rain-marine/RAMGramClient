@@ -5,7 +5,7 @@ import models.trimmed.TrimmedTweet;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("tweet")
-public class TweetResponse implements Response{
+public class TweetResponse implements Response<Object>{
 
     private TrimmedTweet trimmedTweet;
 

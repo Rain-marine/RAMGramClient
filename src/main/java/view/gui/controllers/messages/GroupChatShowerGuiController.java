@@ -99,7 +99,7 @@ public class GroupChatShowerGuiController implements Initializable {
         if (messageText.equals("") && chosenImageByteArray == null) {
             AlertBox.display("Nerd Alert", "write something idiot");
         } else {
-            new AddContentRequest(LoggedUser.getToken(), LoggedUser.getId(), AddContentType.GROUP_MESSAGE, chosenImageByteArray, messageText, groupId, 0L).execute();
+            new AddContentRequest(AddContentType.GROUP_MESSAGE, chosenImageByteArray, messageText, groupId, 0L).execute();
             chosenImageView.setImage(null);
             messageTextField.clear();
             loadMessages();
@@ -107,20 +107,24 @@ public class GroupChatShowerGuiController implements Initializable {
     }
 
     private void loadMessages() {
-        timer.stop();
-        infoResponse = new ChatInfoRequest(LoggedUser.getToken(), LoggedUser.getId(), groupId).execute();
-        groupNameLabel.setText(((ChatInfoResponse) infoResponse).getFrontUsername());
-        membersNames = ((ChatInfoResponse) infoResponse).getMembersNames();
-        membersLabel.setText(String.join("\n", membersNames));
+        try {
+            timer.stop();
+            infoResponse = new ChatInfoRequest(groupId).execute();
+            groupNameLabel.setText(((ChatInfoResponse) infoResponse).getFrontUsername());
+            membersNames = ((ChatInfoResponse) infoResponse).getMembersNames();
+            membersLabel.setText(String.join("\n", membersNames));
 
-        VBox list = new VBox(5);
-        response = new ListRequest(LoggedUser.getToken(), LoggedUser.getId(), ListType.MESSAGE, groupId).execute();
-        messageIDs = ((ListResponse) response).getIds();
-        for (Long messageID : messageIDs) {
-            list.getChildren().add(new MessageCard(messageID).getCard());
+            VBox list = new VBox(5);
+            response = new ListRequest(ListType.MESSAGE, groupId).execute();
+            messageIDs = ((ListResponse) response).getIds();
+            for (Long messageID : messageIDs) {
+                list.getChildren().add(new MessageCard(messageID).getCard());
+            }
+            messagesArea.setContent(list);
+            timer.playFromStart();
+        } catch (ClassCastException ignored) {
+
         }
-        messagesArea.setContent(list);
-        timer.playFromStart();
     }
 
     public static long getGroupId() {
@@ -132,8 +136,8 @@ public class GroupChatShowerGuiController implements Initializable {
     }
 
     public void addMemberButtonClicked(ActionEvent actionEvent) {
-        if (SendLinkOrAdd.display(groupId , SendLinkOrAdd.Mode.ADD)) {
-            Response infoResponse = new ChatInfoRequest(LoggedUser.getToken(), LoggedUser.getId(), groupId).execute();
+        if (SendLinkOrAdd.display(groupId, SendLinkOrAdd.Mode.ADD)) {
+            Response infoResponse = new ChatInfoRequest(groupId).execute();
             ArrayList<String> membersNames = ((ChatInfoResponse) infoResponse).getMembersNames();
             membersLabel.setText(String.join("\n", membersNames));
         }
@@ -142,7 +146,7 @@ public class GroupChatShowerGuiController implements Initializable {
 
     public void leaveButtonClicked(ActionEvent actionEvent) {
         timer.stop();
-        new LeaveGroupRequest(LoggedUser.getToken(), LoggedUser.getId(), groupId).execute();
+        new LeaveGroupRequest(groupId).execute();
         SceneLoader.getInstance().messaging(actionEvent);
 
     }
@@ -170,7 +174,7 @@ public class GroupChatShowerGuiController implements Initializable {
             } else {
                 long hours = Long.parseLong(hour.getText()) * 3600;
                 long minutes = Long.parseLong(minute.getText()) * 60;
-                new AddContentRequest(LoggedUser.getToken(), LoggedUser.getId(), AddContentType.SCHEDULED, chosenImageByteArray, messageText, groupId, hours + minutes).execute();
+                new AddContentRequest(AddContentType.SCHEDULED, chosenImageByteArray, messageText, groupId, hours + minutes).execute();
                 chosenImageView.setImage(null);
                 messageTextField.clear();
                 hour.clear();
@@ -181,10 +185,10 @@ public class GroupChatShowerGuiController implements Initializable {
     }
 
     public void getLinkButtonClicked(ActionEvent actionEvent) {
-        SendLinkOrAdd.display(groupId , SendLinkOrAdd.Mode.LINK);
+        SendLinkOrAdd.display(groupId, SendLinkOrAdd.Mode.LINK);
     }
 
     public void inviteLinkButtonClicked(ActionEvent actionEvent) {
-        SendLinkOrAdd.display(groupId , SendLinkOrAdd.Mode.INVITE);
+        SendLinkOrAdd.display(groupId, SendLinkOrAdd.Mode.INVITE);
     }
 }

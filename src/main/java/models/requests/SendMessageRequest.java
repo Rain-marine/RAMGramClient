@@ -1,6 +1,7 @@
 package models.requests;
 
 import controllers.Controllers;
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.BooleanResponse;
 import models.responses.Response;
@@ -23,9 +24,9 @@ public class SendMessageRequest implements Request {
     private byte[] contentImage;
     private String targetUsername;
 
-    public SendMessageRequest(String token, long userId, SendMessageType type, long contentId, List<String> users, List<String> factions, String content, byte[] contentImage, String targetUsername) {
-        this.token = token;
-        this.userId = userId;
+    public SendMessageRequest(SendMessageType type, long contentId, List<String> users, List<String> factions, String content, byte[] contentImage, String targetUsername) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.type = type;
         this.contentId = contentId;
         this.users = users;

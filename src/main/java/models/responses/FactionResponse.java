@@ -6,7 +6,7 @@ import org.codehaus.jackson.annotate.JsonTypeName;
 import java.util.List;
 
 @JsonTypeName("faction")
-public class FactionResponse implements Response{
+public class FactionResponse implements Response<Object>{
 
     private List<TrimmedFaction> trimmedFactions;
 

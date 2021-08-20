@@ -46,7 +46,7 @@ public class SavedMessagesShowerGuiController implements Initializable {
 
     private void loadMessages() {
         VBox list = new VBox(0);
-        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.SAVED_MESSAGES , 0L).execute();
+        Response response = new ListRequest( ListType.SAVED_MESSAGES , 0L).execute();
         ArrayList<Long> messageIDs = ((ListResponse)response).getIds();
         for (Long messageID : messageIDs) {
             list.getChildren().add(new MessageCard(messageID).getCard());
@@ -72,7 +72,7 @@ public class SavedMessagesShowerGuiController implements Initializable {
             AlertBox.display("Nerd Alert" , "write something idiot");
         }
         else {
-            new AddContentRequest(LoggedUser.getToken() , LoggedUser.getId() , AddContentType.NEW_SAVED_MESSAGE , chosenImageByteArray ,messageText ,0L ,0L).execute();
+            new AddContentRequest(AddContentType.NEW_SAVED_MESSAGE , chosenImageByteArray ,messageText ,0L ,0L).execute();
             chosenImageView.setImage(null);
             messageTextField.clear();
             loadMessages();

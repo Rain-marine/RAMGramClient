@@ -1,5 +1,6 @@
 package models.requests;
 
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.BooleanResponse;
 import models.responses.ChatInfoResponse;
@@ -13,10 +14,10 @@ public class ChatInfoRequest implements Request {
     private String token;
     private long userId;
 
-    public ChatInfoRequest( String token, long userId, long chatId) {
+    public ChatInfoRequest( long chatId) {
         this.chatId = chatId;
-        this.token = token;
-        this.userId = userId;
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
     }
 
     public ChatInfoRequest() {

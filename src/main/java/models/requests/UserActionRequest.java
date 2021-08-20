@@ -1,5 +1,6 @@
 package models.requests;
 
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.Response;
 import models.types.UserActionType;
@@ -13,9 +14,9 @@ public class UserActionRequest implements Request {
     private long otherId;
     private UserActionType action;
 
-    public UserActionRequest(String token, long userId, long otherUserId, UserActionType action) {
-        this.token = token;
-        this.userId = userId;
+    public UserActionRequest(long otherUserId, UserActionType action) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.otherId = otherUserId;
         this.action = action;
     }

@@ -80,13 +80,13 @@ public class FollowingProfileGuiController implements Initializable, Controllers
     }
 
     public void unfollowNotify(ActionEvent actionEvent) {
-        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionType.UNFOLLOW).execute();
+        new UserActionRequest( userId , UserActionType.UNFOLLOW).execute();
         ProfileAccessController profileAccessController = new ProfileAccessController(previous,userId,factionId);
         SceneLoader.getInstance().changeScene(profileAccessController.checkAccessibility(),actionEvent);
     }
 
     public void unfollowWithoutNotif(ActionEvent actionEvent) {
-        new UserActionRequest(LoggedUser.getToken() , LoggedUser.getId() , userId , UserActionType.QUIET_UNFOLLOW).execute();
+        new UserActionRequest(userId , UserActionType.QUIET_UNFOLLOW).execute();
         ProfileAccessController profileAccessController = new ProfileAccessController(previous,userId,factionId);
         SceneLoader.getInstance().changeScene(profileAccessController.checkAccessibility(),actionEvent);
     }

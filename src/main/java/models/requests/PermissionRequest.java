@@ -1,5 +1,6 @@
 package models.requests;
 
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonTypeName;
@@ -12,9 +13,9 @@ public class PermissionRequest implements Request{
     private long userId;
     private long otherUserId;
 
-    public PermissionRequest(String token, long userId, long otherUserId) {
-        this.token = token;
-        this.userId = userId;
+    public PermissionRequest( long otherUserId) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.otherUserId = otherUserId;
     }
 

@@ -1,5 +1,6 @@
 package models.requests;
 
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonTypeName;
@@ -16,9 +17,9 @@ public class NotificationRequest implements Request {
     public NotificationRequest() {
     }
 
-    public NotificationRequest(String token, long userId, TYPE type) {
-        this.token = token;
-        this.userId = userId;
+    public NotificationRequest(TYPE type) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.type = type;
     }
 

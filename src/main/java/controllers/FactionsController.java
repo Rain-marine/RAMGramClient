@@ -23,8 +23,7 @@ public class FactionsController {
     }
 
     public void insertNewFaction(String name, List<String> users) {
-        new FactionActionRequest(LoggedUser.getToken() ,
-                LoggedUser.getId() ,
+        new FactionActionRequest(
                 FactionActionType.NEW_FACTION ,
                 0,
                 0L,
@@ -34,38 +33,37 @@ public class FactionsController {
     }
 
     public boolean canAddToGroup(String username) {
-        return (Boolean) new MessageAccessRequest(LoggedUser.getToken() , LoggedUser.getId() , MessageAccessType.FACTION , username).execute().unleash();
+        return (Boolean) new MessageAccessRequest(MessageAccessType.FACTION , username).execute().unleash();
 
     }
 
     public List<TrimmedFaction> getFactions() {
-        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.FACTION , 0L).execute();
+        Response response = new ListRequest( ListType.FACTION , 0L).execute();
         return ((FactionResponse)response).getTrimmedFactions();
     }
 
     public HashMap<Long, String> getActiveFollowers() {
-        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.FOLLOWERS , 0L).execute();
+        Response response = new ListRequest(ListType.FOLLOWERS , 0L).execute();
         return (((FactionResponse)response).getTrimmedFactions()).get(0).getMembers();
     }
 
     public HashMap<Long, String> getActiveFollowings() {
-        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.FOLLOWINGS, 0L).execute();
+        Response response = new ListRequest( ListType.FOLLOWINGS, 0L).execute();
         return (((FactionResponse)response).getTrimmedFactions()).get(0).getMembers();
     }
 
     public HashMap<Long, String> getActiveBlockedUsers() {
-        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.BLACKLIST , 0L).execute();
+        Response response = new ListRequest( ListType.BLACKLIST , 0L).execute();
         return (((FactionResponse)response).getTrimmedFactions()).get(0).getMembers();
     }
 
     public HashMap<Long, String> getGroupMembers(int factionId) {
-        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.FACTION , 0L).execute();
+        Response response = new ListRequest(ListType.FACTION , 0L).execute();
         return (((FactionResponse)response).getTrimmedFactions()).stream().filter(it -> it.getId() == factionId).findAny().orElseThrow().getMembers();
     }
 
     public void deleteFaction(int factionId) {
-        new FactionActionRequest(LoggedUser.getToken() ,
-                LoggedUser.getId() ,
+        new FactionActionRequest(
                 FactionActionType.DELETE_FACTION ,
                 factionId,
                 0L,
@@ -75,8 +73,7 @@ public class FactionsController {
     }
 
     public void deleteUserFromFaction(int factionId, long userId) {
-        new FactionActionRequest(LoggedUser.getToken() ,
-                LoggedUser.getId() ,
+        new FactionActionRequest(
                 FactionActionType.DELETE_MEMBER ,
                 factionId,
                 userId,
@@ -85,8 +82,7 @@ public class FactionsController {
         ).execute();    }
 
     public void addUserToFaction(int factionId, String username) {
-        new FactionActionRequest(LoggedUser.getToken() ,
-                LoggedUser.getId() ,
+        new FactionActionRequest(
                 FactionActionType.ADD_MEMBER ,
                 factionId,
                 0L,
@@ -98,7 +94,7 @@ public class FactionsController {
     public List<String> getFactionNames() {
         //todo: check
         ArrayList<String> factionNames = new ArrayList<>();
-        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.FACTION , 0L).execute();
+        Response response = new ListRequest( ListType.FACTION , 0L).execute();
         return (((FactionResponse)response).getTrimmedFactions()).stream().map(TrimmedFaction::getName).collect(Collectors.toList());
     }
 }

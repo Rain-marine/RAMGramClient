@@ -29,7 +29,7 @@ public class SavedTweetsShowerGuiController implements Initializable {
 
     private void loadMessages() {
         VBox list = new VBox(0);
-        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.SAVED_TWEET , 0L).execute();
+        Response response = new ListRequest( ListType.SAVED_TWEET , 0L).execute();
         ArrayList<Long> tweetIDs = ((ListResponse)response).getIds();
         for (Long tweetId : tweetIDs) {
             list.getChildren().add(new TweetCard(tweetId , TweetCard.MODE.PROFILE).getVBox());

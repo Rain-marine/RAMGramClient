@@ -1,5 +1,6 @@
 package models.requests;
 
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonTypeName;
@@ -11,9 +12,9 @@ public class LeaveGroupRequest implements Request{
     private long userId;
     private long groupId;
 
-    public LeaveGroupRequest(String token, long userId, long groupId) {
-        this.token = token;
-        this.userId = userId;
+    public LeaveGroupRequest( long groupId) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.groupId = groupId;
     }
 

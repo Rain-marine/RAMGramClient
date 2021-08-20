@@ -4,7 +4,7 @@ package models.responses;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("permission")
-public class PermissionResponse implements Response{
+public class PermissionResponse implements Response<Object>{
 
     private boolean[] permissions;
 

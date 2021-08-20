@@ -1,6 +1,7 @@
 package models.requests;
 
 import controllers.Controllers;
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.BooleanResponse;
 import models.responses.ListResponse;
@@ -16,9 +17,9 @@ public class ListRequest implements Request {
     private ListType type;
     private long superId;
 
-    public ListRequest(String token, long userId, ListType type, long superId) {
-        this.token = token;
-        this.userId = userId;
+    public ListRequest( ListType type, long superId) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.type = type;
         this.superId = superId;
     }

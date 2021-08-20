@@ -1,6 +1,7 @@
 package models.requests;
 
 import controllers.Controllers;
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.BooleanResponse;
 import models.responses.Response;
@@ -15,9 +16,9 @@ public class AddCommentRequest implements Request{
     private String commentText;
     private byte[] commentImage;
 
-    public AddCommentRequest(String token, long userId, long tweetId, String commentText, byte[] commentImage) {
-        this.token = token;
-        this.userId = userId;
+    public AddCommentRequest(long tweetId, String commentText, byte[] commentImage) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.tweetId = tweetId;
         this.commentText = commentText;
         this.commentImage = commentImage;

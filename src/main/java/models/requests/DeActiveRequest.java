@@ -14,9 +14,9 @@ public class DeActiveRequest implements Request, Controllers {
     private long userId;
     private boolean isActive;
 
-    public DeActiveRequest(String token, long userId, boolean isActive) {
-        this.token = token;
-        this.userId = userId;
+    public DeActiveRequest( boolean isActive) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.isActive = isActive;
     }
 

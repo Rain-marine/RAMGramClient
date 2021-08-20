@@ -4,7 +4,7 @@ import models.trimmed.TrimmedUser;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("user")
-public class UserResponse implements Response {
+public class UserResponse implements Response<Object> {
 
     private TrimmedUser trimmedUser;
 
@@ -13,7 +13,6 @@ public class UserResponse implements Response {
 
     @Override
     public Object unleash() {
-
         return null;
     }
 

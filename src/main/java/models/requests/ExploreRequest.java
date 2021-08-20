@@ -1,5 +1,6 @@
 package models.requests;
 
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.Response;
 import org.codehaus.jackson.annotate.JsonTypeName;
@@ -11,9 +12,9 @@ public class ExploreRequest implements Request{
     private long userId;
     private String usernameToFind;
 
-    public ExploreRequest(String token, long userId, String usernameToFind) {
-        this.token = token;
-        this.userId = userId;
+    public ExploreRequest( String usernameToFind) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.usernameToFind = usernameToFind;
     }
 

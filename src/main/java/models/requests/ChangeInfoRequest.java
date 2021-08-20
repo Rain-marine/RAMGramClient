@@ -16,16 +16,16 @@ public class ChangeInfoRequest implements Request {
     private byte[] newPhoto;
     private ChangeInfoType type;
 
-    public ChangeInfoRequest(String token, long userId, ChangeInfoType type, String newInfo) {
-        this.token = token;
-        this.userId = userId;
+    public ChangeInfoRequest( ChangeInfoType type, String newInfo) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.newInfo = newInfo;
         this.type = type;
     }
 
-    public ChangeInfoRequest(String token, long userId, ChangeInfoType type, byte[] newPhoto) {
-        this.token = token;
-        this.userId = userId;
+    public ChangeInfoRequest(ChangeInfoType type, byte[] newPhoto) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.newPhoto = newPhoto;
         this.type = type;
     }

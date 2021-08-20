@@ -1,6 +1,7 @@
 package models.requests;
 
 import controllers.Controllers;
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.BooleanResponse;
 import models.responses.Response;
@@ -15,9 +16,9 @@ public class MessageAccessRequest implements Request {
     private MessageAccessType type;
     private String targetUsername;
 
-    public MessageAccessRequest(String token, long userId, MessageAccessType type, String targetUsername) {
-        this.token = token;
-        this.userId = userId;
+    public MessageAccessRequest(MessageAccessType type, String targetUsername) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.type = type;
         this.targetUsername = targetUsername;
     }

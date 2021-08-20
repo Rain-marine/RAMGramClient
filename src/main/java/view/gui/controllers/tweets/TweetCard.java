@@ -1,9 +1,6 @@
 package view.gui.controllers.tweets;
 
 import controllers.ProfileAccessController;
-import view.ImageController;
-import view.SceneLoader;
-import view.popups.AlertBox;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,7 +14,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import models.LoggedUser;
 import models.requests.*;
-import models.responses.BooleanResponse;
 import models.responses.ListResponse;
 import models.responses.Response;
 import models.responses.TweetResponse;
@@ -26,6 +22,9 @@ import models.types.ListType;
 import models.types.TweetActionType;
 import models.types.UserActionType;
 import util.ConfigLoader;
+import view.ImageController;
+import view.SceneLoader;
+import view.popups.AlertBox;
 
 import javax.naming.SizeLimitExceededException;
 import java.util.ArrayList;
@@ -46,7 +45,7 @@ public class TweetCard {
 
     public TweetCard(long tweetId, MODE mode) {
         this.tweetId = tweetId;
-        Response response = new TweetRequest(LoggedUser.getToken() , LoggedUser.getId() , tweetId).execute();
+        Response response = new TweetRequest( tweetId).execute();
         this.trimmedTweet = ((TweetResponse)response).getTrimmedTweet();
         if (trimmedTweet.getWriterId() == LoggedUser.getId()) {
             mode = MODE.OWNER;
@@ -101,7 +100,7 @@ public class TweetCard {
         save.setStyle("-fx-background-color: #690081");
         save.setTextFill(Color.LEMONCHIFFON);
         save.setOnAction(event -> {
-            new TweetActionRequest(LoggedUser.getToken() ,LoggedUser.getId() , tweetId , TweetActionType.SAVE).execute();
+            new TweetActionRequest(tweetId , TweetActionType.SAVE).execute();
             AlertBox.display("done!", "tweet saved");
         });
 
@@ -118,7 +117,7 @@ public class TweetCard {
             if (trimmedTweet.getCommentsIds().size() == 0) {
                 AlertBox.display("empty", "no comments to show");
             } else {
-                Response response3 = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.COMMENT , tweetId).execute();
+                Response response3 = new ListRequest(ListType.COMMENT , tweetId).execute();
                 TweetShowerGuiController.setListOfTweets(((ListResponse)response3).getIds());
                 TweetShowerGuiController.setPreviousMenu(finalMode == MODE.EXPLORER ? 1 : (finalMode == MODE.TIMELINE ? 2 : (finalMode == MODE.OWNER ? 6 : 5)));
                 SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("tweetShower"), event);
@@ -143,7 +142,7 @@ public class TweetCard {
         addComment.setOnAction(event -> {
             String commentTextString = commentText.getText();
             if ((!commentTextString.equals("")) || (commentImageArray != null)) {
-                new AddCommentRequest(LoggedUser.getToken() , LoggedUser.getId() , tweetId , commentTextString ,commentImageArray == null ? null : commentImageArray).execute();
+                new AddCommentRequest( tweetId , commentTextString ,commentImageArray == null ? null : commentImageArray).execute();
                 commentText.clear();
             }
         });
@@ -170,7 +169,7 @@ public class TweetCard {
             retweet.setStyle("-fx-background-color: #690081");
             retweet.setTextFill(Color.LEMONCHIFFON);
             retweet.setOnAction(event -> {
-                new TweetActionRequest(LoggedUser.getToken() ,LoggedUser.getId() , tweetId , TweetActionType.RETWEET).execute();
+                new TweetActionRequest( tweetId , TweetActionType.RETWEET).execute();
 
                 AlertBox.display("done!", "retweeted!");
             });
@@ -179,7 +178,7 @@ public class TweetCard {
             block.setStyle("-fx-background-color: #690081");
             block.setTextFill(Color.LEMONCHIFFON);
             block.setOnAction(event -> {
-                new UserActionRequest(LoggedUser.getToken() ,LoggedUser.getId() , writeId , UserActionType.BLOCK).execute();
+                new UserActionRequest(writeId , UserActionType.BLOCK).execute();
                 AlertBox.display("done!", "user blocked");
             });
 
@@ -187,7 +186,7 @@ public class TweetCard {
             mute.setStyle("-fx-background-color: #690081");
             mute.setTextFill(Color.LEMONCHIFFON);
             mute.setOnAction(event -> {
-                new UserActionRequest(LoggedUser.getToken() ,LoggedUser.getId() , writeId , UserActionType.MUTE).execute();
+                new UserActionRequest(writeId , UserActionType.MUTE).execute();
 
                 AlertBox.display("done!", "user muted!");
             });
@@ -196,7 +195,7 @@ public class TweetCard {
             report.setStyle("-fx-background-color: #690081");
             report.setTextFill(Color.LEMONCHIFFON);
             report.setOnAction(event -> {
-                boolean isDeleted = (Boolean) new TweetActionRequest(LoggedUser.getToken() ,LoggedUser.getId() , tweetId , TweetActionType.REPORT).execute().unleash();
+                boolean isDeleted = (Boolean) new TweetActionRequest( tweetId , TweetActionType.REPORT).execute().unleash();
                 if (isDeleted) {
                     AlertBox.display("refresh", "you need to refresh the page");
                 } else {
@@ -210,7 +209,7 @@ public class TweetCard {
             like.setTextFill(Color.LEMONCHIFFON);
             like.setOnAction(event -> {
                 if (!isLiked) {
-                    new TweetActionRequest(LoggedUser.getToken() ,LoggedUser.getId() , tweetId , TweetActionType.LIKE).execute();
+                    new TweetActionRequest( tweetId , TweetActionType.LIKE).execute();
                     like.setText("liked");
                     updateLikedList();
                 }
@@ -231,7 +230,7 @@ public class TweetCard {
 
     public void updateLikedList() {
         likedNumber.setTextFill(Color.MAGENTA);
-        Response response = new TweetRequest(LoggedUser.getToken() , LoggedUser.getId() , tweetId).execute();
+        Response response = new TweetRequest( tweetId).execute();
         this.trimmedTweet = ((TweetResponse)response).getTrimmedTweet();
         ArrayList<String> peopleLiked = trimmedTweet.getLikedUsernames();
         likedNumber.setText("liked by " + peopleLiked.size() + " people: " + String.join(", ", peopleLiked));

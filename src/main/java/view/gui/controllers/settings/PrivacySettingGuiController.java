@@ -50,7 +50,7 @@ public class PrivacySettingGuiController implements Initializable {
         if (!newLSStatus.equals(lastSeenStatus)) {
             hasAnythingChanged = true;
             LoggedUser.getTrimmedLoggedUser().setLastSeenStatus(newLSStatus);
-            new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoType.LAST_SEEN, newLSStatus).execute();
+            new ChangeInfoRequest( ChangeInfoType.LAST_SEEN, newLSStatus).execute();
         }
         if (hasAnythingChanged)
             reload();

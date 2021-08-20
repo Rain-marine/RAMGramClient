@@ -1,5 +1,6 @@
 package models.requests;
 
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.Response;
 import models.types.FactionActionType;
@@ -19,9 +20,9 @@ public class FactionActionRequest implements Request {
     private String name;
 
 
-    public FactionActionRequest(String token, long userId, FactionActionType type, int factionId, long otherUserId, List<String> users , String name) {
-        this.token = token;
-        this.userId = userId;
+    public FactionActionRequest(FactionActionType type, int factionId, long otherUserId, List<String> users , String name) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.type = type;
         this.otherUserId = otherUserId;
         this.factionId = factionId;

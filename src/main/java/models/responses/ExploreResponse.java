@@ -4,7 +4,7 @@ package models.responses;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("explore")
-public class ExploreResponse implements Response {
+public class ExploreResponse implements Response<Object> {
 
     private long foundUserId;
 
@@ -22,7 +22,6 @@ public class ExploreResponse implements Response {
 
     @Override
     public Object unleash() {
-
         return null;
     }
 

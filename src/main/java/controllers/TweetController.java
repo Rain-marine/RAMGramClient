@@ -15,15 +15,20 @@ public class TweetController{
     }
 
     public ArrayList<Long> getAllTweets(long userId) {
-        return (ArrayList<Long>) new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.TWEETS , userId).execute().unleash();
+        Response response=  new ListRequest(ListType.TWEETS , userId).execute();
+        return ((ListResponse)response).getIds();
     }
 
     public ArrayList<Long> getTopTweets() {
-        return (ArrayList<Long>) new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.EXPLORER , 0L).execute().unleash();
+        Response response=  new ListRequest( ListType.EXPLORER , 0L).execute();
+        return ((ListResponse)response).getIds();
+
     }
 
     public ArrayList<Long> getFollowingTweets() {
-        return (ArrayList<Long>) new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.TIMELINE , 0L).execute().unleash();
+        Response response= new ListRequest( ListType.TIMELINE , 0L).execute();
+        return ((ListResponse)response).getIds();
+
     }
 
 

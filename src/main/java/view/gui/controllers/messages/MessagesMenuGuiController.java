@@ -28,6 +28,7 @@ public class MessagesMenuGuiController implements Initializable {
     private ScrollPane chatsArea;
 
     private PauseTransition timer;
+    private Response response;
 
 
     @Override
@@ -46,19 +47,22 @@ public class MessagesMenuGuiController implements Initializable {
     }
 
     private void updatePane() {
-        Response response = new ListRequest(LoggedUser.getToken() , LoggedUser.getId() , ListType.CHAT , 0L).execute();
-        List<Long> chatIds = ((ListResponse)response).getIds();
-        if (chatIds.size() == 0){
-            chatsArea.setContent(new Label("you have no chats"));
-        }
-        else{
-            VBox list = new VBox(10);
-            for (Long chatId : chatIds) {
-                list.getChildren().add(new ChatCard(chatId).getCard());
+        try {
+            response = new ListRequest(ListType.CHAT, 0L).execute();
+            List<Long> chatIds = ((ListResponse) response).getIds();
+            if (chatIds.size() == 0) {
+                chatsArea.setContent(new Label("you have no chats"));
+            } else {
+                VBox list = new VBox(10);
+                for (Long chatId : chatIds) {
+                    list.getChildren().add(new ChatCard(chatId).getCard());
+                }
+                chatsArea.setContent(list);
             }
-            chatsArea.setContent(list);
+            timer.playFromStart();
+        } catch (ClassCastException ignored) {
+
         }
-        timer.playFromStart();
     }
 
     public void backButtonClicked(ActionEvent actionEvent) {

@@ -4,7 +4,7 @@ import models.trimmed.TrimmedMessage;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("message")
-public class MessageResponse implements Response{
+public class MessageResponse implements Response<Object>{
 
     private TrimmedMessage trimmedMessage;
 

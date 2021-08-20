@@ -44,7 +44,7 @@ public class MessageCard {
     private final ArrayList<Button> buttons;
 
     public MessageCard(long messageId) {
-        Response response = new MessageRequest(LoggedUser.getToken(), LoggedUser.getId(), messageId).execute();
+        Response response = new MessageRequest( messageId).execute();
         this.trimmedMessage = ((MessageResponse) response).getTrimmedMessage();
         this.messageId = messageId;
         this.card = new VBox(5);
@@ -144,14 +144,14 @@ public class MessageCard {
 
         delete.setOnAction(event -> {
             long id = Long.parseLong(delete.getId());
-            new MessageActionRequest(LoggedUser.getToken() , LoggedUser.getId() , MessageActionType.DELETE, id).execute();
+            new MessageActionRequest( MessageActionType.DELETE, id).execute();
             loadDeletedCard();
         });
 
         edit.setOnAction(event -> {
             boolean isEdited = EditMessage.display(Long.parseLong(edit.getId()));
             if (isEdited) {
-                Response response = new MessageRequest(LoggedUser.getToken(), LoggedUser.getId(), messageId).execute();
+                Response response = new MessageRequest( messageId).execute();
                 this.trimmedMessage = ((MessageResponse) response).getTrimmedMessage();
                 loadCard();
             }
@@ -160,7 +160,7 @@ public class MessageCard {
 
         forward.setOnAction(event -> Forward.display(Long.parseLong(forward.getId())));
 
-        save.setOnAction(event -> new AddContentRequest(LoggedUser.getToken() , LoggedUser.getId() , AddContentType.SAVE_MESSAGE , null ,null,0L ,Long.parseLong(save.getId())).execute());
+        save.setOnAction(event -> new AddContentRequest(AddContentType.SAVE_MESSAGE , null ,null,0L ,Long.parseLong(save.getId())).execute());
 
         switch (trimmedMessage.getLink()){
             case NONE -> {

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @JsonTypeName("notification")
-public class NotificationResponse implements Response {
+public class NotificationResponse implements Response<Object> {
 
     private List<TrimmedNotification> trimmedNotifications = new ArrayList<>();
 

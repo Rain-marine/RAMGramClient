@@ -1,5 +1,6 @@
 package models.requests;
 
+import models.LoggedUser;
 import models.NetworkData;
 import models.responses.Response;
 import models.types.AddContentType;
@@ -17,9 +18,9 @@ public class AddContentRequest implements Request {
     private long selfId;
 
 
-    public AddContentRequest(String token, long userId,AddContentType type, byte[] image, String text, long superId, long selfId) {
-        this.token = token;
-        this.userId = userId;
+    public AddContentRequest(AddContentType type, byte[] image, String text, long superId, long selfId) {
+        this.token = LoggedUser.getToken();
+        this.userId = LoggedUser.getId();
         this.type = type;
         this.image = image;
         this.text = text;
