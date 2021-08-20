@@ -80,11 +80,11 @@ public class Forward implements ConfirmBox, Controllers {
                     receiver.setText("");
                 }
                 else if(users.contains(username)) {
-                    factionError.setText("duplicate name");
+                    userError.setText("duplicate name");
                 }
                 else{
                     users.add(username);
-                    addedUsers.setText(String.join(", " , users));
+                    userError.setText(String.join(", " , users));
                 }
             }
         });
