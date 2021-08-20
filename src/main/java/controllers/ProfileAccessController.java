@@ -1,6 +1,6 @@
 package controllers;
 
-import gui.controllers.profiles.*;
+import view.gui.controllers.profiles.*;
 import models.LoggedUser;
 import models.requests.PermissionRequest;
 import models.responses.PermissionResponse;

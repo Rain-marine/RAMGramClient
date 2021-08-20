@@ -74,7 +74,6 @@ public class ConfigLoader {
         return "404 : property not found";
     }
 
-
     public static void writeProperty(String key , String value,String comment){
         try {
             OutputStream outputStream = new FileOutputStream("src/main/resources/configurations/configurations.properties");
@@ -83,6 +82,5 @@ public class ConfigLoader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }
