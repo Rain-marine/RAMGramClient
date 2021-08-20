@@ -107,7 +107,7 @@ public class SettingGuiController implements Initializable, Controllers {
             boolean result = PasswordConfirmBox.display();
             if(result){
                 new DeleteAccountRequest().execute();
-                SceneLoader.getInstance().noConfirmLogout(actionEvent);
+                SceneLoader.getInstance().noConfirmLogoutDelete(actionEvent);
             }
         }
     }

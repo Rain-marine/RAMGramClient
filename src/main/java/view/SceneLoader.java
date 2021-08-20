@@ -87,4 +87,9 @@ public class SceneLoader implements Controllers {
     public void setting(ActionEvent actionEvent) {
         changeScene(ConfigLoader.loadFXML("setting"), actionEvent);
     }
+
+    public void noConfirmLogoutDelete(ActionEvent actionEvent) {
+        SETTING_CONTROLLER.logoutDeleted();
+        changeScene(ConfigLoader.loadFXML("loginFXMLAddress"),actionEvent);
+    }
 }

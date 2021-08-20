@@ -21,4 +21,7 @@ public class SettingController {
     }
 
 
+    public void logoutDeleted() {
+        LoggedUser.setToken(null);
+    }
 }
