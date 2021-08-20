@@ -1,8 +1,8 @@
 {
   "id": 1620593772196,
-  "lastSeenStatus": "following",
-  "isPublic": false,
-  "isActive": false,
+  "lastSeenStatus": "everybody",
+  "isPublic": true,
+  "isActive": true,
   "username": "rain",
   "fullName": "rain marine",
   "bio": "Once Again Arcane Rain Fell",

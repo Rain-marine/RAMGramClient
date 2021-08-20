@@ -26,6 +26,8 @@ public class PrivacySettingGuiController implements Initializable {
     }
 
     private void reload() {
+        if(LoggedUser.getMode() == LoggedUser.Mode.ONLINE)
+            LoggedUser.update();
         lastSeenStatus = LoggedUser.getTrimmedLoggedUser().getLastSeenStatus();
         lastSeenChoice.setValue(lastSeenStatus);
     }
@@ -47,7 +49,8 @@ public class PrivacySettingGuiController implements Initializable {
         String newLSStatus = lastSeenChoice.getValue();
         if (!newLSStatus.equals(lastSeenStatus)) {
             hasAnythingChanged = true;
-            new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoType.LAST_SEEN, newLSStatus).execute().unleash();
+            LoggedUser.getTrimmedLoggedUser().setLastSeenStatus(newLSStatus);
+            new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoType.LAST_SEEN, newLSStatus).execute();
         }
         if (hasAnythingChanged)
             reload();
