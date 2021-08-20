@@ -2,11 +2,10 @@ package models.responses;
 
 import org.codehaus.jackson.annotate.JsonTypeName;
 
-import java.util.AbstractList;
 import java.util.ArrayList;
 
 @JsonTypeName("list")
-public class ListResponse implements Response{
+public class ListResponse implements Response<ArrayList<Long>>{
     private ArrayList<Long> ids;
 
     public ListResponse(ArrayList<Long> ids) {
@@ -17,8 +16,8 @@ public class ListResponse implements Response{
     }
 
     @Override
-    public void unleash() {
-
+    public ArrayList<Long> unleash() {
+        return ids;
     }
 
     public ArrayList<Long> getIds() {

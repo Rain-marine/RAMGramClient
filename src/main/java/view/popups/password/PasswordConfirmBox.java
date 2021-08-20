@@ -43,8 +43,8 @@ public class PasswordConfirmBox implements ConfirmBox {
         ConfirmButton.setOnAction(e -> {
             String password = passwordField.getText();
             if(!password.equals("")){
-                Response response = new CheckPasswordRequest(password , LoggedUser.getId() , LoggedUser.getToken()).execute();
-                if(((BooleanResponse)response).isResult()){
+                BooleanResponse response = (BooleanResponse) new CheckPasswordRequest(password , LoggedUser.getId() , LoggedUser.getToken()).execute();
+                if(response.isResult()){
                     answer = true;
                     window.close();
                 }

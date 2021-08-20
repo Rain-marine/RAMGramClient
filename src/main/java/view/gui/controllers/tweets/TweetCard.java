@@ -196,8 +196,7 @@ public class TweetCard {
             report.setStyle("-fx-background-color: #690081");
             report.setTextFill(Color.LEMONCHIFFON);
             report.setOnAction(event -> {
-                Response response1 = new TweetActionRequest(LoggedUser.getToken() ,LoggedUser.getId() , tweetId , TweetActionType.REPORT).execute();
-                boolean isDeleted = ((BooleanResponse)response1).isResult();
+                boolean isDeleted = (Boolean) new TweetActionRequest(LoggedUser.getToken() ,LoggedUser.getId() , tweetId , TweetActionType.REPORT).execute().unleash();
                 if (isDeleted) {
                     AlertBox.display("refresh", "you need to refresh the page");
                 } else {

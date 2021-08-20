@@ -5,7 +5,7 @@ import models.trimmed.TrimmedLoggedUser;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("login")
-public class LoginResponse implements Response{
+public class LoginResponse implements Response<Object>{
     private boolean isLoginValid;
     private String error;
     private TrimmedLoggedUser trimmedLoggedUser;
@@ -22,11 +22,12 @@ public class LoginResponse implements Response{
     }
 
     @Override
-    public void unleash() {
+    public Object unleash() {
         if (isLoginValid){
             LoggedUser.setTrimmedLoggedUser(trimmedLoggedUser);
             LoggedUser.setToken(token);
         }
+        return null;
     }
 
     public boolean isLoginValid() {

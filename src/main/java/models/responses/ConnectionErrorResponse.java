@@ -3,7 +3,7 @@ package models.responses;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("error")
-public class ConnectionErrorResponse implements Response{
+public class ConnectionErrorResponse implements Response<Object>{
 
     private String message;
 
@@ -23,7 +23,8 @@ public class ConnectionErrorResponse implements Response{
     }
 
     @Override
-    public void unleash() {
+    public Object unleash() {
 
+        return null;
     }
 }

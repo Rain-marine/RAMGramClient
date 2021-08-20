@@ -13,7 +13,8 @@ public class NotificationResponse implements Response {
 
 
     @Override
-    public void unleash() {
+    public Object unleash() {
+        return null;
     }
 
     public NotificationResponse() {

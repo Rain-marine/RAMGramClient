@@ -18,8 +18,9 @@ public class TweetResponse implements Response{
     }
 
     @Override
-    public void unleash() {
+    public Object unleash() {
 
+        return null;
     }
 
     public TrimmedTweet getTrimmedTweet() {

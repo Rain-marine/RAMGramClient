@@ -21,8 +21,9 @@ public class ExploreResponse implements Response {
     }
 
     @Override
-    public void unleash() {
+    public Object unleash() {
 
+        return null;
     }
 
     public ExploreResponse() {

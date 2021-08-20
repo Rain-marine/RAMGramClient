@@ -11,8 +11,8 @@ public class FactionResponse implements Response{
     private List<TrimmedFaction> trimmedFactions;
 
     @Override
-    public void unleash() {
-
+    public Object unleash() {
+        return null;
     }
 
     public FactionResponse() {

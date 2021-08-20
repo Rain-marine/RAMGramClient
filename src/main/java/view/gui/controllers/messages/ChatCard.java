@@ -20,8 +20,7 @@ public class ChatCard {
     private final boolean isGroup;
 
     public ChatCard(Long chatId) {
-        Response response = new ChatRequest(LoggedUser.getToken() , LoggedUser.getId() , chatId).execute();
-        TrimmedChat trimmedChat = ((ChatResponse) response).getTrimmedChat();
+        TrimmedChat trimmedChat = (TrimmedChat) new ChatRequest(LoggedUser.getToken() , LoggedUser.getId() , chatId).execute().unleash();
         long chatId1 = chatId;
         this.card = new VBox(5);
         this.isGroup = trimmedChat.isGroup();

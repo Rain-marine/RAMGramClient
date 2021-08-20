@@ -33,8 +33,7 @@ public class UserController{
     }
 
     public boolean ChangeUsername(String newUsername) {
-        Response response = new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoType.USERNAME , newUsername).execute();
-        return ((BooleanResponse)response).isResult();
+        return (Boolean)  new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoType.USERNAME , newUsername).execute().unleash();
     }
 
     public void changeBio(String newBio) {
@@ -46,13 +45,11 @@ public class UserController{
     }
 
     public boolean changeEmail(String newEmail) {
-        Response response = new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoType.EMAIL , newEmail).execute();
-        return ((BooleanResponse)response).isResult();
+        return (Boolean)  new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoType.EMAIL , newEmail).execute().unleash();
     }
 
     public boolean changeNumber(String newNumber) {
-        Response response = new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoType.NUMBER , newNumber).execute();
-        return ((BooleanResponse)response).isResult();
+        return (Boolean)  new ChangeInfoRequest(LoggedUser.getToken() , LoggedUser.getId() , ChangeInfoType.NUMBER , newNumber).execute().unleash();
     }
 
     public void unblockUser(long userId) {

@@ -6,7 +6,7 @@ import models.trimmed.TrimmedLoggedUser;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("LoggedUser")
-public class LoggedUserResponse implements Response{
+public class LoggedUserResponse implements Response<Object>{
 
     private TrimmedLoggedUser trimmedLoggedUser;
 
@@ -18,8 +18,9 @@ public class LoggedUserResponse implements Response{
     }
 
     @Override
-    public void unleash() {
+    public Object unleash() {
         LoggedUser.setTrimmedLoggedUser(trimmedLoggedUser);
+        return null;
     }
 
     public TrimmedLoggedUser getTrimmedLoggedUser() {

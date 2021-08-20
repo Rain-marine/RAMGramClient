@@ -20,13 +20,11 @@ public class MessageController{
     }
 
     public boolean canSendMessageToUser(String userToSendMessage) {
-        Response accessResponse = new MessageAccessRequest(LoggedUser.getToken() , LoggedUser.getId() , MessageAccessType.USER , userToSendMessage).execute();
-        return ((BooleanResponse)accessResponse).isResult();
+        return (Boolean) new MessageAccessRequest(LoggedUser.getToken() , LoggedUser.getId() , MessageAccessType.USER , userToSendMessage).execute().unleash();
     }
 
     public boolean canSendMessageToGroup(String groupToSendMessage) {
-        Response accessResponse = new MessageAccessRequest(LoggedUser.getToken() , LoggedUser.getId() , MessageAccessType.GROUP , groupToSendMessage).execute();
-        return ((BooleanResponse)accessResponse).isResult();
+        return (Boolean)  new MessageAccessRequest(LoggedUser.getToken() , LoggedUser.getId() , MessageAccessType.GROUP , groupToSendMessage).execute().unleash();
     }
 
     public void sendMessage(String message, byte[] image, List<String> users, List<String> groupsToSendMessage) {

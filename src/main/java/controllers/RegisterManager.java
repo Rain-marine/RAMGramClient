@@ -13,17 +13,14 @@ public class RegisterManager {
     }
 
     public boolean isUsernameAvailable(String username) {
-        Response response = new RegisterRequest(RegisterType.USERNAME, username, null).execute();
-        return ((BooleanResponse) response).isResult();
+        return (Boolean)  new RegisterRequest(RegisterType.USERNAME, username, null).execute().unleash();
     }
 
     public boolean isEmailAvailable(String email) {
-        Response response = new RegisterRequest(RegisterType.EMAIL, email, null).execute();
-        return ((BooleanResponse) response).isResult();
+        return (Boolean) new RegisterRequest(RegisterType.EMAIL, email, null).execute().unleash();
     }
 
     public boolean isPhoneNumberAvailable(String phoneNumber) {
-        Response response = new RegisterRequest(RegisterType.NUMBER, phoneNumber, null).execute();
-        return ((BooleanResponse) response).isResult();
+        return (Boolean) new RegisterRequest(RegisterType.NUMBER, phoneNumber, null).execute().unleash();
     }
 }

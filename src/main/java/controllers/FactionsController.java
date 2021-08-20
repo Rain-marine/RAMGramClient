@@ -34,8 +34,8 @@ public class FactionsController {
     }
 
     public boolean canAddToGroup(String username) {
-        Response response = new MessageAccessRequest(LoggedUser.getToken() , LoggedUser.getId() , MessageAccessType.FACTION , username).execute();
-        return ((BooleanResponse)response).isResult();
+        return (Boolean) new MessageAccessRequest(LoggedUser.getToken() , LoggedUser.getId() , MessageAccessType.FACTION , username).execute().unleash();
+
     }
 
     public List<TrimmedFaction> getFactions() {

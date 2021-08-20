@@ -3,11 +3,11 @@ package models.responses;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("denied")
-public class AccessDeniedResponse implements Response{
+public class AccessDeniedResponse implements Response<Boolean>{
 
     @Override
-    public void unleash() {
-
+    public Boolean unleash() {
+        return null;
     }
 
     public AccessDeniedResponse() {

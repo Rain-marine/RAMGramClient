@@ -29,6 +29,6 @@ import org.codehaus.jackson.annotate.JsonTypeInfo;
 
 })
 
-public interface Response {
-    void unleash();
+public interface Response<T> {
+    T unleash();
 }

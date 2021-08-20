@@ -9,8 +9,9 @@ public class PermissionResponse implements Response{
     private boolean[] permissions;
 
     @Override
-    public void unleash() {
+    public Object unleash() {
 
+        return null;
     }
 
     public PermissionResponse() {

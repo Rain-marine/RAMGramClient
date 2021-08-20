@@ -12,8 +12,9 @@ public class UserResponse implements Response {
     }
 
     @Override
-    public void unleash() {
+    public Object unleash() {
 
+        return null;
     }
 
     public TrimmedUser getTrimmedUser() {

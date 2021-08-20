@@ -4,7 +4,7 @@ package models.responses;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("boolean")
-public class BooleanResponse implements Response{
+public class BooleanResponse implements Response<Boolean>{
 
     private boolean result;
 
@@ -16,8 +16,8 @@ public class BooleanResponse implements Response{
     }
 
     @Override
-    public void unleash() {
-
+    public Boolean unleash() {
+        return this.result;
     }
 
     public boolean isResult() {

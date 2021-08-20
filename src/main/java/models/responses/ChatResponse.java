@@ -4,7 +4,7 @@ import models.trimmed.TrimmedChat;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 @JsonTypeName("chat")
-public class ChatResponse implements Response{
+public class ChatResponse implements Response<TrimmedChat>{
 
     private TrimmedChat trimmedChat;
 
@@ -16,8 +16,8 @@ public class ChatResponse implements Response{
     }
 
     @Override
-    public void unleash() {
-
+    public TrimmedChat unleash() {
+        return trimmedChat;
     }
 
     public TrimmedChat getTrimmedChat() {

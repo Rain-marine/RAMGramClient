@@ -39,8 +39,7 @@ public class SettingGuiController implements Initializable, Controllers {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         if(LoggedUser.getMode() == LoggedUser.Mode.ONLINE){
-            Response response = new IsPublicRequest(LoggedUser.getId(),LoggedUser.getToken()).execute();
-            isPublic = ((BooleanResponse)response).isResult();
+            isPublic = (Boolean)  new IsPublicRequest(LoggedUser.getId(),LoggedUser.getToken()).execute().unleash();
         }
         else {
             isPublic = LoggedUser.getTrimmedLoggedUser().isPublic();

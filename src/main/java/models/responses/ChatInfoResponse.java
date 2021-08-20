@@ -1,12 +1,11 @@
 package models.responses;
 
-import controllers.Controllers;
 import org.codehaus.jackson.annotate.JsonTypeName;
 
 import java.util.ArrayList;
 
 @JsonTypeName("chatInfo")
-public class ChatInfoResponse implements Response{
+public class ChatInfoResponse implements Response<Object>{
     private long loggedUserId;
     private long chatId;
     private long frontUserId;
@@ -17,8 +16,8 @@ public class ChatInfoResponse implements Response{
 
 
     @Override
-    public void unleash() {
-
+    public Object unleash() {
+        return null;
     }
 
     public ChatInfoResponse() {

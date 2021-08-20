@@ -16,8 +16,9 @@ public class MessageResponse implements Response{
     }
 
     @Override
-    public void unleash() {
+    public Object unleash() {
 
+        return null;
     }
 
     public TrimmedMessage getTrimmedMessage() {
