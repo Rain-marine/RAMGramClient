@@ -42,6 +42,7 @@ public class TimeLineGuiController implements Initializable , Controllers{
 
     private void updatePane() {
         System.out.println("updating...");
+        try{
         VBox list = new VBox(0);
         listOfTweets = TWEET_CONTROLLER.getFollowingTweets();
         for (long tweet : listOfTweets) {
@@ -49,6 +50,9 @@ public class TimeLineGuiController implements Initializable , Controllers{
         }
         tweetsArea.setContent(list);
         timer.playFromStart();
+        }catch (ClassCastException ignored){
+
+        }
     }
 
     public void logoutButtonClicked(ActionEvent actionEvent) {

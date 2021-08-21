@@ -42,6 +42,7 @@ public class ExplorerGuiController implements Initializable, Controllers {
     }
 
     private void updatePane() {
+        try{
         listOfTweets = TWEET_CONTROLLER.getTopTweets();
         VBox list = new VBox(0);
         for (Long tweet : listOfTweets) {
@@ -49,6 +50,9 @@ public class ExplorerGuiController implements Initializable, Controllers {
         }
         tweetsArea.setContent(list);
         timer.playFromStart();
+        }catch (ClassCastException ignored){
+
+        }
 
     }
 

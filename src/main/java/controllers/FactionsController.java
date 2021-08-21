@@ -1,10 +1,8 @@
 package controllers;
 
-import models.LoggedUser;
 import models.requests.FactionActionRequest;
 import models.requests.ListRequest;
 import models.requests.MessageAccessRequest;
-import models.responses.BooleanResponse;
 import models.responses.FactionResponse;
 import models.responses.Response;
 import models.trimmed.TrimmedFaction;

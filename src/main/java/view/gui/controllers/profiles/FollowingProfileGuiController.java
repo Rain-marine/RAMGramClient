@@ -47,12 +47,14 @@ public class FollowingProfileGuiController implements Initializable, Controllers
     }
 
     public void backButtonClicked(ActionEvent actionEvent) {
-        switch (previous){
+        switch (previous) {
             case (1) -> SceneLoader.getInstance().explorer(actionEvent);
             case (2) -> SceneLoader.getInstance().timeline(actionEvent);
             case (3) -> SceneLoader.getInstance().yourTweets(actionEvent);
             case (4) -> {
-                switch (factionId){
+                if (profileAccessController != null)
+                    factionId = profileAccessController.getFactionId();
+                switch (factionId) {
                     case -1 -> {
                         DefaultFactionsGuiController.setList(DefaultFactionsGuiController.LIST.FOLLOWER);
                         SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("defaultFactions"), actionEvent);
@@ -61,7 +63,7 @@ public class FollowingProfileGuiController implements Initializable, Controllers
                         DefaultFactionsGuiController.setList(DefaultFactionsGuiController.LIST.FOLLOWING);
                         SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("defaultFactions"), actionEvent);
                     }
-                    case -3 ->{
+                    case -3 -> {
                         DefaultFactionsGuiController.setList(DefaultFactionsGuiController.LIST.BLACKLIST);
                         SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("defaultFactions"), actionEvent);
                     }
@@ -80,15 +82,15 @@ public class FollowingProfileGuiController implements Initializable, Controllers
     }
 
     public void unfollowNotify(ActionEvent actionEvent) {
-        new UserActionRequest( userId , UserActionType.UNFOLLOW).execute();
-        ProfileAccessController profileAccessController = new ProfileAccessController(previous,userId,factionId);
-        SceneLoader.getInstance().changeScene(profileAccessController.checkAccessibility(),actionEvent);
+        new UserActionRequest(userId, UserActionType.UNFOLLOW).execute();
+        ProfileAccessController profileAccessController = new ProfileAccessController(previous, userId, factionId);
+        SceneLoader.getInstance().changeScene(profileAccessController.checkAccessibility(), actionEvent);
     }
 
     public void unfollowWithoutNotif(ActionEvent actionEvent) {
-        new UserActionRequest(userId , UserActionType.QUIET_UNFOLLOW).execute();
-        ProfileAccessController profileAccessController = new ProfileAccessController(previous,userId,factionId);
-        SceneLoader.getInstance().changeScene(profileAccessController.checkAccessibility(),actionEvent);
+        new UserActionRequest(userId, UserActionType.QUIET_UNFOLLOW).execute();
+        ProfileAccessController profileAccessController = new ProfileAccessController(previous, userId, factionId);
+        SceneLoader.getInstance().changeScene(profileAccessController.checkAccessibility(), actionEvent);
     }
 
     public void messageButtonClicked(ActionEvent actionEvent) {
@@ -108,7 +110,7 @@ public class FollowingProfileGuiController implements Initializable, Controllers
 
     public void reportButtonClicked(ActionEvent actionEvent) {
         USER_CONTROLLER.reportUser(userId);
-        AlertBox.display("reported","User reported successfully");
+        AlertBox.display("reported", "User reported successfully");
     }
 
     public void blockButtonClicked(ActionEvent actionEvent) {
@@ -117,7 +119,7 @@ public class FollowingProfileGuiController implements Initializable, Controllers
         BlockedProfileGuiController.setPrevious(previous);
         BlockedProfileGuiController.setFactionId(factionId);
         BlockedProfileGuiController.setProfileAccessController(profileAccessController);
-        SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("blockedProf"),actionEvent);
+        SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("blockedProf"), actionEvent);
     }
 
     public static long getUser() {

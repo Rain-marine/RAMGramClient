@@ -55,7 +55,7 @@ public class ProfileAccessController {
                 return "FXMLs/Profiles/NotVisibleProfile.fxml";
             }
 
-            //is their account private?
+            //is their account public?
             if (results[4]) {
                 PublicProfileGuiController.setUser(otherUserId);
                 PublicProfileGuiController.setPrevious(previousMenu);
@@ -78,4 +78,23 @@ public class ProfileAccessController {
         }
     }
 
+    public int getPreviousMenu() {
+        return previousMenu;
+    }
+
+    public long getOtherUserId() {
+        return otherUserId;
+    }
+
+    public int getFactionId() {
+        return factionId;
+    }
+
+    public boolean[] getResults() {
+        return results;
+    }
+
+    public void setResults(boolean[] results) {
+        this.results = results;
+    }
 }

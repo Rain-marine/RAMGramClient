@@ -4,6 +4,7 @@ import controllers.Controllers;
 import controllers.ProfileAccessController;
 import view.InfoLoader;
 import view.SceneLoader;
+import view.gui.controllers.personalpage.factions.DefaultFactionsGuiController;
 import view.popups.AlertBox;
 import view.gui.controllers.tweets.TweetShowerGuiController;
 import javafx.event.ActionEvent;
@@ -46,6 +47,10 @@ public class PublicProfileGuiController implements Initializable, Controllers {
             case (1) -> SceneLoader.getInstance().explorer(actionEvent);
             case (2) -> SceneLoader.getInstance().timeline(actionEvent);
             case (3) -> SceneLoader.getInstance().yourTweets(actionEvent);
+            case (4) -> {
+                DefaultFactionsGuiController.setList(DefaultFactionsGuiController.LIST.FOLLOWER);
+                SceneLoader.getInstance().changeScene(ConfigLoader.loadFXML("defaultFactions"), actionEvent);
+            }
         }
     }
 
